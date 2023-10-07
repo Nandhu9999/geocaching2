@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const fastify = require("fastify")({logger: false,});
-const PORT = 3000 || process.env.PORT
+const PORT = process.env.PORT || 3000
 
 fastify.register(require("@fastify/static"), {root: path.join(__dirname, "public"),prefix: "/",});
 
