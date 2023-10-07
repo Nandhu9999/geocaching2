@@ -1,0 +1,16 @@
+:root {
+  --color-bg: #FFE6F8;
+  --color-text-main: #000000;
+  --color-primary: #D7F5EF;
+
+  --font-family: "HK Grotesk";
+  --font-family-header: "HK Grotesk";
+}
+
+/* Basic page style resets */
+* {
+  box-sizing: border-box;
+}
+[hidden] {
+  display: none !important;
+}
