@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const fastify = require("fastify")({logger: false,});
+const PORT = 3000 || process.env.PORT
 
 fastify.register(require("@fastify/static"), {root: path.join(__dirname, "public"),prefix: "/",});
 
@@ -33,7 +34,7 @@ fastify.get("/", async (request, reply) => {
 
 // Run the server and report out to the logs
 fastify.listen(
-  { port: process.env.PORT, host: "0.0.0.0" },
+  { port: PORT, host: "0.0.0.0" },
   function (err, address) {
     if (err) {
       console.error(err);
