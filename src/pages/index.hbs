@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="/css/chat.css" />
 
   <script>function $(x){return document.querySelector(x);}</script>
+  <script type="module" src="/js/authorization.js"></script>
   <script type="module" src="/js/chatscript.js"></script>
 
 </head>
@@ -31,28 +32,50 @@
 <body>
   <div id="container">
     <div class="sidebar"></div>
-    <div class="main">
-      <div class="header">
+    <main>
+      <header>
         <span class="menu">🍔</span>
         <span>header</span>
         <span class="users">👥</span>
-      </div>
+      </header>
       
-      <div class="maincontent"></div>
+      <div class="maincontent">
 
-      <div class="footer">
+        <div class="chatlogs"></div>
+      </div>
+
+      <footer>
         <div class="chatindication">
           <span class="loadingCircles"></span>
           <span class="indicationLabel"></span>
         </div>
         <div class="userinput">
-          <div class="widget">😋</div>
-          <div class="textarea" contenteditable="true" spellcheck="false"></div>
-          <div class="send">🚀</div>
+          
+          <div id="widget">
+            😋
+            <dialog class="widgetDialog">
+              <div>🚀</div>
+              <div>😋</div>
+              <div>😋</div>
+            </dialog>
+          </div>
+
+          <div id="textarea" contenteditable="true" spellcheck="false"></div>
+          
+          <div id="send">🚀</div>
+
         </div>
-      </div>
-    </div>
+      </footer>
+    </main>
   </div>
+
+  <dialog id="authModal">
+    <div>some content</div>
+    <button>close</button>
+  </dialog>
+
+
+
 </body>
 
 </html>
