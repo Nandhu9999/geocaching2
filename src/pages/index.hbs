@@ -28,17 +28,25 @@
   <script type="module" src="/js/utils.js"></script>
   <script type="module" src="/js/authorization.js"></script>
   <script type="module" src="/js/chatscript.js"></script>
+  <script type="module" src="/js/sidebarscript.js"></script>
 
 </head>
 
 <body>
   <div id="container">
-    <div class="sidebar"></div>
+    <div class="sidebarLeft">
+      <span class="title">Channels</span>
+      <ul>
+        <li>abc</li>
+        <li>def</li>
+        <li>ghiasdfsdfa sdfdsasdfsadf</li>
+      </ul>
+    </div>
     <main>
       <header>
-        <span class="menu">🍔</span>
+        <span class="menu" id="menuBtn">🍔</span>
         <span>header</span>
-        <span class="users">👥</span>
+        <span class="users" id="usersBtn">👥</span>
       </header>
       
       <div class="maincontent">
@@ -69,6 +77,25 @@
         </div>
       </footer>
     </main>
+    <div class="sidebarRight">
+      <span class="title">Members</span>
+      <ul>
+        <li>abc</li>
+        <li>def</li>
+        <li>ghiasdfsdfa sdfdsasdfsadf</li>
+        <li>abc</li>
+        <li>def</li>
+        <li>abc</li>
+        <li>def</li>
+        <li>abc</li>
+        <li>def</li>
+        <li>abc</li>
+        <li>def</li>
+      </ul>
+      <div class="profile">
+
+      </div>
+    </div>
   </div>
 
   <dialog id="authModal">

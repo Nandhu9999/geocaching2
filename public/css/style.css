@@ -6,7 +6,7 @@
   --font-family: "HK Grotesk";
   --font-family-header: "HK Grotesk";
 
-  --sidebarWidth: 260px;
+  --sidebarWidth: 240px;
 }
 
 /* Basic page style resets */
@@ -29,7 +29,7 @@ html,body{
 #authModal{
   z-index: 10;
   position: fixed;
-  top:calc(50% - 100px); 
+  top:calc(50% - 42px); 
   left:50%;
   translate: -50% -50%;
 

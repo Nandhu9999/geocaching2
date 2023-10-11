@@ -5,7 +5,6 @@ const authModal = $("#authModal")
 const authForm = $("#authModal form")
 
 async function checkAuth(){
-    console.log("checking...")
     async function validateSessions(){
         try{
             const rresponse = await fetch("/api/authorize")
@@ -19,7 +18,7 @@ async function checkAuth(){
     const response = await validateSessions();
     
     if(response &&  response.status == "ok"){
-        console.log("session is active")
+        console.log("SESSION: ✅")
         AUTHORIZED = true
         return 
     }
