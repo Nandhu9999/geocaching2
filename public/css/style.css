@@ -5,6 +5,8 @@
 
   --font-family: "HK Grotesk";
   --font-family-header: "HK Grotesk";
+
+  --sidebarWidth: 260px;
 }
 
 /* Basic page style resets */
@@ -27,9 +29,57 @@ html,body{
 #authModal{
   z-index: 10;
   position: fixed;
-  top:50%; left:50%;
+  top:calc(50% - 100px); 
+  left:50%;
   translate: -50% -50%;
+
+  width: min(90%,400px);
+  background: #484848;
+  border: none;
+  padding: 10px;
+  padding-bottom: 30px;
+  border-radius: 15px;
+
+  h1{
+    color: var(--color-text-main);
+    padding-left: 1em;
+  }
+  form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: var(--color-text-main);
+    width: 80%;
+    margin-inline: auto;
+    gap: 10px;
+    padding-top:10px;
+
+    label{
+      font-size: .8em;
+      line-height: 1.5em;
+    }
+    input{
+      display: block;
+      outline: none;
+      font-size: 1rem;
+      padding: .5em;
+      width: 100%;
+      color: white;
+      background: rgba(0,0,0,0.2);
+      outline:none;
+      border:none;
+      border-radius:5px;
+    }
+
+
+    button{
+      font-size: 1rem;
+      padding: 5px;
+      margin-top:20px;
+    }
+  }
+
 }
-::backdrop {
+#authModal::backdrop {
   background: rgba(0,0,0,0.5);
 }

@@ -5,7 +5,8 @@
 
   <meta charset="utf-8" />
   <link rel="icon" href="https://glitch.com/favicon.ico" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
 
   <title>{{seo.title}}</title>
 
@@ -52,7 +53,7 @@
         </div>
         <div class="userinput">
           
-          <div id="widget">
+          <div id="widget" class="">
             😋
             <dialog class="widgetDialog">
               <div>🚀</div>
@@ -71,8 +72,20 @@
   </div>
 
   <dialog id="authModal">
-    <div>some content</div>
-    <button>close</button>
+    <h1>Login</h1>
+    <form>
+      {{!-- <label>
+        Username:
+        <input type="text" name="username">
+      </label> --}}
+
+      <label>
+        Passcode:
+        <input type="password" name="password">
+      </label>
+
+      <button>submit</button>
+    </form>
   </dialog>
 
 

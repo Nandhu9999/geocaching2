@@ -34,19 +34,23 @@ function systemInit(){
 
 function widgetClicked(){
     widgetOpts.classList.toggle("active")
+    updateWidgetState();
+    textArea.focus();
+}
+
+function updateWidgetState(){
     const widgetActive = widgetOpts.classList.contains("active")
-    console.log(widgetActive ? "open" : "close", "widgets")
-
+    // console.log(widgetActive ? "open" : "close", "widget")
     if ( widgetActive ){
-        $(".widgetDialog").close();
-    } else {
         $(".widgetDialog").show();
+    } else {
+        $(".widgetDialog").close();
     }
-
-    textArea.focus()
 }
 
 function textareaClicked(){
+    widgetOpts.classList.remove("active")
+    updateWidgetState()
 
 }
 
