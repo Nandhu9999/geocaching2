@@ -23,12 +23,17 @@ function socketConnection(socket){
 
     socket.broadcast.emit("exit", userObj);
     connections.pop(idx)
+    
   })
 
 
   socket.on("messageServer", async(data)=>{
     console.log("💬 received message:",socket.id.slice(0, 5));
+
+    // broadcast to all other users and itself
     socket.broadcast.emit("messageGlobal", data);
+    socket.emit("messageVerified", {messageid: data.messageid});
+
   })
 }
 

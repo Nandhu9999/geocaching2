@@ -1,6 +1,6 @@
 import { socketInit } from "./socketClient.js"
 
-console.log("authorization.js")
+// console.log("authorization.js")
 
 export const authObj = {
     verifying: false,
@@ -84,7 +84,15 @@ async function authenticateUser(e){
     }
 }
 
+function forceClose(e){
+    if (!authObj.AUTHORIZED){
+        e.preventDefault();
+        authModal.showModal()
+    }
+}
+
 if (authObj.AUTHORIZED == false) checkAuth()
+authModal.addEventListener("close", forceClose)
 authForm.addEventListener("submit",authenticateUser)
 
 function userActivate(){

@@ -10,8 +10,6 @@ export const socketObj = {
 
 
 export function socketInit(){
-  console.log("socket init...")
-  socketObj.io = null
   const socket = io();
   socketObj.io = socket
 
@@ -20,13 +18,14 @@ export function socketInit(){
   socket.on("enter", userEntered)
   socket.on("exit", userExited)
 
-  socket.on("messageGlobal", onMessageReceived)  
+  socket.on("messageGlobal", onMessageReceived)
+  socket.on("messageVerified", messageVerified)
 
   socket.on("disconnect", () => {
     console.log("SOCKETIO: ❌")
-    checkAuth();
-    MEMBERS.length = 0
-    updateMembersContents()
+    // checkAuth();
+    // MEMBERS.length = 0
+    // updateMembersContents()
   });
 
 }
@@ -57,4 +56,12 @@ async function userExited({socketid}){
 
 function onMessageReceived(data){
   appendMessage(data)
+}
+
+function messageVerified({messageid}){
+  const message = $(".chatlogs").querySelector("#" + messageid)
+
+  if (message) {
+    message.style.opacity = 1
+  }
 }

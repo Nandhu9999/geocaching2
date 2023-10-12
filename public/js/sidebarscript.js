@@ -1,4 +1,4 @@
-console.log("sidebarscript.js")
+// console.log("sidebarscript.js")
 
 export let CHANNELS = []
 export let MEMBERS  = []
