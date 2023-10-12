@@ -40,7 +40,7 @@
 }
 #container .sidebarLeft ul li {
     list-style-type: none;
-    font-size: 1.2rem;
+    font-size: 1rem;
     display: block;
     margin-top: 10px;
     padding: 5px;
@@ -52,6 +52,8 @@
     background: rgba(0, 0, 0, 0.25);
     border-radius: 5px;
     box-shadow: 0 2px 0px 2px black;
+    text-transform: uppercase;
+    line-height: 2rem;
 }
 #container main {
     width: calc(100% - 2 * var(--sidebarWidth));

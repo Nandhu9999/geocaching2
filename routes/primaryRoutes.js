@@ -48,12 +48,24 @@ async function authenticate(request, reply) {
         return reply.send({ status: "ok" });
     }
     return reply.send({ status: "error" });
-    
 };
+
+async function totalChannels(request, reply){
+    return reply.send(["aaa","bbb","ccc"])
+}
+
+async function totalMembers(request, reply){
+    const response = await db.getMembers()
+    console.log(response)
+    return reply.send(response)
+}
 
 module.exports = {
     home,
     authenticate,
     authorizeRequest,
-    checkAuthorized
+    checkAuthorized,
+
+    totalChannels,
+    totalMembers
 }

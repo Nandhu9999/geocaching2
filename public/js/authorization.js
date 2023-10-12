@@ -1,10 +1,18 @@
+import { socketInit } from "./socketClient.js"
+
 console.log("authorization.js")
-export let AUTHORIZED = false;
+
+export const authObj = {
+    verifying: false,
+    AUTHORIZED: false
+}
 
 const authModal = $("#authModal")
 const authForm = $("#authModal form")
 
-async function checkAuth(){
+export async function checkAuth(){
+    if (authObj.verifying) return
+
     async function validateSessions(){
         try{
             const rresponse = await fetch("/api/authorize")
@@ -15,14 +23,18 @@ async function checkAuth(){
         }
     }
     
+    authObj.verifying = true
     const response = await validateSessions();
-    
-    if(response &&  response.status == "ok"){
-        console.log("SESSION: ✅")
-        AUTHORIZED = true
-        return 
+    authObj.verifying = false
+
+    if(response && response.status == "ok"){
+        console.log("SESSIONS: ✅")
+        authObj.AUTHORIZED = true
+        userActivate()
+        return
     }
 
+    authObj.AUTHORIZED = false
     authModal.showModal()
 }
 
@@ -36,7 +48,6 @@ async function authenticateUser(e){
             return "invalid"
         }
         try{
-
             const rresponse = await fetch("/api/authenticate", {
                 method: "POST",
                 headers: {
@@ -67,9 +78,17 @@ async function authenticateUser(e){
         alert("server error", response.message)
     }
     else if(response.status == "ok"){
+        authObj.AUTHORIZED = true
+        userActivate()
         authModal.close()
     }
 }
 
-if (AUTHORIZED == false) checkAuth()
+if (authObj.AUTHORIZED == false) checkAuth()
 authForm.addEventListener("submit",authenticateUser)
+
+function userActivate(){
+    if (authObj.AUTHORIZED){
+        socketInit()
+    }
+}

@@ -20,17 +20,16 @@ dbWrapper
   .then(async dBase => {
     db = dBase;
 
-    // We use try and catch blocks throughout to handle any database errors
     try {
-      // The async / await syntax lets us write the db operations in a way that won't block the app
       if (!exists) {
         
         console.log("db doesnt exist")
-        
+        await db.run("CREATE TABLE Members (socketid TEXT, username TEXT)");
+
       } else {
         
         console.log("db exists")
-
+        await db.run("DELETE FROM Members");
       }
     } catch (dbError) {
       console.error(dbError);
@@ -39,22 +38,6 @@ dbWrapper
 
 // Our server script will call these methods to connect to the db
 module.exports = {
-  
-  /**
-   * Get the options in the database
-   *
-   * Return everything in the Choices table
-   * Throw an error in case of db connection issues
-   */
-  getOptions: async () => {
-    // We use a try catch block in case of db errors
-    try {
-      return await db.all("SELECT * from Choices");
-    } catch (dbError) {
-      // Database connection error
-      console.error(dbError);
-    }
-  },
 
   /**
    * Process a user vote
@@ -78,44 +61,63 @@ module.exports = {
 
       // Return the choices so far - page will build these into a chart
       return await db.all("SELECT * from Choices");
+
     } catch (dbError) {
       console.error(dbError);
     }
   },
 
-  /**
-   * Get logs
-   *
-   * Return choice and time fields from all records in the Log table
-   */
-  getLogs: async () => {
-    // Return most recent 20
+  getMembers: async () => {
     try {
-      // Return the array of log entries to admin page
-      return await db.all("SELECT * from Log ORDER BY time DESC LIMIT 20");
+      return await db.all("SELECT * FROM Members");
     } catch (dbError) {
       console.error(dbError);
     }
   },
 
-  /**
-   * Clear logs and reset votes
-   *
-   * Destroy everything in Log table
-   * Reset votes in Choices table to zero
-   */
-  clearHistory: async () => {
+  addMember: async (socketid, username) => {
     try {
-      // Delete the logs
-      await db.run("DELETE from Log");
-
-      // Reset the vote numbers
-      await db.run("UPDATE Choices SET picks = 0");
-
-      // Return empty array
-      return [];
+      await db.run("INSERT INTO Members (socketid, username) VALUES (?, ?)", [socketid, username])
     } catch (dbError) {
       console.error(dbError);
     }
-  }
+  },
+
+  deleteMember: async (socketid) => {
+    try {
+      await db.run("DELETE FROM Members where socketid=?", [socketid])
+    } catch (dbError) {
+      console.error(dbError);
+    }
+  },
+  
+  clearMembers: async () => {
+    try {
+      await db.run("DELETE FROM Members", [])
+    } catch (dbError) {
+      // output removed because it causes error
+      // even though it works fine, it might be
+      // caused by an already empty table, not 
+      // sure
+      console.error();
+    }
+  },
+
+
+
+
+  // runQuery1: async (q) => {
+  //   try {
+  //     return await db.all(q);
+  //   } catch (dbError) {
+  //     console.error(dbError);
+  //   }
+  // },
+  // runQuery2: async (q) => {
+  //   try {
+  //     return await db.run(q);
+  //   } catch (dbError) {
+  //     console.error(dbError);
+  //   }
+  // }
 };

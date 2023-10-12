@@ -1,5 +1,8 @@
 console.log("sidebarscript.js")
 
+export let CHANNELS = []
+export let MEMBERS  = []
+
 const sidebarLeft = $(".sidebarLeft")
 const sidebarRight = $(".sidebarRight")
 
@@ -34,4 +37,40 @@ function clickedMain(){
     sidebarLeft.classList.remove("active");
     sidebarRight.classList.remove("active");
     sidebarLeft.classList.remove("leftSidebarActive");
+}
+
+export async function updateSidebarContents(){
+    CHANNELS = await (await fetch("/api/channels")).json()
+    MEMBERS  = await (await fetch("/api/members")).json()
+
+    if(Array.isArray(CHANNELS) && Array.isArray(MEMBERS)){
+      updateChannelContents()    
+      updateMembersContents()    
+    } else {
+        CHANNELS = []
+        MEMBERS  = []
+    }
+}
+
+
+function updateChannelContents(){
+    const listContainer = sidebarLeft.querySelector("ul");
+    listContainer.innerHTML = ""
+    
+    CHANNELS.forEach(content => {
+        const listItem = document.createElement("li")
+        listItem.innerText = content
+        listContainer.appendChild(listItem)
+    })
+}
+
+export function updateMembersContents(){
+    const listContainer = sidebarRight.querySelector("ul");
+    listContainer.innerHTML = ""
+    
+    MEMBERS.forEach(({socketid, username}) => {
+        const listItem = document.createElement("li")
+        listItem.innerHTML = `${socketid}`
+        listContainer.appendChild(listItem)
+    })
 }

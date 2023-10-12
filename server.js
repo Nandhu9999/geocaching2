@@ -7,6 +7,9 @@ const PORT = process.env.PORT || 3000
 const COOKIE_SECRET = process.env.COOKIE_SECRET;
 const SESSION_SECRET = process.env.SESSION_SECRET;
 
+const data = require("./src/data.json");
+const db = require("./src/" + data.database);
+
 fastify.register(require("@fastify/static"), {
   root: path.join(__dirname, "public"),prefix: "/",
 });
@@ -35,8 +38,11 @@ const {
   home, 
   authenticate,
   authorizeRequest,
-  checkAuthorized} = require("./routes/primaryRoutes")
+  checkAuthorized,
+  totalChannels,
+  totalMembers} = require("./routes/primaryRoutes")
 
+const { socketConnection } = require("./routes/socketServer")
 
 // HOOKS  
 fastify.addHook("onRequest", authorizeRequest);
@@ -45,9 +51,19 @@ fastify.addHook("onRequest", authorizeRequest);
 fastify.get("/", home);
 fastify.get("/api/authorize", checkAuthorized);
 
+fastify.get("/api/channels", totalChannels);
+fastify.get("/api/members", totalMembers);
+
 fastify.post("/api/authenticate", authenticate);
 
 
+// WEBSOCKET CONNECTION
+
+fastify.register(require('fastify-socket.io'));
+fastify.ready(async(err) => {
+  if (err) throw err
+  fastify.io.on('connection', socketConnection);
+});
 
 
 // Run the server and report out to the logs
