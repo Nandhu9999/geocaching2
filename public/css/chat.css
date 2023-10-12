@@ -22,7 +22,7 @@
 
         .title{
 
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             width: 90%;
             height: 100%;
             box-shadow: 0 0 2px 1.5px rgba(255,255,255,0.5);
@@ -43,7 +43,7 @@
 
             li{
                 list-style-type: none;
-                font-size: 1.2rem;
+                font-size: 1rem;
                 display:block;
                 margin-top: 10px;
                 padding:5px;
@@ -167,10 +167,10 @@
 
         .title{
 
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             width: 90%;
             height: 100%;
-            box-shadow: 0 0 2px 1.5px rgba(255,255,255,0.5);
+            box-shadow: 0 0 1px 1px rgba(255,255,255,0.5);
             display: block;
             border-radius: 10px;
             display:grid;
