@@ -24,9 +24,9 @@ html, body {
     width: min(90%,400px);
     z-index: 10;
     position: fixed;
-    top: 40px;
+    top: 100px;
     left: 50%;
-    translate: -50% -60%;
+    translate: -50% -10%;
     background: #484848;
     border: none;
     padding: 10px;

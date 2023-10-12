@@ -31,9 +31,9 @@ html,body{
 #authModal{
   z-index: 10;
   position: fixed;
-  top: 40px;
+  top: 100px;
   left: 50%;
-  translate: -50% -60%;
+  translate: -50% -10%;
 
   width: min(90%,400px);
   background: #484848;
