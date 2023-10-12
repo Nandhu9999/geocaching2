@@ -15,7 +15,7 @@ function socketConnection(socket){
   })
 
   socket.on("disconnect", async(data) => {
-    console.log("🔴 socket disconnected:",socket.id.slice(0, 5));
+    console.log("🔴 socket disconnected:", socket.id.slice(0, 5));
     await db.deleteMember(socket.id)
     
     const idx = connections.findIndex((x) => x.socketid == socket.id )
@@ -23,6 +23,12 @@ function socketConnection(socket){
 
     socket.broadcast.emit("exit", userObj);
     connections.pop(idx)
+  })
+
+
+  socket.on("messageServer", async(data)=>{
+    console.log("💬 received message:",socket.id.slice(0, 5));
+    socket.broadcast.emit("messageGlobal", data);
   })
 }
 

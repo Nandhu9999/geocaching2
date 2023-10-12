@@ -1,3 +1,5 @@
+import { socketObj } from "./socketClient.js"
+
 console.log("chatscript.js")
 
 function containerSize(){
@@ -55,19 +57,57 @@ function textareaClicked(){
 }
 
 function sendClicked(){
-    appendMessage(textArea.innerText)
+    const myMessage = {
+        username: "username",
+        content: textArea.innerText,
+        timestamp: Date.now(),
+        pfp: ""
+    }
     textArea.innerText = ""
     textArea.focus()
+    
+    socketObj.io.emit("messageServer", myMessage)
 }
 
-function appendMessage(msg){
-    const p = document.createElement("p")
-    p.innerText = msg
-    $(".chatlogs").append(p)
+export function appendMessage(data){
+    const msg = new MessageCreator(data)
+
+    msg.autoGenerateFormat()
+
+    $(".chatlogs").append(msg.tag)
 }
 
+export class MessageCreator{
 
+    constructor({username, timestamp, content, pfp}){
+        this.username  = username
+        this.timestamp = timestamp
+        this.content   = content
+        this.pfp       = pfp
 
+        this.tag            = document.createElement("div");
+        this.tag.innerHTML  = `<div data-col1></div><div data-col2></div>`
+    }
+
+    autoGenerateFormat(){
+        console.log("autogenerating message format")
+        
+        this.setMsgHeaders()
+        this.setTextContent()
+    }
+
+    setMsgHeaders(){
+        const textHeader = document.createElement("div")
+        textHeader.innerHTML = `<div class="msgheader" unselectable="on">${this.username} | ${this.timestamp}</div>`
+        this.tag.querySelector("[data-col2]").prepend(textHeader)
+    }
+
+    setTextContent(){
+        const textContent = document.createElement("div")
+        textContent.innerHTML = `<div class="msgcontent" unselectable="on">${this.content}</div>`
+        this.tag.querySelector("[data-col2]").appendChild(textContent)
+    }
+}
 
 
 systemInit();

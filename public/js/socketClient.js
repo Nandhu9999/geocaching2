@@ -1,14 +1,17 @@
 import { io } from "https://cdn.socket.io/4.5.0/socket.io.esm.min.js"
 import { MEMBERS, updateSidebarContents, updateMembersContents } from "./sidebarscript.js";
 import { checkAuth, authObj } from "./authorization.js";
+import { appendMessage } from "./chatscript.js";
 
-const socketObj = {
+export const socketObj = {
   reconnects: 0,
   io: undefined
 }
 
 
 export function socketInit(){
+  console.log("socket init...")
+  socketObj.io = null
   const socket = io();
   socketObj.io = socket
 
@@ -17,7 +20,7 @@ export function socketInit(){
   socket.on("enter", userEntered)
   socket.on("exit", userExited)
 
-  socket.on("onmessage", onMessageReceived)  
+  socket.on("messageGlobal", onMessageReceived)  
 
   socket.on("disconnect", () => {
     console.log("SOCKETIO: ❌")
@@ -53,5 +56,5 @@ async function userExited({socketid}){
 }
 
 function onMessageReceived(data){
-  const {username, timestamp, content, pfp} = data
+  appendMessage(data)
 }
