@@ -171,7 +171,7 @@
         .mainfooter.hide{display:none;}
 
 
-        
+
         /* ############################ */
         /* OVERLAY CSS in seperate file */
         /* ############################ */
@@ -281,4 +281,34 @@
         }
 
     }
+}
+
+
+.usermessage{
+    display:grid;
+    grid-template-columns: 42px auto;
+    gap: 6px;
+    position: relative;
+    width: calc(100% - 10px);
+    margin-left:10px;
+    color: inherit;
+    
+    div[data-col1]{
+        img{
+            top:2px;
+            width:40px;
+            height:40px;
+            border-radius:50%;
+            position:absolute;
+            object-fit: cover;
+        }
+    }
+
+    div[data-col2]{
+
+    }
+}
+
+.usermessage.hasHeader{
+    margin-top:6px;
 }

@@ -16,3 +16,35 @@ export function randomUUID(n){
   }
   return result;
 }
+
+export function getTime(timestamp){
+  const time = new Date(timestamp)  
+  const hrs = time.getHours()%12 == 0 ? 12 : time.getHours()%12;
+  let mins = time.getMinutes();
+  mins = mins > 9 ? mins : "0" + mins;
+  const suffix = time.getHours() >= 12 ? " PM" : " AM";
+  return `${hrs}:${mins} ${suffix}`;
+}
+
+export function getTimePrefix(timestamp){
+  if(timestamp == 0){return ""}
+  
+  const time = new Date(timestamp);
+  const currenttime = Date.now();
+  let prefix = "";
+  if( currenttime - timestamp >  86400000 ){
+    prefix = "Yesterday at";
+    if( currenttime - timestamp >  86400000 * 2 ){
+      return time.getDate()+"/"+(time.getMonth()+1)+"/"+time.getFullYear(); 
+    }
+  }
+  else{
+    prefix = "Today at";
+  }
+  
+  const hrs = time.getHours()%12 == 0 ? 12 : time.getHours()%12;
+  let mins = time.getMinutes();
+  mins = mins > 9 ? mins : "0" + mins;
+  const suffix = time.getHours() >= 12 ? " PM" : " AM";
+  return `${prefix} ${hrs}:${mins} ${suffix}`; 
+}

@@ -36,7 +36,7 @@ async function userConnected(){
     console.log(`SOCKETIO: ✅ (${socketObj.reconnects} reconnects)`)
     socketObj.reconnects += 1;
     
-    socketObj.io.emit("join", "uid" + Date.now());
+    socketObj.io.emit("join", authObj.username);
     updateSidebarContents();
   }
 }

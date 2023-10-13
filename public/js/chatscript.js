@@ -1,5 +1,6 @@
+import { authObj } from "./authorization.js";
 import { socketObj } from "./socketClient.js"
-import { randomUUID } from "./utils.js"
+import { getTimePrefix, randomUUID } from "./utils.js"
 
 console.log("chatscript.js")
 
@@ -60,11 +61,12 @@ function sendClicked(){
     if(!textArea.innerText.trim()){return}
 
     const myMessage = {
-        username: "username",
-        messageid: `msgid${randomUUID(24)}`,
-        content: textArea.innerText,
-        timestamp: Date.now(),
-        pfp: ""
+        uid       : authObj.uid,
+        username  : authObj.account.username,
+        messageid : `msgid${randomUUID(12)}`,
+        content   : textArea.innerText,
+        timestamp : Date.now(),
+        pfp       : authObj.account.pfp
     }
 
     textArea.innerText = ""
@@ -80,35 +82,55 @@ export function appendMessage(data, opacity = 1){
     msg.autoGenerateFormat()
     msg.setOpacity(opacity)
 
-    document.querySelectorAll(".chatlogs").forEach((chatlog) => {
-        chatlog.appendChild(msg.tag)
-    })
+    document.querySelector(".chatlogs").appendChild(msg.tag)
+    // document.querySelector(".chatlogs2").appendChild(msg.tag)
 }
 
 export class MessageCreator{
+    static lastuid = "";
+    static sameUIDCount = 0;
 
-    constructor({username, messageid, timestamp, content, pfp}){
+    constructor({uid, username, messageid, timestamp, content, pfp}){
+        this.uid       = uid
         this.username  = username
         this.timestamp = timestamp
         this.content   = content
         this.pfp       = pfp
 
-        this.tag            = document.createElement("div");
-        this.tag.id         = messageid
-        this.tag.innerHTML  = `<div data-col1></div><div data-col2></div>`
+        this.tag               = document.createElement("div");
+        this.tag.id            = messageid
+        this.tag.classList     = "usermessage"
+        this.tag.oncontextmenu = "return false"
+        this.tag.innerHTML     = `<div data-col1></div><div data-col2></div>`
     }
 
     autoGenerateFormat(){
-        this.setMsgHeaders()
+        if(MessageCreator.lastuid != this.uid || MessageCreator.sameUIDCount > 5) {
+            this.setMsgHeaders()
+            this.tag.classList.add("hasHeader")
+            this.setUserPfp()
+            MessageCreator.sameUIDCount = 0
+        }else{
+            MessageCreator.sameUIDCount += 1
+        }
+
         this.setTextContent()
+
+        MessageCreator.lastuid = this.uid
     }
 
     setMsgHeaders(){
         const textHeader = document.createElement("div")
-        textHeader.innerHTML = `<div class="msgheader" unselectable="on">${this.username} | ${this.timestamp}</div>`
+        textHeader.innerHTML = `
+            <div class="msgheader" unselectable="on">${this.username} | ${getTimePrefix(this.timestamp)}</div>
+        `
         this.tag.querySelector("[data-col2]").prepend(textHeader)
     }
-
+    setUserPfp(){
+        const userPfp = document.createElement("img")
+        userPfp.src = this.pfp || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_v437iy1U9932C6L6Jzi8HBjgbzH4huC6rA&usqp=CAU"
+        this.tag.querySelector("[data-col1]").appendChild(userPfp)
+    }
     setTextContent(){
         const textContent = document.createElement("div")
         textContent.innerHTML = `<div class="msgcontent" unselectable="on">${this.content}</div>`

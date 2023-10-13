@@ -1,3 +1,8 @@
+import { authObj } from "./authorization.js";
+import { socketObj } from "./socketClient.js"
+import { appendMessage } from "./chatscript.js";
+import { randomUUID } from "./utils.js"
+
 console.log("frameState.js")
 
 export function defaultState(){
@@ -13,8 +18,9 @@ export function defaultState(){
 
 export function overlayState(){
     document.querySelector("main").dataset.state = "overlay"
-
+    
     document.querySelector(".overlayFrame").classList.remove("hide")
+    document.querySelector(".overlayChatWindow").classList.add("hide")
     
     document.querySelector(".mainheader").classList.add("hide")
     document.querySelector(".maincontent").classList.add("hide")
@@ -54,17 +60,49 @@ function setChatOverlay(open){
         document.querySelector(".chatButton").classList.add("hide")
         
         document.querySelector(".overlayChatWindow .overlayHeader .closeOchat")
-                .addEventListener("click", ()=>{
-                    setChatOverlay(false)
-                })
+                .addEventListener("click", ()=>{setChatOverlay(false)})
 
         document.querySelector(".overlayChatWindow .overlayHeader .expandOchat")
-                .addEventListener("click", ()=>{
-                    defaultState()
-                })
+                .addEventListener("click", ()=>{defaultState()})
+
+        
+        sendBtn.addEventListener("click", sendClicked)
+
+        function KEYDOWN(e){
+            if( e.code == "Enter" && e.shiftKey == false ){
+                sendClicked();
+                e.preventDefault();
+            }
+        }
+    
+        if( window.mobileAndTabletCheck ){textArea.addEventListener("keydown", KEYDOWN)}
+        else {textArea.addEventListener("keydown", KEYDOWN)}
+
     }
     else if(open == false){
         document.querySelector(".overlayChatWindow").classList.add("hide")
         document.querySelector(".chatButton").classList.remove("hide")
     }
+}
+
+const textArea = document.querySelector(".overlayChatWindow .textarea")
+const sendBtn = document.querySelector(".overlayChatWindow .send")
+
+function sendClicked(){
+    if(!textArea.innerText.trim()){return}
+
+    const myMessage = {
+        uid       : authObj.uid,
+        username  : authObj.account.username,
+        messageid : `msgid${randomUUID(12)}`,
+        content   : textArea.innerText,
+        timestamp : Date.now(),
+        pfp       : authObj.account.pfp
+    }
+
+    textArea.innerText = ""
+    textArea.focus()
+    
+    socketObj.io.emit("messageServer", myMessage)
+    appendMessage(myMessage, 0.5)
 }

@@ -48,7 +48,7 @@
         overflow-y:auto;
         overflow-x:hidden;
 
-        .chatlogs{
+        .chatlogs2{
             height: 100%;
             color: var(--color-text-main);
         }

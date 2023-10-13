@@ -1,11 +1,17 @@
 import { defaultState } from "./frameState.js"
 import { socketInit } from "./socketClient.js"
+import { randomUUID } from "./utils.js"
 
 // console.log("authorization.js")
 
 export const authObj = {
     verifying: false,
-    AUTHORIZED: false
+    AUTHORIZED: false,
+    uid: "",
+    account: {
+        username: "",
+        pfp:""
+    }
 }
 
 const authModal = $("#authModal")
@@ -30,7 +36,10 @@ export async function checkAuth(){
 
     if(response && response.status == "ok"){
         console.log("SESSIONS: ✅")
-        authObj.AUTHORIZED = true
+        authObj.AUTHORIZED       = true
+        const accountItem        = JSON.parse(window.localStorage.getItem("account"))
+        authObj.uid              = accountItem.uid
+        authObj.account.username = accountItem.username
         userActivate()
         return
     }
@@ -66,7 +75,10 @@ async function authenticateUser(e){
         }
     }
     
-    const response = await validateForm("",e.target[0].value)
+    const username = e.target[0].value
+    const password = e.target[1].value
+
+    const response = await validateForm(username, password)
     authForm.querySelector("button").innerText = "submit"
 
     if (!response){
@@ -80,6 +92,15 @@ async function authenticateUser(e){
     }
     else if(response.status == "ok"){
         authObj.AUTHORIZED = true
+        authObj.account.username = username
+
+        const accountItem = {
+            uid      : randomUUID(8),
+            username : username,
+            pfp      : ""
+        }
+
+        window.localStorage.setItem("account", JSON.stringify(accountItem))
         userActivate()
         authModal.close()
     }
