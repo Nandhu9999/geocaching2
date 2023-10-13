@@ -1,3 +1,5 @@
+import { defaultState, overlayState, setOverlayState } from "./frameState.js"
+
 // console.log("sidebarscript.js")
 
 export let CHANNELS = []
@@ -57,9 +59,14 @@ function updateChannelContents(){
     const listContainer = sidebarLeft.querySelector("ul");
     listContainer.innerHTML = ""
     
-    CHANNELS.forEach(content => {
+    console.log(CHANNELS)
+    CHANNELS.forEach(({label, exec}) => {
         const listItem = document.createElement("li")
-        listItem.innerText = content
+        listItem.innerText = label
+
+        const itemFunction = eval('(' + exec + ')');
+        listItem.onclick = ()=>{itemFunction()}
+
         listContainer.appendChild(listItem)
     })
 }

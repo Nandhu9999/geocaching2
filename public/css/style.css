@@ -35,7 +35,10 @@ html,body{
   left: 50%;
   translate: -50% -10%;
 
-  width: min(90%,400px);
+  width: 90%;
+  max-width: 400px;
+  /* width: min(90%, 400px); */
+  
   background: #484848;
   border: none;
   padding: 10px;

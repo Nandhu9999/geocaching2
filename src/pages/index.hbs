@@ -21,8 +21,9 @@
   <meta name="twitter:card" content="summary">
 
   <!-- Import the webpage's stylesheet -->
-  <link rel="stylesheet" href="/css/style0.css" />
-  <link rel="stylesheet" href="/css/chat0.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/chat.css" />
+  <link rel="stylesheet" href="/css/overlay.css" />
 
   <script>function $(x){return document.querySelector(x);}</script>
   <script type="module" src="/js/utils.js"></script>
@@ -30,6 +31,8 @@
   <script type="module" src="/js/chatscript.js"></script>
   <script type="module" src="/js/sidebarscript.js"></script>
   <script type="module" src="/js/socketClient.js"></script>
+
+  <script type="module" src="/js/frameState.js"></script>
 
 
 </head>
@@ -41,19 +44,19 @@
       <ul>
       </ul>
     </div>
-    <main>
-      <header>
+    <main data-state="default">
+      <header class="mainheader">
         <span class="menu" id="menuBtn">🍔</span>
         <span>header</span>
         <span class="users" id="usersBtn">👥</span>
       </header>
       
       <div class="maincontent">
-
+        <div class="mountContainer"></div>
         <div class="chatlogs"></div>
       </div>
 
-      <footer>
+      <footer class="mainfooter">
         <div class="chatindication">
           <span class="loadingCircles"></span>
           <span class="indicationLabel"></span>
@@ -75,6 +78,28 @@
 
         </div>
       </footer>
+
+      <div class="overlayFrame hide"></div>
+      <div class="overlayChatWindow hide">
+        <div class="overlayHeader">
+        <span class="expandOchat">🟦</span>
+        <span>header</span>
+        <span class="closeOchat">🇽</span>
+        </div>
+        <div class="overlayChatlogs"></div>
+        <div class="overlayFooter">
+
+          <div class="userinput">
+            
+            <div class="widget">😋</div>
+            <div class="textarea" contenteditable="true" spellcheck="false"></div>
+            <div class="send">🚀</div>
+
+          </div>
+
+        </div>
+      </div>
+
     </main>
     <div class="sidebarRight">
       <span class="title">Members</span>
@@ -84,6 +109,7 @@
 
       </div>
     </div>
+
   </div>
 
   <dialog id="authModal">

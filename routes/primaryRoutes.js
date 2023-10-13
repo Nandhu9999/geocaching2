@@ -50,8 +50,28 @@ async function authenticate(request, reply) {
     return reply.send({ status: "error" });
 };
 
+async function logout(request, reply){
+    if(request.session.isAuthenticated){
+        request.session.destroy();
+        return reply.redirect("/");
+    }else{
+        return reply.type("json").send({error:"user not found to logout"});
+    }
+}
+
 async function totalChannels(request, reply){
-    return reply.send(["aaa","bbb","ccc"])
+    // functions will be converted to string
+    // only will be executed in the client side
+    const home = function (){defaultState();}
+    const game = function (){overlayState();setOverlayState('embed','https://scratch.mit.edu/projects/904596842/embed')}
+    const   tv = function (){console.log("tv")}
+
+    const channels = [
+        {label: "home", exec: home.toString()},
+        {label: "game", exec: game.toString()},
+        {label: "t.v.", exec:   tv.toString()}
+    ]
+    return reply.send(channels)
 }
 
 async function totalMembers(request, reply){
@@ -63,6 +83,7 @@ async function totalMembers(request, reply){
 module.exports = {
     home,
     authenticate,
+    logout,
     authorizeRequest,
     checkAuthorized,
 

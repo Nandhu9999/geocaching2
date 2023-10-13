@@ -7,12 +7,16 @@
     flex-direction: row;
     background: #323232;
 
+    overflow:hidden;
+
     .sidebarLeft{
         width: var(--sidebarWidth);
         background: #242424;
         height: 100%;
+        
         flex-shrink: 0;
         flex-grow: 1;
+
         overflow:hidden;
         display: grid;
         padding-top:10px;
@@ -58,21 +62,26 @@
                 box-shadow: 0 2px 0px 2px black;
                 text-transform: uppercase;
                 line-height: 2rem;
+                cursor:pointer;
             }
         }
     }
-
+    main[data-state="default"]{
+        grid-template-rows: 2.5rem auto min-content;
+    }
+    main[data-state="overlay"]{
+        grid-template-rows: auto min-content;
+    }
     main{
         width: calc(100% - 2 * var(--sidebarWidth));
         height: 100%;
         display: grid;
         position: relative;
-        grid-template-rows: 2.5rem auto min-content;
 
         flex-grow: 1;
         flex-shrink: 1;
 
-        header{
+        .mainheader{
             color: white;
             display: grid; place-items: center;
             visibility: hidden;
@@ -84,6 +93,7 @@
                 cursor: pointer;
             }
         }
+        .mainheader.hide{display:none;}
 
         .maincontent{
             height: 100%;
@@ -95,8 +105,9 @@
                 color: var(--color-text-main);
             }
         }
+        .maincontent.hide{display:none}
 
-        footer{
+        .mainfooter{
             padding:10px;
             padding-top: 15px;
             padding-bottom: 15px;
@@ -106,7 +117,10 @@
                 background: #484848;
                 border-radius: 5px;
                 
+                /* width: 100%; */
+                /* max-width: 750px; */
                 width: min(100%, 750px);
+
                 margin-inline: auto;
                 display: grid;
                 grid-template-columns: 3rem auto 3rem;
@@ -154,12 +168,22 @@
             }
 
         }
+        .mainfooter.hide{display:none;}
+
+
+        
+        /* ############################ */
+        /* OVERLAY CSS in seperate file */
+        /* ############################ */
+
+
     }
 
     .sidebarRight{
         width: var(--sidebarWidth);
         background: #242424;
         height: 100%;
+
         flex-shrink: 0;
         flex-grow: 1;
         
@@ -240,10 +264,10 @@
         }
 
         .sidebarLeft.active{
-            --sidebarWidth: 100% !important;
+            --sidebarWidth: 65% !important;
         }
         .sidebarRight.active{
-            --sidebarWidth: 100% !important;
+            --sidebarWidth: 65% !important;
         }
 
         .sidebarLeft.active ~ main::after,

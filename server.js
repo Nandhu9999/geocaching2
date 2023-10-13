@@ -37,6 +37,7 @@ fastify.register(require("@fastify/session"), {
 const {
   home, 
   authenticate,
+  logout,
   authorizeRequest,
   checkAuthorized,
   totalChannels,
@@ -49,6 +50,7 @@ fastify.addHook("onRequest", authorizeRequest);
 
 // ROUTES
 fastify.get("/", home);
+fastify.get("/api/logout", logout);
 fastify.get("/api/authorize", checkAuthorized);
 
 fastify.get("/api/channels", totalChannels);

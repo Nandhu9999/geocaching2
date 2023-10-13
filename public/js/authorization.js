@@ -1,3 +1,4 @@
+import { defaultState } from "./frameState.js"
 import { socketInit } from "./socketClient.js"
 
 // console.log("authorization.js")
@@ -98,5 +99,6 @@ authForm.addEventListener("submit",authenticateUser)
 function userActivate(){
     if (authObj.AUTHORIZED){
         socketInit()
+        defaultState;
     }
 }

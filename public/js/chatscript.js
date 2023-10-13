@@ -8,7 +8,6 @@ function containerSize(){
     $("#container").style.height = `calc(100% - ${height}px)`;
 }
 
-
 const widgetOpts = $("#widget")
 const textArea = $("#textarea")
 const sendBtn = $("#send")
@@ -81,7 +80,9 @@ export function appendMessage(data, opacity = 1){
     msg.autoGenerateFormat()
     msg.setOpacity(opacity)
 
-    $(".chatlogs").appendChild(msg.tag)
+    document.querySelectorAll(".chatlogs").forEach((chatlog) => {
+        chatlog.appendChild(msg.tag)
+    })
 }
 
 export class MessageCreator{
