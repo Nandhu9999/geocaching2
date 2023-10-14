@@ -43,11 +43,17 @@
       <span class="title">Channels</span>
       <ul>
       </ul>
+      <div class="profile noSelect">
+        <div>
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_v437iy1U9932C6L6Jzi8HBjgbzH4huC6rA&usqp=CAU">
+          <div class="usernameDisplay">...</div>
+        </div>
+      </div>
     </div>
     <main data-state="default">
       <header class="mainheader noSelect">
         <span class="menu" id="menuBtn">🍔</span>
-        <span>header</span>
+        <span style="translate: 0 5px;">°°°</span>
         <span class="users" id="usersBtn">👥</span>
       </header>
       
@@ -108,9 +114,6 @@
       <span class="title">Members</span>
       <ul>
       </ul>
-      <div class="profile">
-
-      </div>
     </div>
 
   </div>
@@ -132,6 +135,31 @@
     </form>
   </dialog>
 
+  <dialog id="profileModal">
+    <h1>
+      Edit Profile
+      <span class="modalClose noSelect">🇽</span>
+    </h1>
+    <form>
+
+      <div>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_v437iy1U9932C6L6Jzi8HBjgbzH4huC6rA&usqp=CAU">
+        <h2>...</h2>
+      </div>
+
+      <label>
+        Username:
+        <input type="text" name="username">
+      </label>
+
+      <label>
+        Profile URL:
+        <input type="text" name="pfpurl">
+      </label>
+
+      <button>submit</button>
+    </form>
+  </dialog>
 
 
 </body>

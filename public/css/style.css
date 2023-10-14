@@ -91,6 +91,83 @@ html,body{
   background: rgba(0,0,0,0.5);
 }
 
+#profileModal{
+  z-index: 10;
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  translate: -50% -10%;
+
+  width: 90%;
+  max-width: 400px;
+  /* width: min(90%, 400px); */
+  
+  background: #484848;
+  border: none;
+  padding: 10px;
+  padding-bottom: 30px;
+  border-radius: 15px;
+
+  h1{
+    color: var(--color-text-main);
+    padding-left: 1em;
+    display: flex;
+    justify-content: space-between;
+    span{
+      cursor: pointer;
+    }
+  }
+  form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: var(--color-text-main);
+    width: 80%;
+    margin-inline: auto;
+    gap: 10px;
+    padding-top:10px;
+
+    div{
+      text-align: center;
+      img{
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        margin-inline: auto;
+        display:block;
+      }
+    }
+
+    label{
+      font-size: .8em;
+      line-height: 1.5em;
+    }
+    input{
+      display: block;
+      outline: none;
+      font-size: 1rem;
+      padding: .5em;
+      width: 100%;
+      color: white;
+      background: rgba(0,0,0,0.2);
+      outline:none;
+      border:none;
+      border-radius:5px;
+    }
+
+
+    button{
+      font-size: 1rem;
+      padding: 5px;
+      margin-top:20px;
+    }
+  }
+
+}
+#profileModal::backdrop {
+  background: rgba(0,0,0,0.5);
+}
+
 
 
 

@@ -5,6 +5,8 @@ window.mobileAndTabletCheck = function() {
     return check;
   };
 
+export const tempPfp = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_v437iy1U9932C6L6Jzi8HBjgbzH4huC6rA&usqp=CAU"
+
 export function randomUUID(n){
   let result = '';
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

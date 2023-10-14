@@ -1,6 +1,8 @@
+import { updateUserDOMElements } from "./chatscript.js"
 import { defaultState } from "./frameState.js"
 import { socketInit } from "./socketClient.js"
 import { randomUUID } from "./utils.js"
+
 
 // console.log("authorization.js")
 
@@ -40,6 +42,7 @@ export async function checkAuth(){
         const accountItem        = JSON.parse(window.localStorage.getItem("account"))
         authObj.uid              = accountItem.uid
         authObj.account.username = accountItem.username
+        authObj.account.pfp      = accountItem.pfp
         userActivate()
         return
     }
@@ -120,6 +123,7 @@ authForm.addEventListener("submit",authenticateUser)
 function userActivate(){
     if (authObj.AUTHORIZED){
         socketInit()
-        defaultState;
+        defaultState();
+        updateUserDOMElements();
     }
 }

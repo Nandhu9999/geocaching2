@@ -11,6 +11,7 @@
 
     .sidebarLeft{
         width: var(--sidebarWidth);
+        --profileHeight: 4rem;
         background: #242424;
         height: 100%;
         
@@ -20,7 +21,8 @@
         overflow:hidden;
         display: grid;
         padding-top:10px;
-        grid-template-rows: 3rem auto;
+        padding-bottom:5px;
+        grid-template-rows: 2.5rem auto var(--profileHeight);
         gap: 20px;
         justify-items: center;
         transition: all 0.2s;
@@ -30,7 +32,7 @@
             font-size: 1.2rem;
             width: 90%;
             height: 100%;
-            box-shadow: 0 0 2px 1.5px rgba(255,255,255,0.5);
+            box-shadow: 0 0 2px 1px rgba(255,255,255,0.5);
             display: block;
             border-radius: 10px;
             display:grid;
@@ -69,14 +71,48 @@
                 box-shadow: 0px 0px 0px 1px black;
             }
         }
+
+        .profile:active{background:rgba(0,0,0,.25);}
+        .profile{
+            width: calc(100% - 10px);
+            height: 100%;
+            padding: 10px;
+            padding-right: 20px;
+            cursor: pointer;
+
+            div{
+                display:grid;
+                width:100%;
+                height:100%;
+                grid-template-columns: calc(var(--profileHeight) - 20px) auto;
+                align-content: center;
+
+                img{
+                    width: 40px;
+                    height:40px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    background-position: 50% 50%;
+                }
+
+                div{
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    margin-right: 10px;
+                    color: var(--color-text-main);
+                }
+            }
+        }
     }
     main[data-state="default"]{
-        grid-template-rows: 2.5rem auto min-content;
+        grid-template-rows: var(--headerHeight) auto min-content;
     }
     main[data-state="overlay"]{
         grid-template-rows: auto min-content;
     }
     main{
+        --headerHeight: 2.5rem;
         width: calc(100% - 2 * var(--sidebarWidth));
         height: 100%;
         display: grid;
@@ -89,7 +125,7 @@
             color: white;
             display: grid; place-items: center;
             visibility: hidden;
-            grid-template-columns: min-content auto min-content;
+            grid-template-columns: minmax(min-content,var(--headerHeight)) auto minmax(min-content,var(--headerHeight));
             padding-inline: 10px;
             box-shadow: 0px 0px 1px 1px rgba(108, 108, 108, 0.3);
 
@@ -118,7 +154,7 @@
                 
                 /* width: 100%; */
                 /* max-width: 750px; */
-                width: min(100%, 750px);
+                /* width: min(100%, 750px); */
 
                 margin-inline: auto;
                 display: grid;
@@ -189,7 +225,7 @@
         overflow:hidden;
         display: grid;
         padding-top:10px;
-        grid-template-rows: 3rem auto 200px;
+        grid-template-rows: 2.5rem auto;
         gap: 20px;
         justify-items: center;
         transition: all 0.2s;
@@ -199,7 +235,7 @@
             font-size: 1.2rem;
             width: 90%;
             height: 100%;
-            box-shadow: 0 0 1px 1px rgba(255,255,255,0.5);
+            box-shadow: 0 0 2px 1px rgba(255,255,255,0.5);
             display: block;
             border-radius: 10px;
             display:grid;
@@ -217,6 +253,8 @@
             padding: 10px;
 
             li{
+                --bg-image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_v437iy1U9932C6L6Jzi8HBjgbzH4huC6rA&usqp=CAU";
+
                 position: relative;
                 list-style-type: none;
                 font-size: 1rem;
@@ -243,13 +281,6 @@
                 top: 50%; transform: translate(0, -50%);
                 left: 10px;
             }
-        }
-
-        .profile{
-            width: 100%;
-            /* height: 100%; */
-            aspect-ratio: 1 / 1;
-            background: black;
         }
     }
 
@@ -295,6 +326,7 @@
     width: calc(100% - 10px);
     margin-left:10px;
     color: inherit;
+    font-size: 0.9rem;
     
     div[data-col1]{
         img{

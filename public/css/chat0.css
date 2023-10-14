@@ -8,6 +8,7 @@
 }
 #container .sidebarLeft {
   width: var(--sidebarWidth);
+  --profileHeight: 4rem;
   background: #242424;
   height: 100%;
   flex-shrink: 0;
@@ -15,7 +16,8 @@
   overflow: hidden;
   display: grid;
   padding-top: 10px;
-  grid-template-rows: 3rem auto;
+  padding-bottom: 5px;
+  grid-template-rows: 2.5rem auto var(--profileHeight);
   gap: 20px;
   justify-items: center;
   transition: all 0.2s;
@@ -24,7 +26,7 @@
   font-size: 1.2rem;
   width: 90%;
   height: 100%;
-  box-shadow: 0 0 2px 1.5px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 2px 1px rgba(255, 255, 255, 0.5);
   display: block;
   border-radius: 10px;
   display: grid;
@@ -57,26 +59,65 @@
   line-height: 2rem;
   cursor: pointer;
 }
+#container .sidebarLeft ul li:active {
+  translate: 0px 2px;
+  box-shadow: 0px 0px 0px 1px black;
+}
+#container .sidebarLeft .profile:active {
+  background: rgba(0, 0, 0, .25);
+}
+#container .sidebarLeft .profile {
+  width: calc(100% - 10px);
+  height: 100%;
+  padding: 10px;
+  padding-right: 20px;
+  cursor: pointer;
+}
+#container .sidebarLeft .profile div {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: calc(var(--profileHeight) - 20px) auto;
+  align-content: center;
+}
+#container .sidebarLeft .profile div img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-position: 50% 50%;
+}
+#container .sidebarLeft .profile div div {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-right: 10px;
+  color: var(--color-text-main);
+}
 #container main[data-state="default"] {
-  grid-template-rows: 2.5rem auto min-content;
+  grid-template-rows: var(--headerHeight) auto min-content;
 }
 #container main[data-state="overlay"] {
   grid-template-rows: auto min-content;
 }
 #container main {
+  --headerHeight: 2.5rem;
   width: calc(100% - 2 * var(--sidebarWidth));
   height: 100%;
   display: grid;
   position: relative;
   flex-grow: 1;
   flex-shrink: 1;
+ /* ############################ */
+ /* OVERLAY CSS in seperate file */
+ /* ############################ */
 }
 #container main .mainheader {
   color: white;
   display: grid;
   place-items: center;
   visibility: hidden;
-  grid-template-columns: min-content auto min-content;
+  grid-template-columns: minmax(min-content, var(--headerHeight)) auto minmax(min-content, var(--headerHeight));
   padding-inline: 10px;
   box-shadow: 0px 0px 1px 1px rgba(108, 108, 108, 0.3);
 }
@@ -91,10 +132,6 @@
   overflow-y: auto;
   overflow-x: hidden;
 }
-#container main .maincontent .chatlogs {
-  height: 100%;
-  color: var(--color-text-main);
-}
 #container main .maincontent.hide {
   display: none;
 }
@@ -107,9 +144,12 @@
   box-shadow: 0px 0px 5px 4px rgba(0, 0, 0, 0.1);
   background: #484848;
   border-radius: 5px;
-  /* width: 100%; */
-  /* max-width: 750px; */
-  width: min(100%, 750px);
+ /* width: 100%;
+  */
+ /* max-width: 750px;
+  */
+ width: min(100%, 750px);
+ 
   margin-inline: auto;
   display: grid;
   grid-template-columns: 3rem auto 3rem;
@@ -154,9 +194,6 @@
 }
 #container main .mainfooter.hide {
   display: none;
-  /* ############################ */
-  /* OVERLAY CSS in seperate file */
-  /* ############################ */
 }
 #container .sidebarRight {
   width: var(--sidebarWidth);
@@ -167,7 +204,7 @@
   overflow: hidden;
   display: grid;
   padding-top: 10px;
-  grid-template-rows: 3rem auto 200px;
+  grid-template-rows: 2.5rem auto;
   gap: 20px;
   justify-items: center;
   transition: all 0.2s;
@@ -176,7 +213,7 @@
   font-size: 1.2rem;
   width: 90%;
   height: 100%;
-  box-shadow: 0 0 1px 1px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 2px 1px rgba(255, 255, 255, 0.5);
   display: block;
   border-radius: 10px;
   display: grid;
@@ -193,6 +230,7 @@
   padding: 10px;
 }
 #container .sidebarRight ul li {
+  --bg-image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_v437iy1U9932C6L6Jzi8HBjgbzH4huC6rA&usqp=CAU";
   position: relative;
   list-style-type: none;
   font-size: 1rem;
@@ -220,25 +258,19 @@
   transform: translate(0, -50%);
   left: 10px;
 }
-#container .sidebarRight .profile {
-  width: 100%;
-  /* height: 100%; */
-  aspect-ratio: 1;
-  background: black;
-}
 @media only screen and (max-width: 750px) {
   #container {
     --sidebarWidth: 0px;
-  }
+ }
   #container header {
     visibility: visible !important;
-  }
+ }
   #container .sidebarLeft.active {
     --sidebarWidth: 65% !important;
-  }
+ }
   #container .sidebarRight.active {
     --sidebarWidth: 65% !important;
-  }
+ }
   #container .sidebarLeft.active ~ main::after, #container .sidebarLeft.leftSidebarActive ~ main::after {
     content: " ";
     position: absolute;
@@ -247,5 +279,38 @@
     top: 0;
     left: 0;
     background: rgba(0, 0, 0, 0.5);
-  }
+ }
+}
+#chatlogs {
+ /* height: 100%;
+  */
+  color: var(--color-text-main);
+}
+.usermessage {
+  display: grid;
+  grid-template-columns: 42px auto;
+  gap: 6px;
+  position: relative;
+  width: calc(100% - 10px);
+  margin-left: 10px;
+  color: inherit;
+  font-size: 0.9rem;
+}
+.usermessage div[data-col1] img {
+  top: 2px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  position: absolute;
+  object-fit: cover;
+}
+.usermessage div[data-col2] [data-username] {
+  font-weight: 600;
+}
+.usermessage div[data-col2] [data-timestamp] {
+  font-size: 0.8em;
+  line-height: 1.2rem;
+}
+.usermessage.hasHeader {
+  margin-top: 6px;
 }

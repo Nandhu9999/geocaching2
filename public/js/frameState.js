@@ -3,7 +3,7 @@ import { socketObj } from "./socketClient.js"
 import { appendMessage } from "./chatscript.js";
 import { randomUUID } from "./utils.js"
 
-console.log("frameState.js")
+// console.log("frameState.js")
 
 export function defaultState(){
     document.querySelector("main").dataset.state = "default"

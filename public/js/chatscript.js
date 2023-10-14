@@ -1,8 +1,8 @@
 import { authObj } from "./authorization.js";
 import { socketObj } from "./socketClient.js"
-import { getTimePrefix, randomUUID } from "./utils.js"
+import { getTimePrefix, randomUUID, tempPfp } from "./utils.js"
 
-console.log("chatscript.js")
+// console.log("chatscript.js")
 
 function containerSize(){
     const { x, y, width, height } = navigator.virtualKeyboard.boundingRect;
@@ -102,9 +102,12 @@ export function appendVerifiedMessage(messageid){
 }
 
 export class MessageCreator{
-    static lastuid = "";
+    static lastMsg = {
+        uid: "",
+        username:"",
+        timestamp: 0
+    };
     static sameUIDCount = 0;
-
     constructor({uid, username, messageid, timestamp, content, pfp}){
         this.uid       = uid
         this.username  = username
@@ -120,7 +123,12 @@ export class MessageCreator{
     }
 
     autoGenerateFormat(){
-        if(MessageCreator.lastuid != this.uid || MessageCreator.sameUIDCount > 5) {
+        // show msg header if UID is new OR more than 5 messages from same uid OR been more than 5 mins from same uid
+        if(   MessageCreator.lastMsg.uid != this.uid 
+            || MessageCreator.sameUIDCount > 5 
+            || Date.now() - MessageCreator.lastMsg.timestamp > 1000 * 60 * 5
+            || MessageCreator.lastMsg.username != this.username
+        ) {
             this.setMsgHeaders()
             this.setUserPfp()
             this.tag.classList.add("hasHeader")
@@ -130,7 +138,9 @@ export class MessageCreator{
         }
 
         this.setTextContent()
-        MessageCreator.lastuid = this.uid
+        MessageCreator.lastMsg.uid       = this.uid
+        MessageCreator.lastMsg.username  = this.username
+        MessageCreator.lastMsg.timestamp = this.timestamp
     }
 
     setMsgHeaders(){
@@ -144,7 +154,7 @@ export class MessageCreator{
     }
     setUserPfp(){
         const userPfp = document.createElement("img")
-        userPfp.src = this.pfp || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_v437iy1U9932C6L6Jzi8HBjgbzH4huC6rA&usqp=CAU"
+        userPfp.src = this.pfp || tempPfp
         this.tag.querySelector("[data-col1]").appendChild(userPfp)
     }
     setTextContent(){
@@ -158,5 +168,21 @@ export class MessageCreator{
     }
 }
 
+export function updateUser(username, pfp){
+    if ( username ) {authObj.account.username = username}
+    if (      pfp ) {authObj.account.pfp      = pfp}
+
+    const accountItem        = JSON.parse(window.localStorage.getItem("account"))
+    accountItem.username     = authObj.account.username
+    accountItem.pfp          = authObj.account.pfp
+
+    window.localStorage.setItem("account", JSON.stringify(accountItem))
+    updateUserDOMElements();
+}
+
+export function updateUserDOMElements(){
+    $(".sidebarLeft .profile img").src = authObj.account.pfp
+    $(".sidebarLeft .profile .usernameDisplay").innerText = authObj.account.username
+}
 
 systemInit();
