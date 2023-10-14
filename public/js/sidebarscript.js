@@ -63,7 +63,7 @@ function updateChannelContents(){
     CHANNELS.forEach(({label, exec}) => {
         const listItem = document.createElement("li")
         listItem.innerText = label
-
+        listItem.classList = "noSelect"
         const itemFunction = eval('(' + exec + ')');
         listItem.onclick = ()=>{itemFunction()}
 
@@ -78,6 +78,7 @@ export function updateMembersContents(){
     MEMBERS.forEach(({socketid, username}) => {
         const listItem = document.createElement("li")
         listItem.innerHTML = `${socketid}`
+        listItem.classList = "noSelect"
         listContainer.appendChild(listItem)
     })
 }

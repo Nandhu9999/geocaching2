@@ -92,13 +92,13 @@ async function authenticateUser(e){
     }
     else if(response.status == "ok"){
         authObj.AUTHORIZED = true
-        authObj.account.username = username
-
         const accountItem = {
             uid      : randomUUID(8),
             username : username,
             pfp      : ""
         }
+        authObj.account.username = username
+        authObj.uid = accountItem.uid
 
         window.localStorage.setItem("account", JSON.stringify(accountItem))
         userActivate()

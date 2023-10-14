@@ -45,7 +45,7 @@
       </ul>
     </div>
     <main data-state="default">
-      <header class="mainheader">
+      <header class="mainheader noSelect">
         <span class="menu" id="menuBtn">🍔</span>
         <span>header</span>
         <span class="users" id="usersBtn">👥</span>
@@ -53,7 +53,7 @@
       
       <div class="maincontent">
         <div class="mountContainer"></div>
-        <div class="chatlogs"></div>
+        <div id="chatlogs"></div>
       </div>
 
       <footer class="mainfooter">
@@ -63,7 +63,7 @@
         </div>
         <div class="userinput">
           
-          <div id="widget" class="">
+          <div id="widget" class="noSelect">
             😋
             <dialog class="widgetDialog">
               <div>🚀</div>
@@ -74,7 +74,7 @@
 
           <div id="textarea" contenteditable="true" spellcheck="false"></div>
           
-          <div id="send">🚀</div>
+          <div id="send" class="noSelect">🚀</div>
 
         </div>
       </footer>
@@ -88,16 +88,15 @@
         </div>
         
         <div class="overlayChatlogs">
-          <div class="chatlogs2"></div>
         </div>
         
         <div class="overlayFooter">
 
           <div class="userinput">
             
-            <div class="widget">😋</div>
+            <div class="widget" class="noSelect">😋</div>
             <div class="textarea" contenteditable="true" spellcheck="false"></div>
-            <div class="send">🚀</div>
+            <div class="send" class="noSelect">🚀</div>
 
           </div>
 

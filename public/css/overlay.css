@@ -47,12 +47,8 @@
         width: 100%;
         overflow-y:auto;
         overflow-x:hidden;
-
-        .chatlogs2{
-            height: 100%;
-            color: var(--color-text-main);
-        }
         
+        /* chatlogs element shared */
     }
 
     .overlayFooter{

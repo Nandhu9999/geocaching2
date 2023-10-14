@@ -64,6 +64,10 @@
                 line-height: 2rem;
                 cursor:pointer;
             }
+            li:active{
+                translate: 0px 2px;
+                box-shadow: 0px 0px 0px 1px black;
+            }
         }
     }
     main[data-state="default"]{
@@ -99,11 +103,6 @@
             height: 100%;
             overflow-y:auto;
             overflow-x:hidden;
-
-            .chatlogs{
-                height: 100%;
-                color: var(--color-text-main);
-            }
         }
         .maincontent.hide{display:none}
 
@@ -283,6 +282,10 @@
     }
 }
 
+#chatlogs{
+    /* height: 100%; */
+    color: var(--color-text-main);
+}
 
 .usermessage{
     display:grid;
@@ -305,7 +308,13 @@
     }
 
     div[data-col2]{
-
+        [data-username]{
+            font-weight: 600;
+        }
+        [data-timestamp]{
+            font-size: 0.8em;
+            line-height: 1.2rem;
+        }
     }
 }
 

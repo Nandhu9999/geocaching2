@@ -12,6 +12,7 @@ function containerSize(){
 const widgetOpts = $("#widget")
 const textArea = $("#textarea")
 const sendBtn = $("#send")
+let lastTypedTimestamp = 0;
 
 function systemInit(){
     if ("virtualKeyboard" in navigator) {
@@ -21,6 +22,7 @@ function systemInit(){
 
     widgetOpts.addEventListener("click", widgetClicked)
     textArea.addEventListener("click", textareaClicked)
+    textArea.addEventListener("input", isTyping)
     sendBtn.addEventListener("click", sendClicked)
 
     function KEYDOWN(e){
@@ -76,14 +78,27 @@ function sendClicked(){
     appendMessage(myMessage, 0.5)
 }
 
+function isTyping(){
+    const currTimestamp = Date.now()
+    if(currTimestamp - lastTypedTimestamp < 5000 || !textArea.innerText.trim())
+        {return}
+    
+    lastTypedTimestamp = currTimestamp;
+    // update server with it
+    socketObj.io.emit("isTyping", "")
+}
+
 export function appendMessage(data, opacity = 1){
     const msg = new MessageCreator(data)
 
     msg.autoGenerateFormat()
     msg.setOpacity(opacity)
 
-    document.querySelector(".chatlogs").appendChild(msg.tag)
-    // document.querySelector(".chatlogs2").appendChild(msg.tag)
+    document.querySelector("#chatlogs").appendChild(msg.tag)
+}
+export function appendVerifiedMessage(messageid){
+    const message = $("#chatlogs").querySelector("#" + messageid)
+    if (message) {message.style.opacity = 1}
 }
 
 export class MessageCreator{
@@ -107,24 +122,25 @@ export class MessageCreator{
     autoGenerateFormat(){
         if(MessageCreator.lastuid != this.uid || MessageCreator.sameUIDCount > 5) {
             this.setMsgHeaders()
-            this.tag.classList.add("hasHeader")
             this.setUserPfp()
+            this.tag.classList.add("hasHeader")
             MessageCreator.sameUIDCount = 0
         }else{
             MessageCreator.sameUIDCount += 1
         }
 
         this.setTextContent()
-
         MessageCreator.lastuid = this.uid
     }
 
     setMsgHeaders(){
-        const textHeader = document.createElement("div")
-        textHeader.innerHTML = `
-            <div class="msgheader" unselectable="on">${this.username} | ${getTimePrefix(this.timestamp)}</div>
-        `
-        this.tag.querySelector("[data-col2]").prepend(textHeader)
+        const msgHeader = document.createElement("div")
+        msgHeader.innerHTML = `
+            <div class="msgheader" unselectable="on">
+                <span data-username>${this.username}</span>
+                <span data-timestamp>${getTimePrefix(this.timestamp)}</span>
+            </div>`
+        this.tag.querySelector("[data-col2]").prepend(msgHeader)
     }
     setUserPfp(){
         const userPfp = document.createElement("img")

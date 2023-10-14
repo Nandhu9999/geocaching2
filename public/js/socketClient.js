@@ -1,7 +1,7 @@
 import { io } from "https://cdn.socket.io/4.5.0/socket.io.esm.min.js"
 import { MEMBERS, updateSidebarContents, updateMembersContents } from "./sidebarscript.js";
 import { checkAuth, authObj } from "./authorization.js";
-import { appendMessage } from "./chatscript.js";
+import { appendMessage, appendVerifiedMessage } from "./chatscript.js";
 
 export const socketObj = {
   reconnects: 0,
@@ -36,7 +36,7 @@ async function userConnected(){
     console.log(`SOCKETIO: ✅ (${socketObj.reconnects} reconnects)`)
     socketObj.reconnects += 1;
     
-    socketObj.io.emit("join", authObj.username);
+    socketObj.io.emit("join", authObj.account.username);
     updateSidebarContents();
   }
 }
@@ -59,9 +59,5 @@ function onMessageReceived(data){
 }
 
 function messageVerified({messageid}){
-  const message = $(".chatlogs").querySelector("#" + messageid)
-
-  if (message) {
-    message.style.opacity = 1
-  }
+  appendVerifiedMessage(messageid)
 }

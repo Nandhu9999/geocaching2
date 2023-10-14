@@ -14,6 +14,9 @@ export function defaultState(){
     
     document.querySelector(".overlayFrame").classList.add("hide")
     document.querySelector(".overlayChatWindow").classList.add("hide")
+
+    // move chatlogs to default chat space
+    $(".maincontent").appendChild(document.getElementById("chatlogs"));
 }
 
 export function overlayState(){
@@ -26,6 +29,8 @@ export function overlayState(){
     document.querySelector(".maincontent").classList.add("hide")
     document.querySelector(".mainfooter").classList.add("hide")
 
+    // move chatlogs to overlay chat window
+    $(".overlayChatlogs").append(document.getElementById("chatlogs"));
 }
 
 export function setOverlayState(type, link){
@@ -65,19 +70,16 @@ function setChatOverlay(open){
         document.querySelector(".overlayChatWindow .overlayHeader .expandOchat")
                 .addEventListener("click", ()=>{defaultState()})
 
-        
+        // ################################################
         sendBtn.addEventListener("click", sendClicked)
-
         function KEYDOWN(e){
             if( e.code == "Enter" && e.shiftKey == false ){
-                sendClicked();
-                e.preventDefault();
+                sendClicked();e.preventDefault();
             }
         }
-    
         if( window.mobileAndTabletCheck ){textArea.addEventListener("keydown", KEYDOWN)}
         else {textArea.addEventListener("keydown", KEYDOWN)}
-
+        // ################################################
     }
     else if(open == false){
         document.querySelector(".overlayChatWindow").classList.add("hide")
