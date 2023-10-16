@@ -21,9 +21,13 @@
   <meta name="twitter:card" content="summary">
 
   <!-- Import the webpage's stylesheet -->
-  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/style0.css" />
+  <link rel="stylesheet" href="/css/chat0.css" />
+  <link rel="stylesheet" href="/css/overlay0.css" />
+
+  {{!-- <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/chat.css" />
-  <link rel="stylesheet" href="/css/overlay.css" />
+  <link rel="stylesheet" href="/css/overlay.css" /> --}}
 
   <script>function $(x){return document.querySelector(x);}</script>
   <script type="module" src="/js/utils.js"></script>
@@ -33,6 +37,7 @@
   <script type="module" src="/js/socketClient.js"></script>
 
   <script type="module" src="/js/frameState.js"></script>
+  <script type="module" src="/js/globalscript.js"></script>
 
 
 </head>
@@ -40,7 +45,7 @@
 <body>
   <div id="container">
     <div class="sidebarLeft">
-      <span class="title">Channels</span>
+      <span class="title noSelect">Channels</span>
       <ul>
       </ul>
       <div class="profile noSelect">
@@ -59,7 +64,8 @@
       
       <div class="maincontent">
         <div class="mountContainer"></div>
-        <div id="chatlogs"></div>
+        <div id="chatlogs">
+        </div>
       </div>
 
       <footer class="mainfooter">
@@ -75,6 +81,7 @@
               <div>🚀</div>
               <div>🔦</div>
               <div>📸</div>
+              <button id="devCheck">DEV</button>
             </dialog>
           </div>
 
@@ -88,9 +95,9 @@
       <div class="overlayFrame hide"></div>
       <div class="overlayChatWindow hide">
         <div class="overlayHeader">
-        <span class="expandOchat">🟦</span>
+        <span class="expandOchannels noSelect">🍔</span>
         <span>header</span>
-        <span class="closeOchat">🇽</span>
+        <span class="expandOmembers noSelect">👥</span>
         </div>
         
         <div class="overlayChatlogs">
@@ -100,7 +107,7 @@
 
           <div class="userinput">
             
-            <div class="widget" class="noSelect">😋</div>
+            <div class="closechat" class="noSelect"><span class="closechatWrapper">🇽</span></div>
             <div class="textarea" contenteditable="true" spellcheck="false"></div>
             <div class="send" class="noSelect">🚀</div>
 
@@ -111,19 +118,20 @@
 
     </main>
     <div class="sidebarRight">
-      <span class="title">Members</span>
+      <span class="title noSelect">Members</span>
       <ul>
       </ul>
+
     </div>
 
   </div>
 
   <dialog id="authModal">
     <h1>Login</h1>
-    <form>
+    <form spellcheck="off">
       <label>
         Username:
-        <input type="text" name="username">
+        <input type="text" name="username" autocomplete="off">
       </label>
 
       <label>
@@ -149,19 +157,21 @@
 
       <label>
         Username:
-        <input type="text" name="username">
+        <input type="text" name="username" autocomplete="off">
       </label>
 
       <label>
         Profile URL:
-        <input type="text" name="pfpurl">
+        <input type="text" name="pfpurl" autocomplete="off">
       </label>
 
       <button>submit</button>
     </form>
   </dialog>
 
-
+  <div id="loaderContainer">
+    <div class="loader"></div>
+  </div>
 </body>
 
 </html>

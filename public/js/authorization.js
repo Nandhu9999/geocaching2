@@ -1,7 +1,8 @@
-import { updateUserDOMElements } from "./chatscript.js"
-import { defaultState } from "./frameState.js"
+import { loadChatMessages } from "./chatscript.js"
+import { defaultState, updateUserDOMElements } from "./frameState.js"
+import { updateSidebarContents } from "./sidebarscript.js"
 import { socketInit } from "./socketClient.js"
-import { randomUUID } from "./utils.js"
+import { isValidImage, randomUUID, tempPfp } from "./utils.js"
 
 
 // console.log("authorization.js")
@@ -10,6 +11,7 @@ export const authObj = {
     verifying: false,
     AUTHORIZED: false,
     uid: "",
+    sid: "",
     account: {
         username: "",
         pfp:""
@@ -19,8 +21,27 @@ export const authObj = {
 const authModal = $("#authModal")
 const authForm = $("#authModal form")
 
-export async function checkAuth(){
+function showAuthModal(){
+    const accountItem = window.localStorage.getItem("account")
+    authModal.showModal()
+    if( accountItem ){
+        authForm.querySelector("input[name=username]").value = JSON.parse(accountItem).username
+        authForm.querySelector("input[name=password]").focus()
+    } else {
+        authForm.querySelector("input[name=username]").focus()
+    }
+}
+
+/*
+ * CHECK AUTHENTICATION
+ * verifies if user session details is
+ * upto date
+ * if session exists, then set authObj
+ * details for easier use between services  
+ */
+export async function updateAuth(){
     if (authObj.verifying) return
+    authObj.verifying = true
 
     async function validateSessions(){
         try{
@@ -32,7 +53,6 @@ export async function checkAuth(){
         }
     }
     
-    authObj.verifying = true
     const response = await validateSessions();
     authObj.verifying = false
 
@@ -43,14 +63,26 @@ export async function checkAuth(){
         authObj.uid              = accountItem.uid
         authObj.account.username = accountItem.username
         authObj.account.pfp      = accountItem.pfp
+        if(!isValidImage(authObj.account.pfp)){
+            authObj.account.pfp = tempPfp
+        }
         userActivate()
         return
     }
-
+    
     authObj.AUTHORIZED = false
-    authModal.showModal()
+    showAuthModal()
 }
 
+/*
+ * AUTHENTICATE USER
+ * fill user details to authenticate
+ * them, user form needs to be filled
+ * with username and passcode.
+ * 
+ * if user session exists, set username
+ * input tag to previous username
+ */
 async function authenticateUser(e){
     e.preventDefault();
     authForm.querySelector("button").innerText = "loading.."
@@ -95,10 +127,19 @@ async function authenticateUser(e){
     }
     else if(response.status == "ok"){
         authObj.AUTHORIZED = true
-        const accountItem = {
+
+        let previousPfp = ""
+        let accountItem = window.localStorage.getItem("account")
+        if(accountItem){
+            previousPfp = JSON.parse(accountItem).pfp
+        }
+        if(!isValidImage(previousPfp)){
+            previousPfp = tempPfp
+        }
+        accountItem = {
             uid      : randomUUID(8),
             username : username,
-            pfp      : ""
+            pfp      : previousPfp
         }
         authObj.account.username = username
         authObj.uid = accountItem.uid
@@ -112,11 +153,11 @@ async function authenticateUser(e){
 function forceClose(e){
     if (!authObj.AUTHORIZED){
         e.preventDefault();
-        authModal.showModal()
+        showAuthModal()
     }
 }
 
-if (authObj.AUTHORIZED == false) checkAuth()
+if (authObj.AUTHORIZED == false) updateAuth()
 authModal.addEventListener("close", forceClose)
 authForm.addEventListener("submit",authenticateUser)
 
@@ -124,6 +165,8 @@ function userActivate(){
     if (authObj.AUTHORIZED){
         socketInit()
         defaultState();
-        updateUserDOMElements();
+        updateSidebarContents();
+        loadChatMessages();
+        updateUserDOMElements(); //
     }
 }

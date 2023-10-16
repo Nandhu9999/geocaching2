@@ -6,8 +6,7 @@ function socketConnection(socket){
   console.info('🟢 socket    connected:', socket.id.slice(0, 5));
 
   socket.on("join", async(username)=>{
-    db.addMember(socket.id, username)
-
+    await db.addMember(socket.id, username)
     const userObj = {socketid: socket.id, username: username, lastTyped: 0}
 
     socket.broadcast.emit("enter", userObj);
@@ -15,9 +14,9 @@ function socketConnection(socket){
   })
 
   socket.on("disconnect", async(data) => {
-    console.log("🔴 socket disconnected:", socket.id.slice(0, 5));
+    console.log("⚫ socket disconnected:", socket.id.slice(0, 5));
     await db.deleteMember(socket.id)
-    
+
     const idx = connections.findIndex((x) => x.socketid == socket.id )
     const userObj = connections[idx]
     
@@ -25,7 +24,6 @@ function socketConnection(socket){
     connections.pop(idx)
     
   })
-  
   
   socket.on("messageServer", async(data)=>{
     console.log("💬 received message:",socket.id.slice(0, 5));

@@ -50,3 +50,23 @@ export function getTimePrefix(timestamp){
   const suffix = time.getHours() >= 12 ? " PM" : " AM";
   return `${prefix} ${hrs}:${mins} ${suffix}`; 
 }
+
+export async function showLoader(){
+  $("#loaderContainer").classList.add("active")
+}
+export function closeLoader(){
+  $("#loaderContainer").classList.remove("active")
+}
+
+$("#devCheck").addEventListener("click", ()=>{
+  console.log("dev checking..");
+})
+
+
+export function isValidImage(url) {
+  return /^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(url);
+}
+export function isValidName(name){
+  if (!name) return false
+  return true
+}

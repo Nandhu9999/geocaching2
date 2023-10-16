@@ -1,9 +1,27 @@
 import { authObj } from "./authorization.js";
 import { socketObj } from "./socketClient.js"
 import { appendMessage } from "./chatscript.js";
-import { randomUUID } from "./utils.js"
+import { randomUUID, tempPfp } from "./utils.js"
+import { toggleSidebarLeft, forceFocusMain, toggleSidebarRight } from "./sidebarscript.js";
 
 // console.log("frameState.js")
+
+export function updateUser(username, pfp){
+    if ( username ) {authObj.account.username = username}
+    if (      pfp ) {authObj.account.pfp      = pfp}
+
+    const accountItem        = JSON.parse(window.localStorage.getItem("account"))
+    accountItem.username     = authObj.account.username
+    accountItem.pfp          = authObj.account.pfp
+
+    window.localStorage.setItem("account", JSON.stringify(accountItem))
+    updateUserDOMElements();
+}
+
+export function updateUserDOMElements(){
+    $(".sidebarLeft .profile img").src = authObj.account.pfp || tempPfp
+    $(".sidebarLeft .profile .usernameDisplay").innerText = authObj.account.username
+}
 
 export function defaultState(){
     document.querySelector("main").dataset.state = "default"
@@ -17,27 +35,33 @@ export function defaultState(){
 
     // move chatlogs to default chat space
     $(".maincontent").appendChild(document.getElementById("chatlogs"));
+
+    // focus to main 
+    forceFocusMain();
 }
 
 export function overlayState(){
-    document.querySelector("main").dataset.state = "overlay"
+    $("main").dataset.state = "overlay"
     
-    document.querySelector(".overlayFrame").classList.remove("hide")
-    document.querySelector(".overlayChatWindow").classList.add("hide")
+    $(".overlayFrame").classList.remove("hide")
+    $(".overlayChatWindow").classList.add("hide")
     
-    document.querySelector(".mainheader").classList.add("hide")
-    document.querySelector(".maincontent").classList.add("hide")
-    document.querySelector(".mainfooter").classList.add("hide")
+    $(".mainheader").classList.add("hide")
+    $(".maincontent").classList.add("hide")
+    $(".mainfooter").classList.add("hide")
 
     // move chatlogs to overlay chat window
     $(".overlayChatlogs").append(document.getElementById("chatlogs"));
+
+    // focus to main 
+    forceFocusMain();
 }
 
-export function setOverlayState(type, link){
+export function setOverlayState(type, media){
     if(type == "embed"){
 
         const iframe = document.createElement("iframe")
-        iframe.src               = link + "?autostart=true"
+        iframe.src               = media.link + "?autostart=true"
         iframe.allowtransparency = "false" 
         iframe.width             = "980"
         iframe.height            = "100%"
@@ -48,47 +72,68 @@ export function setOverlayState(type, link){
         iframe.style.left        = "50%"
         iframe.style.translate   = "-50% 0"
 
-        document.querySelector(".overlayFrame").innerHTML   = ""
-        document.querySelector(".overlayFrame").appendChild(iframe)
+        $(".overlayFrame").innerHTML   = ""
+        $(".overlayFrame").appendChild(iframe)
         
         const chatButton = document.createElement('div');
         chatButton.classList = "chatButton";
+        chatButton.innerText = "💬"
         chatButton.onclick = () => { setChatOverlay(true) }
-        document.querySelector(".overlayFrame").appendChild(chatButton)
+        $(".overlayFrame").appendChild(chatButton)
+
+    }
+    else if(type == "movie"){
+
+        const movieFrame = document.createElement("video")
+        const source     = document.createElement("source")
+        const  track     = document.createElement("track")
+
+        source.src       = media.stream
+        source.type      = "video/mp4"
+        track.src        = media.captions
+        track.label      = "English"
+        track.kind       = "captions"
+        track.srclang    = "en-us"
+        track.default    = true
+
+        movieFrame.appendChild(source)    
+        movieFrame.appendChild( track)    
+        $(".overlayFrame").innerHTML   = ""
+        $(".overlayFrame").appendChild(movieFrame)
     }
 }
 
 
 function setChatOverlay(open){
     if(open == true){
-        document.querySelector(".overlayChatWindow").classList.remove("hide")
-        document.querySelector(".chatButton").classList.add("hide")
-        
-        document.querySelector(".overlayChatWindow .overlayHeader .closeOchat")
-                .addEventListener("click", ()=>{setChatOverlay(false)})
+        $(".overlayChatWindow").classList.remove("hide")
+        $(".chatButton").classList.add("hide")
 
-        document.querySelector(".overlayChatWindow .overlayHeader .expandOchat")
-                .addEventListener("click", ()=>{defaultState()})
+        $(".overlayChatWindow .overlayHeader .expandOchannels").onclick = ()=>{toggleSidebarLeft()}
+        $(".overlayChatWindow .overlayHeader .expandOmembers").onclick = ()=>{toggleSidebarRight()}
 
         // ################################################
-        sendBtn.addEventListener("click", sendClicked)
+        sendBtn.onclick = sendClicked
         function KEYDOWN(e){
             if( e.code == "Enter" && e.shiftKey == false ){
                 sendClicked();e.preventDefault();
             }
         }
-        if( window.mobileAndTabletCheck ){textArea.addEventListener("keydown", KEYDOWN)}
-        else {textArea.addEventListener("keydown", KEYDOWN)}
+        if( window.mobileAndTabletCheck ){textArea.onkeydown = KEYDOWN}
+        else {textArea.onkeypress = KEYDOWN}
         // ################################################
     }
     else if(open == false){
-        document.querySelector(".overlayChatWindow").classList.add("hide")
-        document.querySelector(".chatButton").classList.remove("hide")
+        $(".overlayChatWindow").classList.add("hide")
+        $(".chatButton").classList.remove("hide")
     }
 }
 
+const closeChat = document.querySelector(".overlayChatWindow .closechat")
 const textArea = document.querySelector(".overlayChatWindow .textarea")
 const sendBtn = document.querySelector(".overlayChatWindow .send")
+
+closeChat.addEventListener("click", ()=>{setChatOverlay(false)})
 
 function sendClicked(){
     if(!textArea.innerText.trim()){return}

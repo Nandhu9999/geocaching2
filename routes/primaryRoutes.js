@@ -2,10 +2,7 @@ const data = require("../src/data.json");
 const db = require("../src/" + data.database);
 
 const seo = require("../src/seo.json");
-
-if (seo.url === "glitch-default") {
-  seo.url = `https://${process.env.PROJECT_DOMAIN}.glitch.me`;
-}
+if (seo.url === "glitch-default") { seo.url = `https://${process.env.PROJECT_DOMAIN}.glitch.me`; }
 
 function authorizeRequest(request, reply, next){
 
@@ -18,7 +15,7 @@ function authorizeRequest(request, reply, next){
      *  NOT ALLOWED except
      *  some valid urls
      */
-
+    
     if( ISAUTH === undefined && URL.startsWith("/api/")){
         console.log(request.url)
 
@@ -30,6 +27,10 @@ function authorizeRequest(request, reply, next){
     
     next()
 }
+
+// // //
+// // //
+// // //
 
 async function checkAuthorized(request, reply){
     console.log("checking authorization")
@@ -59,34 +60,10 @@ async function logout(request, reply){
     }
 }
 
-async function totalChannels(request, reply){
-    // functions will be converted to string
-    // only will be executed in the client side
-    const home = function (){defaultState();}
-    const game = function (){overlayState();setOverlayState('embed','https://scratch.mit.edu/projects/904596842/embed')}
-    const   tv = function (){console.log("tv")}
-
-    const channels = [
-        {label: "home", exec: home.toString()},
-        {label: "game", exec: game.toString()},
-        {label: "t.v.", exec:   tv.toString()}
-    ]
-    return reply.send(channels)
-}
-
-async function totalMembers(request, reply){
-    const response = await db.getMembers()
-    console.log(response)
-    return reply.send(response)
-}
-
 module.exports = {
     home,
     authenticate,
     logout,
     authorizeRequest,
     checkAuthorized,
-
-    totalChannels,
-    totalMembers
 }

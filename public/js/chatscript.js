@@ -12,7 +12,6 @@ function containerSize(){
 const widgetOpts = $("#widget")
 const textArea = $("#textarea")
 const sendBtn = $("#send")
-let lastTypedTimestamp = 0;
 
 function systemInit(){
     if ("virtualKeyboard" in navigator) {
@@ -34,13 +33,17 @@ function systemInit(){
 
     if( window.mobileAndTabletCheck ){textArea.addEventListener("keydown", KEYDOWN)}
     else {textArea.addEventListener("keydown", KEYDOWN)}
-
 }
 
 function widgetClicked(){
     widgetOpts.classList.toggle("active")
     updateWidgetState();
     textArea.focus();
+}
+
+export function forceCloseWidget(){
+    widgetOpts.classList.remove("active")
+    updateWidgetState();
 }
 
 function updateWidgetState(){
@@ -74,19 +77,28 @@ function sendClicked(){
     textArea.innerText = ""
     textArea.focus()
     
-    socketObj.io.emit("messageServer", myMessage)
-    appendMessage(myMessage, 0.5)
+    if(socketObj.active){
+        socketObj.io.emit("messageServer", myMessage)
+        appendMessage(myMessage, 0.5)
+    } else {
+        console.log("socket disconnected..")
+    }
 }
 
+let lastTypedTimestamp = 0;
 function isTyping(){
     const currTimestamp = Date.now()
     if(currTimestamp - lastTypedTimestamp < 5000 || !textArea.innerText.trim())
         {return}
     
     lastTypedTimestamp = currTimestamp;
-    // update server with it
-    socketObj.io.emit("isTyping", "")
+    if(socketObj.active){
+        socketObj.io.emit("isTyping", null)
+    } else {
+        console.log("socket disconnected..")
+    }
 }
+
 
 export function appendMessage(data, opacity = 1){
     const msg = new MessageCreator(data)
@@ -94,13 +106,14 @@ export function appendMessage(data, opacity = 1){
     msg.autoGenerateFormat()
     msg.setOpacity(opacity)
 
-    document.querySelector("#chatlogs").appendChild(msg.tag)
+    $("#chatlogs").appendChild(msg.tag)
+    const msgHeight = msg.getHeight()
+    $(".maincontent").scrollBy( 0, msgHeight)
 }
 export function appendVerifiedMessage(messageid){
     const message = $("#chatlogs").querySelector("#" + messageid)
     if (message) {message.style.opacity = 1}
 }
-
 export class MessageCreator{
     static lastMsg = {
         uid: "",
@@ -117,13 +130,17 @@ export class MessageCreator{
 
         this.tag               = document.createElement("div");
         this.tag.id            = messageid
-        this.tag.classList     = "usermessage"
+        this.tag.classList     = "usermessage noSelect"
         this.tag.oncontextmenu = "return false"
         this.tag.innerHTML     = `<div data-col1></div><div data-col2></div>`
     }
 
     autoGenerateFormat(){
-        // show msg header if UID is new OR more than 5 messages from same uid OR been more than 5 mins from same uid
+        // show msg header 
+        // IF UID is newer
+        // OR more than 5 messages from same uid 
+        // OR been more than 5 mins from same uid
+        // OR if the name is new
         if(   MessageCreator.lastMsg.uid != this.uid 
             || MessageCreator.sameUIDCount > 5 
             || Date.now() - MessageCreator.lastMsg.timestamp > 1000 * 60 * 5
@@ -141,6 +158,9 @@ export class MessageCreator{
         MessageCreator.lastMsg.uid       = this.uid
         MessageCreator.lastMsg.username  = this.username
         MessageCreator.lastMsg.timestamp = this.timestamp
+
+        this.tag.addEventListener("pointerdown", this.msgTapped,true)
+        this.tag.addEventListener("pointerup", this.msgTapRelease,true)
     }
 
     setMsgHeaders(){
@@ -162,27 +182,38 @@ export class MessageCreator{
         textContent.innerHTML = `<div class="msgcontent" unselectable="on">${this.content}</div>`
         this.tag.querySelector("[data-col2]").appendChild(textContent)
     }
-
     setOpacity(val){
         this.tag.style.opacity = val;
     }
+    getHeight(){
+        let headerHeight = 0
+        if(this.tag.classList.contains("hasHeader")) headerHeight = 10
+        return (this.tag.offsetHeight + headerHeight + 10)
+    }
+    msgTapped(e){
+        let tempParent = e.target
+        while (!tempParent.classList.contains("usermessage")){
+            tempParent = tempParent.parentElement
+        }
+        tempParent.classList.add("highlightEffect")
+    }
+    msgTapRelease(e){
+        let tempParent = e.target
+        while (!tempParent.classList.contains("usermessage")){
+            tempParent = tempParent.parentElement
+        }
+        tempParent.classList.remove("highlightEffect")
+    }
 }
 
-export function updateUser(username, pfp){
-    if ( username ) {authObj.account.username = username}
-    if (      pfp ) {authObj.account.pfp      = pfp}
-
-    const accountItem        = JSON.parse(window.localStorage.getItem("account"))
-    accountItem.username     = authObj.account.username
-    accountItem.pfp          = authObj.account.pfp
-
-    window.localStorage.setItem("account", JSON.stringify(accountItem))
-    updateUserDOMElements();
-}
-
-export function updateUserDOMElements(){
-    $(".sidebarLeft .profile img").src = authObj.account.pfp
-    $(".sidebarLeft .profile .usernameDisplay").innerText = authObj.account.username
+export function loadChatMessages(part = 0){
+    if (!authObj.AUTHORIZED){return}
+    /*
+     * part system used to display only 
+     * limited messages from entire corpus
+     * maximum only two parts should be active
+     */
+    $("#chatlogs").innerHTML = `<h1 style="padding:10px;" class="noSelect">#chat</h1>`
 }
 
 systemInit();

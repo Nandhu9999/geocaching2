@@ -1,12 +1,13 @@
 // console.log("sidebarscript.js")
 import { authObj } from "./authorization.js"
-import { updateUser } from "./chatscript.js"
+import { forceCloseWidget } from "./chatscript.js"
+import { updateUser } from "./frameState.js"
+import { isValidImage, isValidName, showLoader } from "./utils.js"
 
 // [!] DO NOT REMOVE
 // these functions are used 
 // inside the evaluated string.
 import { defaultState, overlayState, setOverlayState } from "./frameState.js"
-import { tempPfp } from "./utils.js"
 
 
 export let CHANNELS = []
@@ -25,14 +26,19 @@ menuBtn.addEventListener("click", toggleSidebarLeft)
 usersBtn.addEventListener("click", toggleSidebarRight)
 mainBlock.addEventListener("click", clickedMain)
 
-function toggleSidebarLeft(){
+export function toggleSidebarLeft(){
+    // if widget is open
+    console.log("left")
+    forceCloseWidget()
     sidebarLeft.classList.toggle("active");
     if ( sidebarLeft.classList.contains("active") ){
         cooldown = Date.now() + 100;
     }
 }
 
-function toggleSidebarRight(){
+export function toggleSidebarRight(){
+    // if widget is open
+    forceCloseWidget()
     sidebarRight.classList.toggle("active");
     if ( sidebarRight.classList.contains("active") ){
         cooldown = Date.now() + 100;
@@ -40,6 +46,10 @@ function toggleSidebarRight(){
     }
 }
 
+export function forceFocusMain(){
+    cooldown = 0
+    clickedMain()
+}
 function clickedMain(){
     if (Date.now() < cooldown) { return }
 
@@ -103,15 +113,59 @@ profileBar.addEventListener("click", ()=>{
 })
 profileModalClose.addEventListener("click", ()=>{profileForm.reset(); profileModal.close();})
 profileForm.addEventListener("submit", editProfile);
-function editProfile(e){
+
+const profileState = {
+    username:"",
+    pfp:""
+}
+async function editProfile(e){
     e.preventDefault();
-    const username = e.target[0].value
-    const pfp      = e.target[1].value
+    if ( isValidName(e.target[1].value)) {
+        profileState.username = e.target[0].value || authObj.account.username
+    }
+    if (isValidImage(e.target[1].value)) { 
+        profileState.pfp      = e.target[1].value || authObj.account.pfp 
+    }
 
-    updateUser(username, pfp)
+    showLoader()
     
-    e.target[0].value = ""
-    e.target[1].value = ""
+    async function serverUpdate(username, pfp){
+        try{
+            const rresponse = await fetch("/api/editProfile", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body:JSON.stringify({
+                    sid: authObj.sid,
+                    uid: authObj.uid,
+                    username: username,
+                    pfp: pfp
+                })
+            })
+            const response = await rresponse.json();
+            return response
+        } catch {
+            return { status: "error" }
+        }
+    }
 
+    const response = await serverUpdate(profileState.username, profileState.pfp)
+    profileForm.reset()
     profileModal.close()
+
+    if (!response){
+        alert("error")
+        return
+    }
+    else if(response.status == "error"){
+        alert("server unable to process request", response.message)
+        return
+    }
+    // success
+    // ..wait for socket response..
+}
+
+export function saveProfileEdit(){
+    updateUser(profileState.username, profileState.pfp)
 }
