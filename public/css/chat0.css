@@ -39,6 +39,7 @@
   color: var(--color-text-main);
   width: 100%;
   overflow: hidden;
+  overflow-y: auto;
   padding: 10px;
 }
 #container .sidebarLeft ul li {
@@ -149,8 +150,8 @@
   */
  /* max-width: 750px;
   */
-  width: min(100%, 750px);
-  
+ /* width: min(100%, 750px);
+  */
   margin-inline: auto;
   display: grid;
   grid-template-columns: 3rem auto 3rem;
@@ -259,7 +260,7 @@
   transform: translate(0, -50%);
   left: 10px;
 }
-@media only screen and (max-width: 750px) {
+@media only screen and (max-width: 850px) {
   #container {
     --sidebarWidth: 0px;
  }

@@ -46,6 +46,7 @@
             color: var(--color-text-main);
             width: 100%;
             overflow:hidden;
+            overflow-y: auto;
             padding: 10px;
 
             li{
@@ -202,6 +203,7 @@
                     overflow-y:auto;
                     padding-block: 12px;
                 }
+                
             }
 
         }
@@ -288,7 +290,7 @@
 
 }
 
-@media only screen and (max-width: 750px) {
+@media only screen and (max-width: 850px) {
     #container{
         --sidebarWidth: 0px;
         header{

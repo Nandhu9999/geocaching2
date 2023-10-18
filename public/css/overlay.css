@@ -19,6 +19,12 @@
         cursor: pointer;
     }
     .chatButton.hide{display:none;}
+
+    .movieFrame{
+        background-color: black;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+    }
 }
 .overlayFrame.hide{display:none;}
 

@@ -33,7 +33,7 @@ async function editProfile(request, reply){
     // ...
 
     this.io.to(sid).emit("updateProfileStatus", "ok")
-    this.io.sockets.except( sid ).emit("profileUpdated", {uid, username, pfp})
+    this.io.sockets.except( sid ).emit("profileUpdated", {sid, uid, username, pfp})
     return reply.send({ status: "ok" })
 }
 

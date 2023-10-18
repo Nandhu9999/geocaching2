@@ -1,8 +1,9 @@
 import { io } from "https://cdn.socket.io/4.5.0/socket.io.esm.min.js"
-import { MEMBERS, updateMembersContents, saveProfileEdit } from "./sidebarscript.js";
+import { MEMBERS, updateMembersContents, saveProfileEdit, profileState } from "./sidebarscript.js";
 import { authObj } from "./authorization.js";
-import { appendMessage, appendVerifiedMessage } from "./chatscript.js";
+import { appendMessage, appendBulkMessages, appendVerifiedMessage } from "./chatscript.js";
 import { closeLoader } from "./utils.js";
+import { updateUserDOMElements } from "./frameState.js";
 
 export const socketObj = {
   reconnects: 0,
@@ -16,6 +17,7 @@ export function socketInit(){
   socketObj.io = socket
 
   socket.on("connect", userConnected);
+  socket.on("ijoined", iJoined)
   
   socket.on("enter", userEntered)
   socket.on("exit", userExited)
@@ -25,7 +27,8 @@ export function socketInit(){
 
   socket.on("pushUpdate", socketUpdateMessage)
   socket.on("updateProfileStatus", updateProfileStatus)
-
+  socket.on("profileUpdated", profileUpdated)
+  
   socket.on("disconnect", () => {
     console.log("SOCKETIO: ❌")
     socketObj.active = false;
@@ -49,6 +52,15 @@ async function userConnected(){
   }
 }
 
+function iJoined({socketid, messagesCached}){
+  if(authObj.sid != socketid){return;}
+  const idx = MEMBERS.findIndex((x) => x.socketid == socketid )
+  if (idx != -1){ console.log("socket id already exists"); return;}
+  MEMBERS.push({socketid:socketid, username:authObj.account.username})
+  updateMembersContents()
+  appendBulkMessages(messagesCached)
+}
+
 async function userEntered({socketid, username}){
   console.log(socketid, `(${username}) joined`)
   MEMBERS.push({socketid:socketid, username:username})
@@ -58,7 +70,7 @@ async function userEntered({socketid, username}){
 async function userExited({socketid}){
   const idx = MEMBERS.findIndex((x) => x.socketid == socketid )
   console.log(socketid, `(${MEMBERS[idx].username}) left`)
-  MEMBERS.pop(idx)
+  MEMBERS.splice(idx,1)
   updateMembersContents()
 }
 
@@ -75,9 +87,17 @@ function socketUpdateMessage(data){
 }
 
 function updateProfileStatus(status){
-  console.log("status")
   if(status == "ok"){
     saveProfileEdit()
+    updateUserDOMElements()
+    profileUpdated({sid: authObj.sid, uid:authObj.uid, username:profileState.username, pfp:profileState.pfp})
     closeLoader()
   }
+}
+
+function profileUpdated({sid, uid, username, pfp}){
+  const idx = MEMBERS.findIndex((x) => x.socketid == sid )
+  MEMBERS[idx].username = username
+  MEMBERS[idx].pfp      = pfp
+  updateMembersContents();
 }

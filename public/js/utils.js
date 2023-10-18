@@ -1,3 +1,4 @@
+import { MEMBERS } from "./sidebarscript.js";
 
 window.mobileAndTabletCheck = function() {
     let check = false;
@@ -60,6 +61,7 @@ export function closeLoader(){
 
 $("#devCheck").addEventListener("click", ()=>{
   console.log("dev checking..");
+  console.log(MEMBERS)
 })
 
 

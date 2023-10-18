@@ -21,6 +21,11 @@
 .overlayFrame .chatButton.hide {
   display: none;
 }
+.overlayFrame .movieFrame {
+  background-color: black;
+  width: 100%;
+  aspect-ratio: 1.7777777778;
+}
 .overlayFrame.hide {
   display: none;
 }
@@ -65,8 +70,8 @@
   */
  /* max-width: 750px;
   */
-  width: min(100%, 750px);
-  
+ /* width: min(100%, 750px);
+  */
   margin-inline: auto;
   display: grid;
   grid-template-columns: 3rem auto 3rem;

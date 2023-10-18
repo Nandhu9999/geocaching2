@@ -28,7 +28,6 @@ mainBlock.addEventListener("click", clickedMain)
 
 export function toggleSidebarLeft(){
     // if widget is open
-    console.log("left")
     forceCloseWidget()
     sidebarLeft.classList.toggle("active");
     if ( sidebarLeft.classList.contains("active") ){
@@ -90,10 +89,11 @@ function updateChannelContents(){
 export function updateMembersContents(){
     const listContainer = sidebarRight.querySelector("ul");
     listContainer.innerHTML = ""
-    
+
+    MEMBERS.sort((a,b)=> (a.username > b.username ? 1 : -1))
     MEMBERS.forEach(({socketid, username, pfp}) => {
         const listItem = document.createElement("li")
-        listItem.innerHTML   = `${username}`
+        listItem.innerHTML   = `${username}` + `${socketid == authObj.sid ? " (You)" : ""}`
         listItem.classList   = "noSelect"
         listContainer.appendChild(listItem)
     })
@@ -114,13 +114,13 @@ profileBar.addEventListener("click", ()=>{
 profileModalClose.addEventListener("click", ()=>{profileForm.reset(); profileModal.close();})
 profileForm.addEventListener("submit", editProfile);
 
-const profileState = {
+export const profileState = {
     username:"",
     pfp:""
 }
 async function editProfile(e){
     e.preventDefault();
-    if ( isValidName(e.target[1].value)) {
+    if ( isValidName(e.target[0].value)) {
         profileState.username = e.target[0].value || authObj.account.username
     }
     if (isValidImage(e.target[1].value)) { 
@@ -153,7 +153,6 @@ async function editProfile(e){
     const response = await serverUpdate(profileState.username, profileState.pfp)
     profileForm.reset()
     profileModal.close()
-
     if (!response){
         alert("error")
         return

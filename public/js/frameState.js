@@ -24,14 +24,14 @@ export function updateUserDOMElements(){
 }
 
 export function defaultState(){
-    document.querySelector("main").dataset.state = "default"
+    $("main").dataset.state = "default"
     
-    document.querySelector(".mainheader").classList.remove("hide")
-    document.querySelector(".maincontent").classList.remove("hide")
-    document.querySelector(".mainfooter").classList.remove("hide")
+    $(".mainheader").classList.remove("hide")
+    $(".maincontent").classList.remove("hide")
+    $(".mainfooter").classList.remove("hide")
     
-    document.querySelector(".overlayFrame").classList.add("hide")
-    document.querySelector(".overlayChatWindow").classList.add("hide")
+    $(".overlayFrame").classList.add("hide")
+    $(".overlayChatWindow").classList.add("hide")
 
     // move chatlogs to default chat space
     $(".maincontent").appendChild(document.getElementById("chatlogs"));
@@ -58,6 +58,15 @@ export function overlayState(){
 }
 
 export function setOverlayState(type, media){
+
+    function enableChatframe(){
+        const chatButton = document.createElement('div');
+        chatButton.classList = "chatButton";
+        chatButton.innerText = "💬"
+        chatButton.onclick = () => { setChatOverlay(true) }
+        $(".overlayFrame").appendChild(chatButton)
+    }
+
     if(type == "embed"){
 
         const iframe = document.createElement("iframe")
@@ -73,14 +82,11 @@ export function setOverlayState(type, media){
         iframe.style.translate   = "-50% 0"
 
         $(".overlayFrame").innerHTML   = ""
+        $(".overlayFrame").style.display = "block"
+        $(".overlayFrame").style.flexDirection = "none"
         $(".overlayFrame").appendChild(iframe)
         
-        const chatButton = document.createElement('div');
-        chatButton.classList = "chatButton";
-        chatButton.innerText = "💬"
-        chatButton.onclick = () => { setChatOverlay(true) }
-        $(".overlayFrame").appendChild(chatButton)
-
+        enableChatframe()
     }
     else if(type == "movie"){
 
@@ -88,6 +94,7 @@ export function setOverlayState(type, media){
         const source     = document.createElement("source")
         const  track     = document.createElement("track")
 
+        movieFrame.classList.add("movieFrame")
         source.src       = media.stream
         source.type      = "video/mp4"
         track.src        = media.captions
@@ -99,7 +106,11 @@ export function setOverlayState(type, media){
         movieFrame.appendChild(source)    
         movieFrame.appendChild( track)    
         $(".overlayFrame").innerHTML   = ""
+        $(".overlayFrame").style.display = "flex"
+        $(".overlayFrame").style.flexDirection = "column"
         $(".overlayFrame").appendChild(movieFrame)
+
+        enableChatframe()
     }
 }
 
@@ -129,9 +140,9 @@ function setChatOverlay(open){
     }
 }
 
-const closeChat = document.querySelector(".overlayChatWindow .closechat")
-const textArea = document.querySelector(".overlayChatWindow .textarea")
-const sendBtn = document.querySelector(".overlayChatWindow .send")
+const closeChat = $(".overlayChatWindow .closechat")
+const textArea = $(".overlayChatWindow .textarea")
+const sendBtn = $(".overlayChatWindow .send")
 
 closeChat.addEventListener("click", ()=>{setChatOverlay(false)})
 

@@ -99,6 +99,9 @@ function isTyping(){
     }
 }
 
+export function appendBulkMessages(msgsArray){
+    msgsArray.forEach(msg=>{appendMessage(msg, 1)})
+}
 
 export function appendMessage(data, opacity = 1){
     const msg = new MessageCreator(data)
@@ -109,6 +112,7 @@ export function appendMessage(data, opacity = 1){
     $("#chatlogs").appendChild(msg.tag)
     const msgHeight = msg.getHeight()
     $(".maincontent").scrollBy( 0, msgHeight)
+    $(".overlayChatlogs").scrollBy( 0, msgHeight)
 }
 export function appendVerifiedMessage(messageid){
     const message = $("#chatlogs").querySelector("#" + messageid)
@@ -143,7 +147,7 @@ export class MessageCreator{
         // OR if the name is new
         if(   MessageCreator.lastMsg.uid != this.uid 
             || MessageCreator.sameUIDCount > 5 
-            || Date.now() - MessageCreator.lastMsg.timestamp > 1000 * 60 * 5
+            || MessageCreator.lastMsg.timestamp - Date.now() > 1000 * 60 * 5
             || MessageCreator.lastMsg.username != this.username
         ) {
             this.setMsgHeaders()
@@ -161,6 +165,7 @@ export class MessageCreator{
 
         this.tag.addEventListener("pointerdown", this.msgTapped,true)
         this.tag.addEventListener("pointerup", this.msgTapRelease,true)
+        this.tag.addEventListener("contextmenu", this.msgContextMenu,true)
     }
 
     setMsgHeaders(){
@@ -196,6 +201,7 @@ export class MessageCreator{
             tempParent = tempParent.parentElement
         }
         tempParent.classList.add("highlightEffect")
+        tempParent.dataset.touchdownTime = Date.now();
     }
     msgTapRelease(e){
         let tempParent = e.target
@@ -203,6 +209,32 @@ export class MessageCreator{
             tempParent = tempParent.parentElement
         }
         tempParent.classList.remove("highlightEffect")
+        const longpressTime = Date.now() - tempParent.dataset.touchdownTime; 
+        if (longpressTime > 250){
+            MessageCreator.openCtxMenu(tempParent)
+        }
+    }
+    msgContextMenu(e){
+        e.preventDefault();
+        let tempParent = e.target
+        while (!tempParent.classList.contains("usermessage")){
+            tempParent = tempParent.parentElement
+        }
+        MessageCreator.openCtxMenu(tempParent)
+        return false;
+    }
+    static getSummary(tag){
+        const summary = tag.cloneNode(true)
+        summary.id = ""
+        
+        return summary
+    }
+    static openCtxMenu(tag){
+        $("#userMessageModal").showModal();
+        if( !window.mobileAndTabletCheck() ){
+            $("#userMessageModal").classList.add("centerDisplay");
+        }
+
     }
 }
 
