@@ -3,6 +3,7 @@ import { socketObj } from "./socketClient.js"
 import { appendMessage } from "./chatscript.js";
 import { randomUUID, tempPfp } from "./utils.js"
 import { toggleSidebarLeft, forceFocusMain, toggleSidebarRight } from "./sidebarscript.js";
+import { redoTool, settingsTool, undoTool, brushTool, paletteTool, bucketTool } from "./drawscript.js";
 
 // console.log("frameState.js")
 
@@ -32,6 +33,10 @@ export function defaultState(){
     
     $(".overlayFrame").classList.add("hide")
     $(".overlayChatWindow").classList.add("hide")
+
+    $(".overlayFrame").innerHTML   = ""
+    $(".overlayFrame").style.display = ""
+    $(".overlayFrame").style.flexDirection = "none"
 
     // move chatlogs to default chat space
     $(".maincontent").appendChild(document.getElementById("chatlogs"));
@@ -109,6 +114,55 @@ export function setOverlayState(type, media){
         $(".overlayFrame").style.display = "flex"
         $(".overlayFrame").style.flexDirection = "column"
         $(".overlayFrame").appendChild(movieFrame)
+
+        enableChatframe()
+    }
+    else if(type == "draw"){
+        const drawTools = [
+            {name:"📎",exec:settingsTool}, {name:"🔚",exec:undoTool},    {name:"🔜",exec:redoTool},
+            {name:"🖌️",exec:brushTool},    {name:"🎨",exec:paletteTool}, {name:"🖍️",exec:null},
+            {name:"🪣",exec:bucketTool},   {name:"📄",exec:null},
+        ]
+
+        const canvasContainer = document.createElement("div")
+        const canvasTools     = document.createElement("div")
+        const toolsOpenBtn    = document.createElement("div")
+        const toolsCloseBtn   = document.createElement("div")
+        const canvas          = document.createElement("canvas")
+
+        canvasContainer.id      = "canvasContainer"
+        toolsOpenBtn.classList  = "toolsOpenBtn noSelect"
+        toolsCloseBtn.classList = "toolsCloseBtn noSelect"
+        canvasTools.id          = "canvasTools"
+        canvas.id               = "canvas"
+
+        canvasContainer.style.setProperty("--totalTools", drawTools.length)
+        const toolsArr     = document.createElement("div")
+        toolsArr.classList = "toolsArray"
+
+        drawTools.forEach(tool=>{
+            const item = document.createElement("div")
+            item.innerText = tool.name
+            item.classList = "item noSelect"
+            item.onclick = tool.exec;
+            toolsArr.append(item)
+        })
+        
+        toolsOpenBtn.innerText = "🇴"
+        toolsCloseBtn.innerText = "🇽"
+
+        toolsOpenBtn.onclick = ()=>{canvasTools.classList.remove("hide")}
+        toolsCloseBtn.onclick = ()=>{canvasTools.classList.add("hide")}
+
+        canvasTools.appendChild(toolsArr)
+        canvasTools.appendChild(toolsCloseBtn)
+        
+        canvasContainer.appendChild(toolsOpenBtn)
+        canvasContainer.appendChild(canvasTools)
+        canvasContainer.appendChild(canvas)
+        $(".overlayFrame").innerHTML   = ""
+        $(".overlayFrame").style.display = "block"
+        $(".overlayFrame").appendChild(canvasContainer)
 
         enableChatframe()
     }

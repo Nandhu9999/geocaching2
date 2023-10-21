@@ -10,11 +10,14 @@ async function totalChannels(request, reply){
     {overlayState();setOverlayState('embed',{link:'https://scratch.mit.edu/projects/904596842/embed'})}
     const   tv = function ()
     {overlayState();setOverlayState('movie',{stream:'', captions:''})}
+    const draw = function ()
+    {overlayState();setOverlayState('draw' ,{})}
 
     const channels = [
         {label: "home", exec: home.toString()},
-        {label: "game", exec: game.toString()},
-        {label: "t.v.", exec:   tv.toString()}
+        // {label: "game", exec: game.toString()},
+        {label: "t.v.", exec:   tv.toString()},
+        {label: "draw", exec: draw.toString()},
     ]
     return reply.send(channels)
 }

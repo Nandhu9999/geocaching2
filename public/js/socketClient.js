@@ -33,8 +33,8 @@ export function socketInit(){
     console.log("SOCKETIO: ❌")
     socketObj.active = false;
     // checkAuth();
-    // MEMBERS.length = 0
-    // updateMembersContents()
+    MEMBERS.length = 0
+    updateMembersContents()
   });
 
 }

@@ -1,0 +1,77 @@
+#canvasContainer{
+    --toolsHeight: 3rem;
+    --toolItemSize: 2.4rem;
+    --totalTools: 1;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: black;
+    
+    #canvasTools{
+        --gapSize: 0px;
+        position: absolute; z-index:10;
+        top:5px; right:5px;
+        /* width: calc(calc(var(--totalTools) + 1) * var(--toolItemSize)); */
+        max-width: calc(100% - 10px);
+        height: var(--toolsHeight);
+        padding-block:calc(var(--toolsHeight) - var(--toolItemSize));
+
+        display:grid;
+        grid-template-columns: calc(var(--totalTools) * calc(var(--toolItemSize) + var(--gapSize))) var(--toolsHeight);
+        overflow: auto;
+        overflow-y: hidden;
+        align-content: center;
+
+        background: grey;
+        border-radius: 5px;
+        box-shadow: 0px 2px 1px rgba(0,0,0,0.6);
+
+        &.hide{
+            display:none;
+        }
+        .toolsArray{
+            display:grid;
+            justify-content: space-around;
+            gap: var(--gapSize);
+            grid-template-columns: repeat(var(--totalTools), var(--toolItemSize));
+            width: 100%;
+            height: 100%;
+            padding-left:5px;
+            .item{
+                width: var(--toolItemSize);
+                height: var(--toolItemSize);
+                display: grid;
+                place-items: center;
+                background-color: rgba(0,0,0,0.2);
+                border-radius: 50%;
+                cursor: pointer;
+            }
+        }
+        .toolsCloseBtn {
+            width: var(--toolItemSize);
+            height: var(--toolItemSize);
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+        }
+    }
+    .toolsOpenBtn {
+        position: absolute; z-index:9;
+        top:calc(var(--toolsHeight) - var(--toolItemSize));
+        right:10px;
+        width: var(--toolItemSize);
+        height: var(--toolItemSize);
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+    }
+
+    #canvas{
+        width:1000px;
+        height:1000px;
+        background-color: aliceblue;
+        position: absolute;
+        top:50%;left:50%;
+        translate:-50% -50%;
+    }
+}
