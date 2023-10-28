@@ -1,6 +1,6 @@
 import { authObj } from "./authorization.js";
 import { socketObj } from "./socketClient.js"
-import { getTimePrefix, randomUUID, tempPfp } from "./utils.js"
+import { getTimePrefix, randomUUID, tempPfp, devCommand } from "./utils.js"
 
 // console.log("chatscript.js")
 
@@ -62,16 +62,26 @@ function textareaClicked(){
 
 }
 
-function sendClicked(){
-    if(!textArea.innerText.trim()){return}
-
-    const myMessage = {
-        uid       : authObj.uid,
-        username  : authObj.account.username,
-        messageid : `msgid${randomUUID(12)}`,
-        content   : textArea.innerText,
-        timestamp : Date.now(),
-        pfp       : authObj.account.pfp
+export function sendClicked(msg=null){
+    if(!msg && !textArea.innerText.trim()){return}
+    
+    let myMessage = {}
+    if (msg) {
+        myMessage = msg
+    } else {
+        myMessage = {
+            uid       : authObj.uid,
+            username  : authObj.account.username,
+            messageid : `msgid${randomUUID(12)}`,
+            content   : textArea.innerText,
+            timestamp : Date.now(),
+            pfp       : authObj.account.pfp
+        }
+    }
+    if(myMessage.content.startsWith("/")){
+        const stopProcess = devCommand(myMessage.content);
+        if(stopProcess) return;
+        // broadcast command
     }
 
     textArea.innerText = ""
@@ -105,7 +115,6 @@ export function appendBulkMessages(msgsArray){
 
 export function appendMessage(data, opacity = 1){
     const msg = new MessageCreator(data)
-
     msg.autoGenerateFormat()
     msg.setOpacity(opacity)
 

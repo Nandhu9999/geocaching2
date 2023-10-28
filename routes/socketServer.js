@@ -3,8 +3,9 @@ const db = require("../src/" + data.database);
 
 const connections = []
 const messagesCache = []
+const drawHistoryCache = []
 function socketConnection(socket){
-  console.info('🟢 socket    connected:', socket.id.slice(0, 5));
+  // console.info('🟢 socket    connected:', socket.id.slice(0, 5));
 
   socket.on("join", async(username)=>{
     await db.addMember(socket.id, username)
@@ -16,7 +17,7 @@ function socketConnection(socket){
   })
 
   socket.on("disconnect", async(data) => {
-    console.log("⚫ socket disconnected:", socket.id.slice(0, 5));
+    // console.log("⚫ socket disconnected:", socket.id.slice(0, 5));
     await db.deleteMember(socket.id)
 
     const idx = connections.findIndex((x) => x.socketid == socket.id )
@@ -30,6 +31,10 @@ function socketConnection(socket){
   socket.on("messageServer", async(data)=>{
     // console.log("💬 received message:",socket.id.slice(0, 5));
     
+    if(data.content.startsWith("/")){
+      
+    }
+
     messagesCache.push(data)
     while(messagesCache.length > 100) messagesCache.pop(0)
 
@@ -38,6 +43,22 @@ function socketConnection(socket){
     socket.emit("messageVerified", {messageid: data.messageid});
   })
   
+  socket.on("drawInit", async(data)=>{
+    console.log("🧑‍🎨 new artist!");
+    socket.emit("drawInitReceive", drawHistoryCache);
+  })
+
+  socket.on("draw", async(data)=>{
+    console.log("🖌️ received draw message:",data.drawid);
+    
+    drawHistoryCache.push(data)
+    while(drawHistoryCache.length > 100) messagesCache.pop(0)
+
+    // broadcast to all other users except sender
+    socket.broadcast.emit("drawPushGlobal", data);
+    socket.emit("drawVerified", {drawid: data.drawid});
+  })
+
   socket.on("isTyping", async()=>{
     const idx = connections.findIndex((x) => x.socketid == socket.id )
     connections[idx].lastTyped = Date.now();

@@ -1,9 +1,8 @@
 import { authObj } from "./authorization.js";
-import { socketObj } from "./socketClient.js"
-import { appendMessage } from "./chatscript.js";
+import { sendClicked } from "./chatscript.js";
 import { randomUUID, tempPfp } from "./utils.js"
 import { toggleSidebarLeft, forceFocusMain, toggleSidebarRight } from "./sidebarscript.js";
-import { redoTool, settingsTool, undoTool, brushTool, paletteTool, bucketTool } from "./drawscript.js";
+import { clearcanvasTool, redoTool, settingsTool, undoTool, panzoomTool, brushTool, paletteTool, bucketTool, eraseTool, layersTool, setBaseCanvas, colorpickerTool } from "./drawscript.js";
 
 // console.log("frameState.js")
 
@@ -37,6 +36,7 @@ export function defaultState(){
     $(".overlayFrame").innerHTML   = ""
     $(".overlayFrame").style.display = ""
     $(".overlayFrame").style.flexDirection = "none"
+    $(".overlayFrame").dataset.state = "default";
 
     // move chatlogs to default chat space
     $(".maincontent").appendChild(document.getElementById("chatlogs"));
@@ -90,7 +90,8 @@ export function setOverlayState(type, media){
         $(".overlayFrame").style.display = "block"
         $(".overlayFrame").style.flexDirection = "none"
         $(".overlayFrame").appendChild(iframe)
-        
+        $(".overlayFrame").dataset.state = "embed";
+
         enableChatframe()
     }
     else if(type == "movie"){
@@ -100,6 +101,7 @@ export function setOverlayState(type, media){
         const  track     = document.createElement("track")
 
         movieFrame.classList.add("movieFrame")
+        movieFrame.controls = true
         source.src       = media.stream
         source.type      = "video/mp4"
         track.src        = media.captions
@@ -108,21 +110,36 @@ export function setOverlayState(type, media){
         track.srclang    = "en-us"
         track.default    = true
 
+
         movieFrame.appendChild(source)    
-        movieFrame.appendChild( track)    
+        movieFrame.appendChild( track)
+        
         $(".overlayFrame").innerHTML   = ""
         $(".overlayFrame").style.display = "flex"
         $(".overlayFrame").style.flexDirection = "column"
+        $(".overlayFrame").style.justifyContent = "space-around"
         $(".overlayFrame").appendChild(movieFrame)
+        $(".overlayFrame").appendChild( document.createElement("div"))
+        $(".overlayFrame").appendChild( document.createElement("div"))
+        $(".overlayFrame").dataset.state = "movie";
 
         enableChatframe()
     }
     else if(type == "draw"){
         const drawTools = [
-            {name:"📎",exec:settingsTool}, {name:"🔚",exec:undoTool},    {name:"🔜",exec:redoTool},
-            {name:"🖌️",exec:brushTool},    {name:"🎨",exec:paletteTool}, {name:"🖍️",exec:null},
-            {name:"🪣",exec:bucketTool},   {name:"📄",exec:null},
+            // {name:"🗑️",exec:clearcanvasTool},
+            // {name:"📎",exec:settingsTool},
+            {name:"🔚",exec:undoTool},{name:"🔜",exec:redoTool},
+            {name:"👆",exec:panzoomTool},
+            {name:"🖌️",exec:brushTool},{name:"🎨",exec:paletteTool},{name:"🤏",exec:eraseTool},
+            // {name:"💧",exec:colorpickerTool},
+            {name:"🪣",exec:bucketTool},
+            // {name:"📄",exec:layersTool},
         ]
+
+        // pen
+        // content aware fill tool
+        // gradient
 
         const canvasContainer = document.createElement("div")
         const canvasTools     = document.createElement("div")
@@ -134,11 +151,14 @@ export function setOverlayState(type, media){
         toolsOpenBtn.classList  = "toolsOpenBtn noSelect"
         toolsCloseBtn.classList = "toolsCloseBtn noSelect"
         canvasTools.id          = "canvasTools"
-        canvas.id               = "canvas"
+        canvas.id               = "baseCanvas"
 
-        canvasContainer.style.setProperty("--totalTools", drawTools.length)
-        const toolsArr     = document.createElement("div")
-        toolsArr.classList = "toolsArray"
+        canvasTools.style.setProperty("--totalTools", drawTools.length)
+        const toolsArr        = document.createElement("div")
+        const toolsArrWrapper = document.createElement("div")
+        toolsArr.classList        = "toolsArray"
+        toolsArrWrapper.classList = "toolsArrWrapper"
+        toolsArrWrapper.appendChild(toolsArr)
 
         drawTools.forEach(tool=>{
             const item = document.createElement("div")
@@ -154,7 +174,7 @@ export function setOverlayState(type, media){
         toolsOpenBtn.onclick = ()=>{canvasTools.classList.remove("hide")}
         toolsCloseBtn.onclick = ()=>{canvasTools.classList.add("hide")}
 
-        canvasTools.appendChild(toolsArr)
+        canvasTools.appendChild(toolsArrWrapper)
         canvasTools.appendChild(toolsCloseBtn)
         
         canvasContainer.appendChild(toolsOpenBtn)
@@ -163,25 +183,64 @@ export function setOverlayState(type, media){
         $(".overlayFrame").innerHTML   = ""
         $(".overlayFrame").style.display = "block"
         $(".overlayFrame").appendChild(canvasContainer)
+        $(".overlayFrame").dataset.state = "draw";
 
+        setBaseCanvas(canvas, canvasContainer)
         enableChatframe()
     }
 }
 
+export function updateMovieState(stream = "",captions = ""){
+    if (!$(".movieFrame")) {return}
+    
+    $(".movieFrame").remove()
 
-function setChatOverlay(open){
+    console.log("stream link:",stream)
+    console.log("captions link:",captions)
+
+    const movieFrame = document.createElement("video")
+    const source     = document.createElement("source")
+    const  track     = document.createElement("track")
+
+    movieFrame.classList.add("movieFrame")
+    movieFrame.controls = true
+    source.src       = stream
+    source.type      = "video/mp4"
+    track.src        = captions
+    track.label      = "English"
+    track.kind       = "captions"
+    track.srclang    = "en-us"
+    track.default    = true
+
+    movieFrame.appendChild( track)
+    movieFrame.appendChild(source)    
+    
+    $(".overlayFrame").prepend(movieFrame)
+}
+
+
+export function setChatOverlay(open){
     if(open == true){
         $(".overlayChatWindow").classList.remove("hide")
         $(".chatButton").classList.add("hide")
 
-        $(".overlayChatWindow .overlayHeader .expandOchannels").onclick = ()=>{toggleSidebarLeft()}
-        $(".overlayChatWindow .overlayHeader .expandOmembers").onclick = ()=>{toggleSidebarRight()}
+        if(window.mobileAndTabletCheck() == true){
+            console.log("mobile")
+            $(".overlayChatWindow .overlayHeader .expandOchannels").style.visibility = "visible";
+            $(".overlayChatWindow .overlayHeader .expandOmembers").style.visibility = "visible";
+            $(".overlayChatWindow .overlayHeader .expandOchannels").onclick = ()=>{toggleSidebarLeft()}
+            $(".overlayChatWindow .overlayHeader .expandOmembers").onclick = ()=>{toggleSidebarRight()}
+        }else{
+            console.log("desktop")
+            $(".overlayChatWindow .overlayHeader .expandOchannels").style.visibility = "hidden";
+            $(".overlayChatWindow .overlayHeader .expandOmembers").style.visibility = "hidden";
+        }
 
         // ################################################
-        sendBtn.onclick = sendClicked
+        sendBtn.onclick = sendClicked2
         function KEYDOWN(e){
             if( e.code == "Enter" && e.shiftKey == false ){
-                sendClicked();e.preventDefault();
+                sendClicked2();e.preventDefault();
             }
         }
         if( window.mobileAndTabletCheck ){textArea.onkeydown = KEYDOWN}
@@ -200,9 +259,8 @@ const sendBtn = $(".overlayChatWindow .send")
 
 closeChat.addEventListener("click", ()=>{setChatOverlay(false)})
 
-function sendClicked(){
+function sendClicked2(){
     if(!textArea.innerText.trim()){return}
-
     const myMessage = {
         uid       : authObj.uid,
         username  : authObj.account.username,
@@ -211,10 +269,7 @@ function sendClicked(){
         timestamp : Date.now(),
         pfp       : authObj.account.pfp
     }
-
+    sendClicked(myMessage)
     textArea.innerText = ""
     textArea.focus()
-    
-    socketObj.io.emit("messageServer", myMessage)
-    appendMessage(myMessage, 0.5)
 }

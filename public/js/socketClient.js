@@ -3,7 +3,8 @@ import { MEMBERS, updateMembersContents, saveProfileEdit, profileState } from ".
 import { authObj } from "./authorization.js";
 import { appendMessage, appendBulkMessages, appendVerifiedMessage } from "./chatscript.js";
 import { closeLoader } from "./utils.js";
-import { updateUserDOMElements } from "./frameState.js";
+import { updateMovieState, updateUserDOMElements } from "./frameState.js";
+import { drawInitReceive, onDrawUpdateReceived } from "./drawscript.js";
 
 export const socketObj = {
   reconnects: 0,
@@ -25,6 +26,14 @@ export function socketInit(){
   socket.on("messageGlobal", onMessageReceived)
   socket.on("messageVerified", messageVerified)
 
+  socket.on("drawInitReceive", drawInitReceive)
+  socket.on("drawPushGlobal", onDrawUpdateReceived)
+  //socket.on("drawVerified", drawVerified)
+  
+  socket.on("updateMovie", updateMovieState)
+
+
+  
   socket.on("pushUpdate", socketUpdateMessage)
   socket.on("updateProfileStatus", updateProfileStatus)
   socket.on("profileUpdated", profileUpdated)

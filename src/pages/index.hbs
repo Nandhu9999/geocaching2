@@ -30,6 +30,8 @@
   <link rel="stylesheet" href="/css/overlay.css" />
   <link rel="stylesheet" href="/css/draw.css" />
 
+  <link rel="stylesheet" href="/module/reinvented-color-wheel.css">
+
   <script>function $(x){return document.querySelector(x);}</script>
   <script type="module" src="/js/utils.js"></script>
   <script type="module" src="/js/authorization.js"></script>
@@ -39,7 +41,9 @@
 
   <script type="module" src="/js/frameState.js"></script>
   <script type="module" src="/js/globalscript.js"></script>
+  <script type="module" src="/js/drawscript.js"></script>
 
+  <script type="module" src="/module/reinvented-color-wheel.js"></script>
 
 </head>
 
@@ -185,6 +189,13 @@
       <div>reply</div>
       <div>copy</div>
       <div>break</div>
+    </div>
+  </dialog>
+
+  <dialog id="drawModal" class="noSelect">
+    <div class="contents"></div>
+    <div class="close">
+      <span class="closeDrawModal">🇽</span>
     </div>
   </dialog>
 

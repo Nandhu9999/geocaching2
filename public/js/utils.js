@@ -1,4 +1,6 @@
+import { drawObj } from "./drawscript.js";
 import { MEMBERS } from "./sidebarscript.js";
+import { updateMovieState } from "./frameState.js";
 
 window.mobileAndTabletCheck = function() {
     let check = false;
@@ -72,3 +74,100 @@ export function isValidName(name){
   if (!name) return false
   return true
 }
+
+export function distanceBetween({x1,y1, x2,y2}) {
+  return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
+}
+export function angleBetween ({x1,y1, x2,y2}) {
+  return Math.atan2(x2 - x1, y2 - y1)
+}
+export function midPointBtw({x1,y1,x2,y2}) {
+  return {
+    x: x1 + (x2 - x1) / 2,
+    y: y1 + (y2 - y1) / 2
+  };
+}
+
+export function devCommand(command){
+
+  const cmd = command.split(" ")
+  if (cmd[0] == "/d"){
+    console.log(drawObj)
+    return true;
+  }
+  else if (cmd[0] == "/size"){
+    console.log(cmd)
+    drawObj.size = Number(cmd[1])
+    console.log(drawObj)
+    return true;
+  }
+  else if (cmd[0] == "/check"){
+    console.log(drawObj)
+    return true;
+  }
+  else if(cmd[0] == "/stream"){
+    updateMovieState(cmd[1],cmd[2])
+    return true;
+  }
+}
+export function clamp(val, min, max) {
+  return val > max ? max : val < min ? min : val;
+}
+
+export function hexToRgb(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16),
+    a: 255
+  } : null;
+}
+function reverseHex(val){
+  const parts = val.split("")
+  const r = parts[0] + parts[1];
+  const g = parts[2] + parts[3];
+  const b = parts[4] + parts[5];
+  return b+g+r;
+}
+export function CanvasFloodfill(x, y, newColor, ctx) {
+  newColor = "0xFF"+ reverseHex(newColor.split("#")[1].toUpperCase());
+  var left, right, leftEdge, rightEdge;
+  const w = ctx.canvas.width, h = ctx.canvas.height, pixels = w * h;
+  const imgData = ctx.getImageData(0, 0, w, h);
+  const p32 = new Uint32Array(imgData.data.buffer);
+  const stack = [x + y * w]; // add starting pos to stack
+  const targetColor = p32[stack[0]];
+  console.log(targetColor, newColor)
+  if (targetColor === newColor || targetColor === undefined) { return } // avoid endless loop
+  while (stack.length) {
+      let idx = stack.pop();
+      while(idx >= w && p32[idx - w] === targetColor) { idx -= w }; // move to top edge
+      right = left = false;   
+      leftEdge = (idx % w) === 0;          
+      rightEdge = ((idx +1) % w) === 0;
+      while (p32[idx] === targetColor) {
+          p32[idx] = newColor;
+          if(!leftEdge) {
+              if (p32[idx - 1] === targetColor) { // check left
+                  if (!left) {        
+                      stack.push(idx - 1);  // found new column to left
+                      left = true;  // 
+                  }
+              } else if (left) { left = false }
+          }
+          if(!rightEdge) {
+              if (p32[idx + 1] === targetColor) {
+                  if (!right) {
+                      stack.push(idx + 1); // new column to right
+                      right = true;
+                  }
+              } else if (right) { right = false }
+          }
+          idx += w;
+      }
+  }
+  ctx.putImageData(imgData,0, 0);
+  return;
+}
+
