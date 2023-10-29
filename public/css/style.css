@@ -27,7 +27,7 @@
     font-family: var(--font-family), Arial, Helvetica, sans-serif;
   }
 body{
-  overscroll-behaviour-y:contain;
+  overscroll-behavior-y:contain;
 }
 code{
   background:rgba(0,0,0,0.3);
