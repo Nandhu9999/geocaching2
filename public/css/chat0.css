@@ -297,6 +297,7 @@
   padding-left: 10px;
   color: inherit;
   font-size: 0.9rem;
+  line-height: 1.2rem;
 }
 .usermessage div[data-col1] img {
   top: 0px;
@@ -313,6 +314,9 @@
   font-size: 0.8em;
   line-height: 1.2rem;
   color: rgba(255, 255, 255, 0.5);
+}
+.usermessage div[data-col2] [data-msgcontent] {
+  min-height: 20px;
 }
 .usermessage.hasHeader {
   margin-top: 10px;

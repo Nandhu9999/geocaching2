@@ -200,7 +200,7 @@ export class MessageCreator{
     }
     setTextContent(){
         const textContent = document.createElement("div")
-        textContent.innerHTML = `<div class="msgcontent" unselectable="on">${this.content}</div>`
+        textContent.innerHTML = `<div class="msgcontent" data-msgcontent unselectable="on">${this.content}</div>`
         this.tag.querySelector("[data-col2]").appendChild(textContent)
     }
     setOpacity(val){
@@ -226,7 +226,7 @@ export class MessageCreator{
         }
         tempParent.classList.remove("highlightEffect")
         const longpressTime = Date.now() - tempParent.dataset.touchdownTime; 
-        if (longpressTime > 250){
+        if (longpressTime > 250 && longpressTime < 1500){
             MessageCreator.openCtxMenu(tempParent)
         }
     }
@@ -247,10 +247,28 @@ export class MessageCreator{
     }
     static openCtxMenu(tag){
         $("#userMessageModal").showModal();
+        const content = tag.querySelector(".msgcontent").innerText
+        const msgId = tag.id;
+
         if( !window.mobileAndTabletCheck() ){
             $("#userMessageModal").classList.add("centerDisplay");
         }
-
+        // reply message
+        $("#userMessageModal .replyMsg").onclick = ()=>{
+            alert("feature not available yet")
+        }
+        // copy message
+        $("#userMessageModal .copyMsg").onclick = ()=>{
+            navigator.clipboard.writeText(content);
+            $("#userMessageModal").close()
+        }
+        // break message
+        $("#userMessageModal .breakMsg").onclick = ()=>{
+            tag.querySelector(".msgcontent").style.userSelect = "text";
+            const words = content.split(" ")
+            tag.querySelector(".msgcontent").innerHTML = (words.map(word=>{return (`<code>${word}</code> `)})).join(" ")
+            $("#userMessageModal").close()
+        }
     }
 }
 

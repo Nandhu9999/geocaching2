@@ -27,7 +27,9 @@
     font-family: var(--font-family), Arial, Helvetica, sans-serif;
   }
 
-
+code{
+  background:rgba(0,0,0,0.3);
+}
 
 
   #authModal{
@@ -193,6 +195,7 @@
     border: none;
     outline: none;
     padding: 10px;
+    padding-inline:0;
     border-radius: 15px 15px 0 0;
     overflow-y:auto;
 
@@ -209,7 +212,7 @@
       font-size: 1.2rem;
       justify-content: space-around;
       margin-bottom: 15px;
-
+      padding-inline: 15px;
       span{
         cursor: pointer;
       }
@@ -218,12 +221,18 @@
       display:flex;
       flex-direction: column;
       padding-top:10px;
-      gap: 10px;
+      gap: 2px;
       div{
         font-size:1.2rem;
         padding-left:42px;
+        padding-block:4px;
         color: var(--color-text-main);
         opacity: 0.7;
+        cursor: pointer;
+        &:active{
+          background:rgba(0,0,0,0.125);
+          transition: all 0.2s;
+        }
       }
     }
   }

@@ -9,6 +9,7 @@ export const drawObj = {
     CANVAS: null,
     color: "#323232",
     size: 15,
+    totalTouchActives: 0,
     clickActive: false,
     lastKnwnPoint: {x:0,y:0},
     layerMapping:{},
@@ -393,9 +394,13 @@ class CanvasPlatform{
     }
 }
 class SocketPlatform extends CanvasPlatform{
+
     constructor(canvas,canvasContainer){
         super(canvas,canvasContainer)
         this.action = {}
+        
+        this.recordRate = 20;
+        this.lastRecorded = Date.now();
 
         socketObj.io.emit("drawInit", authObj.uid);
     }
@@ -403,7 +408,7 @@ class SocketPlatform extends CanvasPlatform{
         this.action = {
             actionid:"",
             uid:authObj.uid,
-            mode:"desktop",
+            mode: window.mobileAndTabletCheck() ? "mobile" : "desktop",
             type:"",
             color:"",
             size:-1,
@@ -419,16 +424,17 @@ class SocketPlatform extends CanvasPlatform{
     pushServer(action){
         if(action.uid == authObj.uid){
             socketObj.io.emit("draw", Object.assign(action,{drawid:randomUUID(8)}))
-            this.DRAWHISTORY.push(action)
             drawObj.myActions.push(action)
+            this.DRAWHISTORY.push(action)
             this.currentState++;
         }
     }
 
     clearCanvasAction(ctxId){
         this.resetActionObj()
+        this.action.actionid = randomUUID(8)
         this.action.type = "clearcanvas"
-        this.action.ctxId = -1
+        this.action.ctxId = ctxId
         this.pushServer(this.action)
     }
 
@@ -438,9 +444,6 @@ class DesktopCanvas extends SocketPlatform{
     constructor(canvas,canvasContainer){
         super(canvas,canvasContainer)
         this.createEvents()
-
-        this.recordRate = 10;
-        this.lastRecorded = Date.now();
     }
     createEvents(){
         this.canvasContainer.addEventListener("pointerdown", this.onPointerDown.bind(this), true)
@@ -555,17 +558,95 @@ class MobileCanvas extends SocketPlatform{
         this.canvasContainer.addEventListener("touchcancel", this.onTouchCancel.bind(this))
     }
 
-    onTouchStart(e){
-        console.log(e)
+    onTouchStart({touches}){
+        
+        const target = touches[0].target;
+        if(target.classList.contains("toolsArrWrapper")||target.classList.contains("noSelect")) return;
+        drawObj.totalTouchActives = touches.length
+        console.log(touches)
+
+        const {clientX, clientY} = touches[0] // FIRST TOUCH PROPS
+        const {x,y} = this.getPointerPos({clientX,clientY})
+
+        switch(drawObj.selected){
+            case "brush":
+                if (drawObj.totalTouchActives != 1) break;
+                // [ONLY] if there is only 1 finger active
+                drawObj.lastKnwnPoint = {x,y}
+                this.action.actionid = randomUUID(8)
+                this.action.type = "brush";
+                this.action.color = drawObj.color;
+                this.action.size = drawObj.size;
+                this.action.points = [{x,y}]
+                
+                this.drawQuadraticLine({x1:drawObj.lastKnwnPoint.x,y1:drawObj.lastKnwnPoint.y,x2:x,y2:y},drawObj.layerMapping[authObj.uid]);
+                break;
+            case "erase":
+                if (drawObj.totalTouchActives != 1) break;
+                // [ONLY] if there is only 1 finger active
+                drawObj.lastKnwnPoint = {x,y}
+                this.action.actionid = randomUUID(8)
+                this.action.type = "erase"
+                this.action.size = drawObj.size;
+                this.action.points = [{x,y}]
+
+                this.eraseQuadraticLine({x1:drawObj.lastKnwnPoint.x,y1:drawObj.lastKnwnPoint.y, x2:x, y2:y}, drawObj.layerMapping[authObj.uid]);
+                break;
+            case "bucket":
+                if (drawObj.totalTouchActives != 1) break;
+                // [ONLY] if there is only 1 finger active
+                drawObj.lastKnwnPoint = {x,y}
+                this.action.actionid = randomUUID(8)
+                this.action.type = "bucket",
+                this.action.color = drawObj.color
+                this.action.x = x
+                this.action.y = y
+                this.fillPoint({x,y,color:drawObj.color},drawObj.layerMapping[authObj.uid]);
+                break;
+            case "pan&zoom":
+                break;
+        }
+
     }
-    onTouchMove(e){
-        console.log(e)
+    onTouchMove({touches}){
+        // console.log(e)
+        if(Date.now() - this.lastRecorded < this.recordRate){return}
+        this.lastRecorded = Date.now();
+
+        const {clientX, clientY} = touches[0] // FIRST TOUCH PROPS
+        const {x,y} = this.getPointerPos({clientX,clientY})
+
+        switch(drawObj.selected){
+            case "brush":
+                this.action.points.push({x,y})
+                this.drawQuadraticLine({x1:drawObj.lastKnwnPoint.x,y1:drawObj.lastKnwnPoint.y,x2:x,y2:y},drawObj.layerMapping[authObj.uid]);
+                break;
+            case "erase":
+                this.action.points.push({x,y})
+                this.eraseQuadraticLine({x1:drawObj.lastKnwnPoint.x,y1:drawObj.lastKnwnPoint.y,x2:x,y2:y},drawObj.layerMapping[authObj.uid]);
+                break;
+            case "pan&zoom":
+                // should be able to pan and zoom when tool selected
+                // or when using multiple fingers
+                if(drawObj.selected != "pan&zoom" || drawObj.totalTouchActives <= 1) break;
+
+
+                break;
+        }
+        // Save current x,y to known point for
+        // connection between next position
+        drawObj.lastKnwnPoint = {x,y}
     }
-    onTouchEnd(e){
-        console.log(e)
+    onTouchEnd({touches}){
+        // console.log(e)
+        drawObj.totalTouchActives = touches.length
+        if(this.action.actionid || drawObj.totalTouchActives == 0) this.pushServer(this.action)
+        this.resetActionObj()
     }
     onTouchCancel(){
-        
+        drawObj.totalTouchActives = touches.length
+        if(this.action.actionid || drawObj.totalTouchActives == 0) this.pushServer(this.action)
+        this.resetActionObj()
     }
 }
 export function drawInitReceive(drawHistory){

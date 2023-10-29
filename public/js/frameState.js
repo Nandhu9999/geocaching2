@@ -168,8 +168,8 @@ export function setOverlayState(type, media){
             toolsArr.append(item)
         })
         
-        toolsOpenBtn.innerText = "🇴"
-        toolsCloseBtn.innerText = "🇽"
+        toolsOpenBtn.innerText = "🅾"
+        toolsCloseBtn.innerText = "❎"
 
         toolsOpenBtn.onclick = ()=>{canvasTools.classList.remove("hide")}
         toolsCloseBtn.onclick = ()=>{canvasTools.classList.add("hide")}
@@ -220,6 +220,9 @@ export function updateMovieState(stream = "",captions = ""){
 
 
 export function setChatOverlay(open){
+    // Only if chatWindow exists
+    if(!$(".chatButton")) return;
+
     if(open == true){
         $(".overlayChatWindow").classList.remove("hide")
         $(".chatButton").classList.add("hide")

@@ -4,8 +4,8 @@ const fastify = require("fastify")({logger: false,});
 
 // CONFIG
 const PORT = process.env.PORT || 3000
-const COOKIE_SECRET = process.env.COOKIE_SECRET;
-const SESSION_SECRET = process.env.SESSION_SECRET;
+const COOKIE_SECRET = process.env.COOKIE_SECRET || "qj6EUPTx0pbLkVGsuPw8nH2Pe3BgRwe5";
+const SESSION_SECRET = process.env.SESSION_SECRET || "67rTNHieTrmQ3sXI3PaG3rxyTrPCfaq6";
 
 const data = require("./src/data.json");
 const db = require("./src/" + data.database);

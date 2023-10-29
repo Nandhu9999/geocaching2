@@ -21,15 +21,15 @@
   <meta name="twitter:card" content="summary">
 
   <!-- Import the webpage's stylesheet -->
-  {{!-- <link rel="stylesheet" href="/css/style0.css" />
+  <link rel="stylesheet" href="/css/style0.css" />
   <link rel="stylesheet" href="/css/chat0.css" />
   <link rel="stylesheet" href="/css/overlay0.css" />
-  <link rel="stylesheet" href="/css/draw0.css" /> --}}
+  <link rel="stylesheet" href="/css/draw0.css" />
 
-  <link rel="stylesheet" href="/css/style.css" />
+  {{!-- <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/chat.css" />
   <link rel="stylesheet" href="/css/overlay.css" />
-  <link rel="stylesheet" href="/css/draw.css" />
+  <link rel="stylesheet" href="/css/draw.css" /> --}}
 
   <link rel="stylesheet" href="/module/reinvented-color-wheel.css">
 
@@ -113,7 +113,7 @@
 
           <div class="userinput">
             
-            <div class="closechat" class="noSelect"><span class="closechatWrapper">🇽</span></div>
+            <div class="closechat" class="noSelect"><span class="closechatWrapper">❎</span></div>
             <div class="textarea" contenteditable="true" spellcheck="false"></div>
             <div class="send" class="noSelect">🚀</div>
 
@@ -152,7 +152,7 @@
   <dialog id="profileModal">
     <h1>
       Edit Profile
-      <span class="modalClose noSelect">🇽</span>
+      <span class="modalClose noSelect">❎</span>
     </h1>
     <form>
 
@@ -180,23 +180,23 @@
     <div class="reactions">
       <span>👍</span>
       <span>👎</span>
-      <span>🫶</span>
+      <span>❤️</span>
       <span>🤣</span>
       <span>😮</span>
       <span>😢</span>
       <span>🙏</span>
     </div>
     <div class="optionsArray">
-      <div>reply</div>
-      <div>copy</div>
-      <div>break</div>
+      <div class="replyMsg msgInteractOpts">reply</div>
+      <div class="copyMsg msgInteractOpts">copy</div>
+      <div class="breakMsg msgInteractOpts">break</div>
     </div>
   </dialog>
 
   <dialog id="drawModal" class="noSelect">
     <div class="contents"></div>
     <div class="close">
-      <span class="closeDrawModal">🇽</span>
+      <span class="closeDrawModal">❎</span>
     </div>
   </dialog>
 

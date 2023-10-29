@@ -21,6 +21,9 @@ html, body {
   width: 100%;
   font-family: var(--font-family), Arial, Helvetica, sans-serif;
 }
+code {
+  background: rgba(0, 0, 0, 0.3);
+}
 #authModal {
   z-index: 10;
   position: fixed;
@@ -170,6 +173,7 @@ html, body {
   border: none;
   outline: none;
   padding: 10px;
+  padding-inline: 0;
   border-radius: 15px 15px 0 0;
   overflow-y: auto;
 }
@@ -186,6 +190,7 @@ html, body {
   font-size: 1.2rem;
   justify-content: space-around;
   margin-bottom: 15px;
+  padding-inline: 15px;
 }
 #userMessageModal .reactions span {
   cursor: pointer;
@@ -194,13 +199,19 @@ html, body {
   display: flex;
   flex-direction: column;
   padding-top: 10px;
-  gap: 10px;
+  gap: 2px;
 }
 #userMessageModal .optionsArray div {
   font-size: 1.2rem;
   padding-left: 42px;
+  padding-block: 4px;
   color: var(--color-text-main);
   opacity: 0.7;
+  cursor: pointer;
+}
+#userMessageModal .optionsArray div:active {
+  background: rgba(0, 0, 0, 0.125);
+  transition: all 0.2s;
 }
 #userMessageModal::backdrop {
   background: rgba(0, 0, 0, 0.5);
