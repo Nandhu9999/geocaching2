@@ -127,7 +127,7 @@ export function setOverlayState(type, media){
     }
     else if(type == "draw"){
         const drawTools = [
-            // {name:"🗑️",exec:clearcanvasTool},
+            {name:"🗑️",exec:clearcanvasTool},
             // {name:"📎",exec:settingsTool},
             {name:"🔚",exec:undoTool},{name:"🔜",exec:redoTool},
             {name:"👆",exec:panzoomTool},

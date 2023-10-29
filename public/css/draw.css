@@ -121,6 +121,21 @@
         display: flex;
         justify-content: center;
         align-items: center;
+
+        .colorpalette{
+            height: 100%;
+            aspect-ratio: 1 / 1;
+            display:grid;
+            gap:2px;
+            grid-template-columns: repeat(16, auto);
+            grid-template-rows: repeat(16, auto);
+            div {
+                border:black 2px solid;
+                &.selected{
+                    border-color: white;
+                }
+            }
+        }
     }
     .close{
         height: 3rem;

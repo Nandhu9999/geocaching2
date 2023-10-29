@@ -114,6 +114,13 @@ export function appendBulkMessages(msgsArray){
 }
 
 export function appendMessage(data, opacity = 1){
+
+    if(data.content.startsWith("/")){
+        console.log("entered slash command")
+        devCommand(data.content);
+        return
+    }
+
     const msg = new MessageCreator(data)
     msg.autoGenerateFormat()
     msg.setOpacity(opacity)

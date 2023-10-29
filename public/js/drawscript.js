@@ -13,6 +13,8 @@ export const drawObj = {
     lastKnwnPoint: {x:0,y:0},
     layerMapping:{},
 
+    myActions: [],
+
     scale: 1,
 
     worldX: 0,
@@ -37,7 +39,6 @@ export const drawObj = {
         }
         const canvas = $(".brushSizeViewer")
         if( canvas ){
-            console.log("change view")
             const ctx = canvas.getContext("2d");
             ctx.clearRect(0,0,canvas.width, canvas.height)
             ctx.strokeStyle = "grey";
@@ -45,6 +46,22 @@ export const drawObj = {
             ctx.beginPath();
             ctx.arc(canvas.width / 2, canvas.height / 2, this.size / 2, 0, Math.PI*2);
             ctx.stroke();
+        }
+    },
+    setTool: function(tool){
+        switch(tool){
+            case "brush":
+                this.selected = "brush"
+                break;
+            case "erase":
+                this.selected = "erase"
+                break;
+            case "pan&zoom":
+                this.selected = "pan&zoom"
+                break;
+            case "bucket":
+                this.selected = "bucket"
+                break;
         }
     }
 }
@@ -57,7 +74,7 @@ export function closeDrawModal(){
 }
 export function clearcanvasTool(){
     console.log("clear canvas")
-
+    drawObj.CANVAS.clearCanvasAction(-1);
 }
 export function settingsTool(){
     console.log("settings")
@@ -72,15 +89,14 @@ export function redoTool(){
 export function panzoomTool(){
     console.log("panzoom")
     if(drawObj.selected == "pan&zoom"){
-        drawObj.cScale = 1
-        drawObj.cOffsetX = 0
-        drawObj.cOffsetY = 0
+        drawObj.scale = 1
+        drawObj.offsetX = 0
+        drawObj.offsetY = 0
         drawObj.CANVAS.updatePanZoom();
     }
     drawObj.selected = "pan&zoom"
 }
 export function brushTool(){
-    console.log("brush")
     if(drawObj.selected != "brush"){
         drawObj.selected = "brush"
         return
@@ -140,31 +156,54 @@ export function paletteTool(){
     
     $("#drawModal .contents").innerHTML = ""
 
-    const colorWheel = new ReinventedColorWheel({
-        // appendTo is the only required property. specify the parent element of the color wheel.
-        appendTo: $("#drawModal .contents"),
-      
-        // followings are optional properties and their default values.
-      
-        // initial color (can be specified in hsv / hsl / rgb / hex)
-        // hsv: [0, 100, 100],
-        // hsl: [0, 100, 50],
-        // rgb: [255, 0, 0],
-        hex: '#FF0000',
-      
-        // appearance
-        wheelDiameter: 200,
-        wheelThickness: 20,
-        handleDiameter: 16,
-        wheelReflectsSaturation: true,
-      
-        // handler
-        onChange: function (color) {
-          // the only argument is the ReinventedColorWheel instance itself.
-          // console.log("hsv:", color.hsv[0], color.hsv[1], color.hsv[2]);
-          drawObj.color = color.hex
-        },
-    });
+    switch("256colors"){
+        case "colorwheel":
+            const colorWheel = new ReinventedColorWheel({
+                // appendTo is the only required property. specify the parent element of the color wheel.
+                appendTo: $("#drawModal .contents"),
+                
+                // followings are optional properties and their default values.
+        
+                // initial color (can be specified in hsv / hsl / rgb / hex)
+                // hsv: [0, 100, 100],
+                // hsl: [0, 100, 50],
+                // rgb: [255, 0, 0],
+                hex: '#FF0000',
+                
+                // appearance
+                wheelDiameter: 200,
+                wheelThickness: 20,
+                handleDiameter: 16,
+                wheelReflectsSaturation: true,
+                
+                // handler
+                onChange: function (color) {
+                    // the only argument is the ReinventedColorWheel instance itself.
+                    // console.log("hsv:", color.hsv[0], color.hsv[1], color.hsv[2]);
+                    drawObj.color = color.hex
+                },
+            });
+            break;
+        case "256colors":
+            const colors = ["#000", "#111", "#222", "#333", "#444", "#555", "#666", "#777", "#888", "#999", "#aaa", "#bbb", "#ccc", "#ddd", "#eee", "#fff"]
+            const colorpalette = document.createElement("div")
+            colorpalette.classList = "colorpalette"
+            colors.forEach((color)=>{
+                const div = document.createElement("div")
+                div.style.background = color;
+                div.classList = "colorpaletteOption"
+                div.onclick = ()=>{
+                    drawObj.color = color;
+                    const opt = $(".colorpaletteOption.selected")
+                    if(opt) opt.classList.remove("selected");
+                    div.classList.add("selected")
+                }
+                colorpalette.appendChild(div)
+            })
+            $("#drawModal .contents").appendChild(colorpalette)
+            break;
+    }
+    
 }
 export function colorpickerTool(){
     console.log("color picker")
@@ -235,6 +274,11 @@ class CanvasPlatform{
             x: (clientX - rect.left) / (rect.right - rect.left) * this.canvas.width,
             y: (clientY - rect.top) / (rect.bottom - rect.top) * this.canvas.height
         };
+    }
+    clearCanvas(ctxId = -1){
+        if(ctxId == -1){
+            this.CONTEXTS.forEach((context)=>{context.clearRect(0,0,this.canvas.width,this.canvas.height);})
+        }
     }
     drawQuadraticLine({x1,y1,x2,y2, color=drawObj.color, size=drawObj.size},ctxId=0){
         const ctx = this.CONTEXTS[ctxId]
@@ -316,6 +360,8 @@ class CanvasPlatform{
             case "bucket":
                 this.fillPoint(action)
                 break;
+            case "clearcanvas":
+                this.clearCanvas(action.ctxId)
         }
         this.DRAWHISTORY.push(action);
         this.currentState++;
@@ -374,8 +420,16 @@ class SocketPlatform extends CanvasPlatform{
         if(action.uid == authObj.uid){
             socketObj.io.emit("draw", Object.assign(action,{drawid:randomUUID(8)}))
             this.DRAWHISTORY.push(action)
+            drawObj.myActions.push(action)
             this.currentState++;
         }
+    }
+
+    clearCanvasAction(ctxId){
+        this.resetActionObj()
+        this.action.type = "clearcanvas"
+        this.action.ctxId = -1
+        this.pushServer(this.action)
     }
 
 }
@@ -397,9 +451,8 @@ class DesktopCanvas extends SocketPlatform{
         this.canvasContainer.addEventListener("wheel",       this.onWheel.bind(this))
         this.canvasContainer.addEventListener("keydown",     this.onKeyDown.bind(this))
     }
-
-    onPointerDown({clientX, clientY, which}){
-        if ( which != 1 ) return
+    onPointerDown({clientX, clientY, which, target}){
+        if (which != 1||target.classList.contains("toolsArrWrapper")||target.classList.contains("noSelect")) return
 
         drawObj.clickActive = true
         this.resetActionObj()
@@ -492,12 +545,27 @@ class DesktopCanvas extends SocketPlatform{
 class MobileCanvas extends SocketPlatform{
     constructor(canvas,canvasContainer){
         super(canvas,canvasContainer)
+        this.createEvents()
     }
     createEvents(){
-        this.canvas.addEventListener("touchstart",)
-        this.canvas.addEventListener("touchmove",)
-        this.canvas.addEventListener("touchend",)
-        this.canvas.addEventListener("touchcancel",)
+        console.log("events created")
+        this.canvasContainer.addEventListener("touchstart",  this.onTouchStart.bind(this), true)
+        this.canvasContainer.addEventListener("touchmove",   this.onTouchMove.bind(this),  true)
+        this.canvasContainer.addEventListener("touchend",    this.onTouchEnd.bind(this),   true)
+        this.canvasContainer.addEventListener("touchcancel", this.onTouchCancel.bind(this))
+    }
+
+    onTouchStart(e){
+        console.log(e)
+    }
+    onTouchMove(e){
+        console.log(e)
+    }
+    onTouchEnd(e){
+        console.log(e)
+    }
+    onTouchCancel(){
+        
     }
 }
 export function drawInitReceive(drawHistory){
@@ -508,4 +576,11 @@ export function drawInitReceive(drawHistory){
 }
 export function onDrawUpdateReceived(data){
     drawObj.CANVAS.fromServer(data);
+}
+export function onDrawVerified(obj){
+    const results = drawObj.myActions.filter((action)=>{if (action.actionid == obj.actionid) return true})
+    if (results.length > 0){
+        drawObj.CANVAS.fromServer(results[0])
+        drawObj.myActions = drawObj.myActions.filter((action)=>{if (action.actionid != obj.actionid) return true})
+    }
 }

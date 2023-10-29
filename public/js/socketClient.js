@@ -4,7 +4,7 @@ import { authObj } from "./authorization.js";
 import { appendMessage, appendBulkMessages, appendVerifiedMessage } from "./chatscript.js";
 import { closeLoader } from "./utils.js";
 import { updateMovieState, updateUserDOMElements } from "./frameState.js";
-import { drawInitReceive, onDrawUpdateReceived } from "./drawscript.js";
+import { drawInitReceive, onDrawUpdateReceived, onDrawVerified } from "./drawscript.js";
 
 export const socketObj = {
   reconnects: 0,
@@ -28,7 +28,7 @@ export function socketInit(){
 
   socket.on("drawInitReceive", drawInitReceive)
   socket.on("drawPushGlobal", onDrawUpdateReceived)
-  //socket.on("drawVerified", drawVerified)
+  socket.on("drawVerified", onDrawVerified)
   
   socket.on("updateMovie", updateMovieState)
 

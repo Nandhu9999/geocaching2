@@ -48,15 +48,23 @@ function socketConnection(socket){
     socket.emit("drawInitReceive", drawHistoryCache);
   })
 
-  socket.on("draw", async(data)=>{
-    console.log("🖌️ received draw message:",data.drawid);
+  socket.on("draw", async(action)=>{
+    console.log("🖌️ received draw message:",action.drawid);
     
-    drawHistoryCache.push(data)
-    while(drawHistoryCache.length > 100) messagesCache.pop(0)
+    switch(action.type){
+      case "clearcanvas":
+        drawHistoryCache.length = 0
+        break;
 
+      default:
+        drawHistoryCache.push(action)
+        while(drawHistoryCache.length > 100) messagesCache.pop(0)
+        break;   
+    }
+    
     // broadcast to all other users except sender
-    socket.broadcast.emit("drawPushGlobal", data);
-    socket.emit("drawVerified", {drawid: data.drawid});
+    socket.broadcast.emit("drawPushGlobal", action);
+    socket.emit("drawVerified", {drawid: action.drawid, actionid: action.actionid});
   })
 
   socket.on("isTyping", async()=>{

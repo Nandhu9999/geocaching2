@@ -1,4 +1,4 @@
-import { closeDrawModal } from "./drawscript.js"
+import { drawObj, closeDrawModal } from "./drawscript.js"
 import { setChatOverlay } from "./frameState.js";
 
 document.body.addEventListener("pointerup",PointerAndTouchUp)
@@ -36,7 +36,7 @@ function GLOBAL_KEYDOWN(e){
   const {altKey, ctrlKey, shiftKey, code} = e;
 //   console.log(code)
   if(code == "Escape"){
-    if ( $(".userMessageModal").classList.contains("hide") == false ){
+    if ( $("#userMessageModal").classList.contains("hide") == false ){
         setChatOverlay(false)
         return
     }
@@ -76,11 +76,21 @@ function GLOBAL_KEYDOWN(e){
     else if( $(".overlayFrame").dataset.state === "draw" ){
         switch(code){
             case "KeyB":
-                console.log("B");break;
+                console.log("B");
+                drawObj.setTool("brush")
+                break;
             case "KeyV":
-                console.log("V");break;
+                console.log("V");
+                drawObj.setTool("pan&zoom")
+                break;
             case "KeyE":
-                console.log("E");break;
+                console.log("E");
+                drawObj.setTool("erase")
+                break;
+            case "KeyF":
+                console.log("F");
+                drawObj.setTool("bucket")
+                break;
             case "KeyZ":
                 if(ctrlKey && !shiftKey && !altKey){
                     console.log("undo")
