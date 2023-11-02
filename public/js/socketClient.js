@@ -3,7 +3,8 @@ import { MEMBERS, updateMembersContents, saveProfileEdit, profileState } from ".
 import { authObj } from "./authorization.js";
 import { appendMessage, appendBulkMessages, appendVerifiedMessage } from "./chatscript.js";
 import { closeLoader } from "./utils.js";
-import { updateMovieState, updateUserDOMElements } from "./frameState.js";
+import { updateUserDOMElements } from "./frameState.js";
+import { updateMovieState } from "./videoscript.js";
 import { drawInitReceive, onDrawUpdateReceived, onDrawVerified } from "./drawscript.js";
 
 export const socketObj = {

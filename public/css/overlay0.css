@@ -8,7 +8,7 @@
 .overlayFrame .chatButton {
   content: " ";
   position: absolute;
-  z-index: 2;
+  z-index: 101;
   bottom: 17px;
   left: 15px;
   width: 2.4rem;

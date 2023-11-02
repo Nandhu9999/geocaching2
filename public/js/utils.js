@@ -1,6 +1,6 @@
 import { drawObj } from "./drawscript.js";
 import { MEMBERS } from "./sidebarscript.js";
-import { updateMovieState } from "./frameState.js";
+import { updateMovieState } from "./videoscript.js";
 
 window.mobileAndTabletCheck = function() {
   // console.log("FORCE MOBILE")
@@ -89,7 +89,6 @@ export function midPointBtw({x1,y1,x2,y2}) {
     y: y1 + (y2 - y1) / 2
   };
 }
-
 export function devCommand(command){
 
   const cmd = command.split(" ")
@@ -115,7 +114,6 @@ export function devCommand(command){
 export function clamp(val, min, max) {
   return val > max ? max : val < min ? min : val;
 }
-
 export function hexToRgb(hex) {
   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result ? {
@@ -125,51 +123,222 @@ export function hexToRgb(hex) {
     a: 255
   } : null;
 }
-function reverseHex(val){
+export function reverseHex(val){
   const parts = val.split("")
   const r = parts[0] + parts[1];
   const g = parts[2] + parts[3];
   const b = parts[4] + parts[5];
   return b+g+r;
 }
-export function CanvasFloodfill(x, y, newColor, ctx) {
-  newColor = "0xFF"+ reverseHex(newColor.split("#")[1].toUpperCase());
-  var left, right, leftEdge, rightEdge;
-  const w = ctx.canvas.width, h = ctx.canvas.height, pixels = w * h;
-  const imgData = ctx.getImageData(0, 0, w, h);
-  const p32 = new Uint32Array(imgData.data.buffer);
-  const stack = [x + y * w]; // add starting pos to stack
-  const targetColor = p32[stack[0]];
-  console.log(targetColor, newColor)
-  if (targetColor === newColor || targetColor === undefined) { return } // avoid endless loop
-  while (stack.length) {
-      let idx = stack.pop();
-      while(idx >= w && p32[idx - w] === targetColor) { idx -= w }; // move to top edge
-      right = left = false;   
-      leftEdge = (idx % w) === 0;          
-      rightEdge = ((idx +1) % w) === 0;
-      while (p32[idx] === targetColor) {
-          p32[idx] = newColor;
-          if(!leftEdge) {
-              if (p32[idx - 1] === targetColor) { // check left
-                  if (!left) {        
-                      stack.push(idx - 1);  // found new column to left
-                      left = true;  // 
-                  }
-              } else if (left) { left = false }
-          }
-          if(!rightEdge) {
-              if (p32[idx + 1] === targetColor) {
-                  if (!right) {
-                      stack.push(idx + 1); // new column to right
-                      right = true;
-                  }
-              } else if (right) { right = false }
-          }
-          idx += w;
-      }
+
+export const CanvasAPI = {
+  defaulColor: "#aaaaaa",
+  defaultSize: 0,
+  stampImage: new Image(),
+
+  clearCanvas(ctx){
+    const {width, height} = ctx.canvas
+    ctx.clearRect(0,0, width, height)
+  },
+  
+  clearCanvasColor(ctx,color){
+    const {width, height} = ctx.canvas
+    ctx.rect(0,0,width,height);
+    ctx.fillStyle = color;
+    ctx.fill();
+  },
+
+  executePointLine({ctx,x1,y1,x2,y2},props,callbackFn){
+    const dist = distanceBetween({x1,y1, x2,y2});
+    const angle = angleBetween({x1,y1, x2,y2});
+    const halfSize = props.size / 2;
+    if(x1 == x2 && y1 == y2){
+      callbackFn(ctx,x1 - halfSize,y1 - halfSize, props)
+    }
+    for (let i = 0; i < dist; i += halfSize / 2) {
+      const x = x1 + (Math.sin(angle) * i) - halfSize
+      const y = y1 + (Math.cos(angle) * i) - halfSize
+      callbackFn(ctx,x,y, props)
+    }
+  },
+  executePointCurveLine({ctx,x1,y1,x2,y2},props,callbackFn){
+    let f,t,dx2,dy2;
+    if (typeof f === 'undefined') f = 0.3;
+    if (typeof t === 'undefined') t = 0.6;
+    
+    const dist = distanceBetween({x1,y1, x2,y2});
+    const halfSize = props.size / 2;
+
+    function gradient(a, b) {
+      return (b.y - a.y) / (b.x - a.x);
+    }
+  
+    var m = 0;
+    var dx1 = 0;
+    var dy1 = 0;
+  
+    var preP = { x: x1, y: y1 };
+    var curP = { x: x2, y: y2 };
+  
+    m = gradient(preP, curP);
+    dx2 = (curP.x - preP.x) * -f;
+    dy2 = dx2 * m * t;
+  
+    for (let i = 0; i < dist; i += halfSize / 2) {
+      var x = preP.x - dx1 + curP.x + dx2;
+      var y = preP.y - dy1 + curP.y + dy2;
+  
+      callbackFn(ctx,x,y, props)
+    }
+
+  },
+  erasePoint(ctx,x,y,props){
+    const halfSize = props.size / 2
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.strokeStyle = "#000000";
+    ctx.beginPath();
+    ctx.arc(x + halfSize, y + halfSize, halfSize, 0, Math.PI*2);
+    ctx.fill();
+    ctx.globalCompositeOperation = 'source-over';
+  },
+  // drawPoint(ctx,x,y,props){
+  //   const size = props.size
+  //   const halfSize = size/2
+  //   ctx.save();
+  //   ctx.translate(x, y);
+  //   ctx.fillStyle = "red";
+  //   ctx.fillRect(0, 0, size, size);
+  //   ctx.globalCompositeOperation = 'source-in';
+  //   ctx.drawImage(CanvasAPI.stampImage,0,0, size, size)
+  //   ctx.restore();
+  // },
+  // erasePoint(ctx,x,y,props){
+  //   const size = props.size
+  //   const halfSize = props.size / 2
+  //   for( var i = 0 ; i < Math.round( Math.PI * size ) ; i++ ){
+  //     var angle = ( i / Math.round( Math.PI * size )) * 360;
+  //     ctx.clearRect(x + halfSize,y + halfSize, Math.sin( angle * ( Math.PI / 180 )) * size , Math.cos( angle * ( Math.PI / 180 )) * size );
+  //   }
+  // },
+  // drawPoint(ctx,x,y,props){
+  //   const size = props.size
+  //   const color = props.color;
+  //   const halfSize = size/2
+  //   ctx.fillStyle = color;
+  //   ctx.beginPath();
+  //   ctx.arc(x + halfSize, y + halfSize, size, 0, Math.PI*2);
+  //   ctx.fill();
+  // },
+  drawPoint(ctx,x,y,props){
+    const size = props.size
+    const color = props.color
+    const halfSize = props.size / 2
+    for( var i = 0 ; i < Math.round( Math.PI * size ) ; i++ ){
+      var angle = ( i / Math.round( Math.PI * size )) * 360;
+      ctx.fillStyle = color
+      ctx.fillRect(x + halfSize,y + halfSize, Math.sin( angle * ( Math.PI / 180 )) * size , Math.cos( angle * ( Math.PI / 180 )) * size );
+      ctx.fill()
+    }
+  },
+  fillPoint(ctx,x,y,color){
+    //https://stackoverflow.com/a/2119892
+    const newColor = "0xFF"+ reverseHex(color.split("#")[1].toUpperCase());
+    floodFill(ctx,x,y,newColor, 50)
   }
-  ctx.putImageData(imgData,0, 0);
-  return;
+}
+CanvasAPI.stampImage.src = "https://cdn-icons-png.flaticon.com/512/0/14.png"
+
+
+
+function getPixel(pixelData, x, y) {
+  if (x < 0 || y < 0 || x >= pixelData.width || y >= pixelData.height) {
+      return NaN;
+  }
+  var pixels = pixelData.data;
+  var i = (y * pixelData.width + x) * 4;
+  return ((pixels[i + 0] & 0xFF) << 24) |
+         ((pixels[i + 1] & 0xFF) << 16) |
+         ((pixels[i + 2] & 0xFF) <<  8) |
+         ((pixels[i + 3] & 0xFF) <<  0);
 }
 
+function setPixel(pixelData, x, y, color) {
+  var i = (y * pixelData.width + x) * 4;
+  var pixels = pixelData.data;
+  pixels[i + 0] = (color >>> 24) & 0xFF;
+  pixels[i + 1] = (color >>> 16) & 0xFF;
+  pixels[i + 2] = (color >>>  8) & 0xFF;
+  pixels[i + 3] = (color >>>  0) & 0xFF;
+}
+
+function diff(c1, c2) {
+  if (isNaN(c1) || isNaN(c2)) {
+      return Infinity;
+  }
+
+  var dr = ((c1 >>> 24) & 0xFF) - ((c2 >>> 24) & 0xFF);
+  var dg = ((c1 >>> 16) & 0xFF) - ((c2 >>> 16) & 0xFF);
+  var db = ((c1 >>>  8) & 0xFF) - ((c2 >>>  8) & 0xFF);
+  var da = ((c1 >>>  0) & 0xFF) - ((c2 >>>  0) & 0xFF);
+
+  return dr*dr + dg*dg + db*db + da*da;
+}
+
+export function floodFill(context, x, y, replacementColor, delta) {
+  var current, w, e, stack, color, cx, cy;
+  const canvas = context.canvas;
+  var pixelData = context.getImageData(0, 0, canvas.width, canvas.height);
+  var done = [];
+  for (var i = 0; i < canvas.width; i++) {
+      done[i] = [];
+  }
+
+  var targetColor = getPixel(pixelData, x, y);
+  delta *= delta;
+
+  stack = [ [x, y] ];
+  done[x][y] = true;
+  while ((current = stack.pop())) {
+      cx = current[0];
+      cy = current[1];
+
+      if (diff(getPixel(pixelData, cx, cy), targetColor) <= delta) {
+          setPixel(pixelData, cx, cy, replacementColor);
+
+          w = e = cx;
+          while (w > 0 && diff(getPixel(pixelData, w - 1, cy), targetColor) <= delta) {
+              --w;
+              if (done[w][cy]) break;
+              setPixel(pixelData, w, cy, replacementColor);
+          }
+          while (e < pixelData.width - 1 && diff(getPixel(pixelData, e + 1, cy), targetColor) <= delta) {
+              ++e;
+              if (done[e][cy]) break;
+              setPixel(pixelData, e, cy, replacementColor);
+          }
+
+          for (cx = w; cx <= e; cx++) {
+              if (cy > 0) {
+                  color = getPixel(pixelData, cx, cy - 1);
+                  if (diff(color, targetColor) <= delta) {
+                      if (!done[cx][cy - 1]) {
+                          stack.push([cx, cy - 1]);
+                          done[cx][cy - 1] = true;
+                      }
+                  }
+              }
+              if (cy < canvas.height - 1) {
+                  color = getPixel(pixelData, cx, cy + 1);
+                  if (diff(color, targetColor) <= delta) {
+                      if (!done[cx][cy + 1]) {
+                          stack.push([cx, cy + 1]);
+                          done[cx][cy + 1] = true;
+                      }
+                  }
+              }
+          }
+      }
+  }
+
+  context.putImageData(pixelData, 0, 0, 0, 0, canvas.width, canvas.height);
+}

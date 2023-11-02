@@ -137,21 +137,20 @@ export function setOverlayState(type, media){
             // {name:"📄",exec:layersTool},
         ]
 
-        // pen
-        // content aware fill tool
-        // gradient
-
         const canvasContainer = document.createElement("div")
         const canvasTools     = document.createElement("div")
         const toolsOpenBtn    = document.createElement("div")
         const toolsCloseBtn   = document.createElement("div")
         const canvas          = document.createElement("canvas")
 
+        const drawLoader      = document.createElement("div")
+
         canvasContainer.id      = "canvasContainer"
         toolsOpenBtn.classList  = "toolsOpenBtn noSelect"
         toolsCloseBtn.classList = "toolsCloseBtn noSelect"
         canvasTools.id          = "canvasTools"
         canvas.id               = "baseCanvas"
+        drawLoader.classList    = "drawLoader"
 
         canvasTools.style.setProperty("--totalTools", drawTools.length)
         const toolsArr        = document.createElement("div")
@@ -171,6 +170,8 @@ export function setOverlayState(type, media){
         toolsOpenBtn.innerText = "🅾"
         toolsCloseBtn.innerText = "❎"
 
+        drawLoader.innerText = "executing..."
+
         toolsOpenBtn.onclick = ()=>{canvasTools.classList.remove("hide")}
         toolsCloseBtn.onclick = ()=>{canvasTools.classList.add("hide")}
 
@@ -180,6 +181,8 @@ export function setOverlayState(type, media){
         canvasContainer.appendChild(toolsOpenBtn)
         canvasContainer.appendChild(canvasTools)
         canvasContainer.appendChild(canvas)
+        canvasContainer.appendChild(drawLoader)
+
         $(".overlayFrame").innerHTML   = ""
         $(".overlayFrame").style.display = "block"
         $(".overlayFrame").appendChild(canvasContainer)
@@ -188,34 +191,6 @@ export function setOverlayState(type, media){
         setBaseCanvas(canvas, canvasContainer)
         enableChatframe()
     }
-}
-
-export function updateMovieState(stream = "",captions = ""){
-    if (!$(".movieFrame")) {return}
-    
-    $(".movieFrame").remove()
-
-    console.log("stream link:",stream)
-    console.log("captions link:",captions)
-
-    const movieFrame = document.createElement("video")
-    const source     = document.createElement("source")
-    const  track     = document.createElement("track")
-
-    movieFrame.classList.add("movieFrame")
-    movieFrame.controls = true
-    source.src       = stream
-    source.type      = "video/mp4"
-    track.src        = captions
-    track.label      = "English"
-    track.kind       = "captions"
-    track.srclang    = "en-us"
-    track.default    = true
-
-    movieFrame.appendChild( track)
-    movieFrame.appendChild(source)    
-    
-    $(".overlayFrame").prepend(movieFrame)
 }
 
 

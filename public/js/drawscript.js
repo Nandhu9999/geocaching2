@@ -1,6 +1,6 @@
 import { authObj } from "./authorization.js";
 import { socketObj } from "./socketClient.js";
-import { randomUUID, hexToRgb, midPointBtw, distanceBetween, angleBetween, CanvasFloodfill, clamp } from "./utils.js";
+import { randomUUID, clamp, CanvasAPI } from "./utils.js";
 
 import ReinventedColorWheel from "../module/reinvented-color-wheel.js";
 
@@ -157,7 +157,7 @@ export function paletteTool(){
     
     $("#drawModal .contents").innerHTML = ""
 
-    switch("256colors"){
+    switch("colorwheel"){
         case "colorwheel":
             const colorWheel = new ReinventedColorWheel({
                 // appendTo is the only required property. specify the parent element of the color wheel.
@@ -186,7 +186,7 @@ export function paletteTool(){
             });
             break;
         case "256colors":
-            const colors = ["#000", "#111", "#222", "#333", "#444", "#555", "#666", "#777", "#888", "#999", "#aaa", "#bbb", "#ccc", "#ddd", "#eee", "#fff"]
+            const colors = ["#000000", "#111000", "#222000", "#333000", "#444000", "#555000", "#666000", "#777000", "#888000", "#999000", "#aaa000", "#bbb000", "#ccc000", "#ddd000", "#eee000", "#fff000"]
             const colorpalette = document.createElement("div")
             colorpalette.classList = "colorpalette"
             colors.forEach((color)=>{
@@ -266,8 +266,16 @@ class CanvasPlatform{
         newlayer.width = this.canvas.width
         newlayer.height = this.canvas.height
         $("#canvasContainer").prepend(newlayer)
-        // this.ctx           = canvas.getContext("2d",{ alpha: true })
-        return newlayer.getContext("2d")
+        // return newlayer.getContext("2d")
+        const ctx = newlayer.getContext("2d",{ alpha: true })
+
+            // ctx.rect(0,0,ctx.canvas.width, ctx.canvas.height)
+            // ctx.fillStyle = "#ffffff";
+            // ctx.fill()
+            newlayer.style.background = "#ffffff"
+
+        ctx.imageSmoothingEnabled = false;
+        return ctx
     }
     getPointerPos({clientX, clientY}) {
         const rect = this.canvas.getBoundingClientRect();
@@ -278,38 +286,29 @@ class CanvasPlatform{
     }
     clearCanvas(ctxId = -1){
         if(ctxId == -1){
-            this.CONTEXTS.forEach((context)=>{context.clearRect(0,0,this.canvas.width,this.canvas.height);})
+            this.CONTEXTS.forEach((context)=>{CanvasAPI.clearCanvasColor(context, "#ffffff")})
         }
     }
     drawQuadraticLine({x1,y1,x2,y2, color=drawObj.color, size=drawObj.size},ctxId=0){
         const ctx = this.CONTEXTS[ctxId]
         if(!ctx){console.error("no context available");return;}
 
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineWidth = size;
-        ctx.lineJoin = ctx.lineCap = 'round';
-        ctx.strokeStyle = color
-
-        var midPoint = midPointBtw({x1,y1,x2,y2});
-        ctx.quadraticCurveTo(x1, y1, midPoint.x, midPoint.y);
-
-        ctx.lineTo(x2, y2);
-        ctx.stroke();
+        CanvasAPI.executePointLine({ctx,x1,y1,x2,y2},{color,size},CanvasAPI.drawPoint)
     }
     eraseQuadraticLine({x1,y1,x2,y2, size=drawObj.size},ctxId=0){
         const ctx = this.CONTEXTS[ctxId]
         if(!ctx){console.error("no context available");return;}
+        
+        CanvasAPI.executePointLine({ctx,x1,y1,x2,y2},{size},CanvasAPI.erasePoint)
+        // const dist = distanceBetween({x1,y1, x2,y2});
+        // const angle = angleBetween({x1,y1, x2,y2});
+        // const halfSizeOfBrush = size / 2;
 
-        const dist = distanceBetween({x1,y1, x2,y2});
-        const angle = angleBetween({x1,y1, x2,y2});
-        const halfSizeOfBrush = size / 2;
-
-        for (let i = 0; i < dist; i += halfSizeOfBrush / 2) {
-            const x = x1 + (Math.sin(angle) * i) - halfSizeOfBrush
-            const y = y1 + (Math.cos(angle) * i) - halfSizeOfBrush
-            this.erasePoint({x, y, size:halfSizeOfBrush},ctxId);
-        }
+        // for (let i = 0; i < dist; i += halfSizeOfBrush / 2) {
+        //     const x = x1 + (Math.sin(angle) * i) - halfSizeOfBrush
+        //     const y = y1 + (Math.cos(angle) * i) - halfSizeOfBrush
+        //     this.erasePoint({x, y, size:halfSizeOfBrush},ctxId);
+        // }
     }
     erasePoint({x,y, size},ctxId=0){
         const ctx = this.CONTEXTS[ctxId]
@@ -327,9 +326,7 @@ class CanvasPlatform{
         const ctx = this.CONTEXTS[ctxId]
         if(!ctx){console.error("no context available");return;}
 
-        // setTimeout(() => {
-            CanvasFloodfill(x,y, color,ctx);
-        // }, 0);
+        CanvasAPI.fillPoint(ctx,x,y,color)
 
     }
     applyAction2Canvas(action){
@@ -392,6 +389,8 @@ class CanvasPlatform{
         changeCSS(this.canvas);
         this.CONTEXTS.forEach((context)=>{changeCSS(context.canvas);})
     }
+
+
 }
 class SocketPlatform extends CanvasPlatform{
 
@@ -399,7 +398,7 @@ class SocketPlatform extends CanvasPlatform{
         super(canvas,canvasContainer)
         this.action = {}
         
-        this.recordRate = 20;
+        this.recordRate = 10;
         this.lastRecorded = Date.now();
 
         socketObj.io.emit("drawInit", authObj.uid);
@@ -524,8 +523,8 @@ class DesktopCanvas extends SocketPlatform{
         if(this.action.actionid) this.pushServer(this.action)
         this.resetActionObj()
     }
-    onWheel({deltaY, clientX, clientY}){
-        if(deltaY == 0) return;
+    onWheel({deltaY, clientX, clientY, ctrlKey}){
+        if(deltaY == 0 || ctrlKey) return;
         const direction = deltaY > 0 ? false : true;
 
         switch(drawObj.selected){
@@ -567,7 +566,14 @@ class MobileCanvas extends SocketPlatform{
 
         const {clientX, clientY} = touches[0] // FIRST TOUCH PROPS
         const {x,y} = this.getPointerPos({clientX,clientY})
-
+        if(drawObj.totalTouchActives == 2){
+            console.log("pan&zoom")
+            return
+        }
+        if(drawObj.totalTouchActives == 3){
+            console.log("three fingers active")
+            return
+        }
         switch(drawObj.selected){
             case "brush":
                 if (drawObj.totalTouchActives != 1) break;
@@ -604,6 +610,7 @@ class MobileCanvas extends SocketPlatform{
                 this.fillPoint({x,y,color:drawObj.color},drawObj.layerMapping[authObj.uid]);
                 break;
             case "pan&zoom":
+                console.log("only panning possible")
                 break;
         }
 
@@ -651,8 +658,19 @@ class MobileCanvas extends SocketPlatform{
 }
 export function drawInitReceive(drawHistory){
     const actionsCount = drawHistory.length;
+    $(".drawLoader").style.display = "grid";
+    if (actionsCount == 0){
+        $(".drawLoader").style.display = "none";
+        return
+    }
     drawHistory.forEach((action,idx)=>{
-        setTimeout(()=>{onDrawUpdateReceived(action)}, idx * (1000 / actionsCount));
+        setTimeout(()=>{
+            onDrawUpdateReceived(action)
+            console.log(idx, actionsCount-1)
+            if(idx == actionsCount - 1){
+                $(".drawLoader").style.display = "none";
+            }
+        }, idx * (1000 / actionsCount));
     })
 }
 export function onDrawUpdateReceived(data){

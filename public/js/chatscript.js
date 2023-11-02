@@ -22,7 +22,7 @@ function systemInit(){
     widgetOpts.addEventListener("click", widgetClicked)
     textArea.addEventListener("click", textareaClicked)
     textArea.addEventListener("input", isTyping)
-    sendBtn.addEventListener("click", sendClicked)
+    sendBtn.addEventListener("click", ()=>{sendClicked()})
 
     function KEYDOWN(e){
         if( e.code == "Enter" && e.shiftKey == false ){
@@ -64,7 +64,6 @@ function textareaClicked(){
 
 export function sendClicked(msg=null){
     if(!msg && !textArea.innerText.trim()){return}
-    
     let myMessage = {}
     if (msg) {
         myMessage = msg
