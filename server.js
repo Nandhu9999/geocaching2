@@ -56,7 +56,7 @@ fastify.post("/api/editProfile", editProfile);
 fastify.post("/api/authenticate", authenticate);
 
 
-fastify.get("/api/debug", debugConsole);
+fastify.post("/api/debug", debugConsole);
 fastify.post("/api/llm", executeLLM);
 
 // WEBSOCKET CONNECTION

@@ -100,6 +100,7 @@ export function devCommand(command){
   if(command.endsWith("\n")){
     command = command.slice(0,-1)
   }
+  debugConsole({"command":command})
   const cmd = command.split(" ")
   if (cmd[0] == "/d"){
     console.log(drawObj)
@@ -123,8 +124,7 @@ export function devCommand(command){
     switch (cmd[1]){
         case "service":
             const url = cmd[2]
-            debugConsole(command)
-            debugConsole(cmd[2])
+            debugConsole({"url":url})
             const orcaMsg = {
               uid       : '000',
               username  : "OrcaMini",
@@ -135,14 +135,15 @@ export function devCommand(command){
             if(!url){
               appendMessage(Object.assign(orcaMsg,{content:"Invalid service url!"}),1)
             }
-            if(url.endsWith("/")){
+            if(url && url.endsWith("/")){
               authObj.other_service_url = url.slice(0,-1)
-            }else{
+            }else if(url){
               authObj.other_service_url = url
             }
+            
             appendMessage(Object.assign(orcaMsg,{content:"Successfully set service url to: \n" + authObj.other_service_url}),1)
+
             break;
-        case "help":
         default:
             console.log("help")
             break    
@@ -442,8 +443,8 @@ async function executeLargeLanguageModel(prompt){
 
 }
 
-export async function debugConsole(a){
-  await fetch("/api/llm", {
+async function debugConsole(a){
+  await fetch("/api/debug", {
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body:JSON.stringify({"response":a})
