@@ -168,8 +168,8 @@ export function paletteTool(){
                 // initial color (can be specified in hsv / hsl / rgb / hex)
                 // hsv: [0, 100, 100],
                 // hsl: [0, 100, 50],
-                // rgb: [255, 0, 0],
-                hex: '#FF0000',
+                rgb: [32, 32, 32],
+                // hex: drawObj.color,
                 
                 // appearance
                 wheelDiameter: 200,
@@ -184,6 +184,7 @@ export function paletteTool(){
                     drawObj.color = color.hex
                 },
             });
+            colorWheel
             break;
         case "256colors":
             const colors = ["#000000", "#111000", "#222000", "#333000", "#444000", "#555000", "#666000", "#777000", "#888000", "#999000", "#aaa000", "#bbb000", "#ccc000", "#ddd000", "#eee000", "#fff000"]

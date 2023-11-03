@@ -364,7 +364,10 @@
     margin-top:10px;
 }
 
-.usermessage.highlightEffect{
+.usermessage.highlightEffect, .usermessage:hover{
     background:rgba(0,0,0,0.2);
     transition: 0.2s all;
+}
+.usermessage:active {
+	pointer-events: none;
 }

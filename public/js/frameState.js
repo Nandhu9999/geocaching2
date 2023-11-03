@@ -170,7 +170,7 @@ export function setOverlayState(type, media){
         toolsOpenBtn.innerText = "🅾"
         toolsCloseBtn.innerText = "❎"
 
-        drawLoader.innerText = "executing..."
+        drawLoader.innerText = "executing.."
 
         toolsOpenBtn.onclick = ()=>{canvasTools.classList.remove("hide")}
         toolsCloseBtn.onclick = ()=>{canvasTools.classList.add("hide")}

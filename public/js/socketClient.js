@@ -1,6 +1,6 @@
 import { io } from "https://cdn.socket.io/4.5.0/socket.io.esm.min.js"
 import { MEMBERS, updateMembersContents, saveProfileEdit, profileState } from "./sidebarscript.js";
-import { authObj } from "./authorization.js";
+import { authObj, updateAuth } from "./authorization.js";
 import { appendMessage, appendBulkMessages, appendVerifiedMessage } from "./chatscript.js";
 import { closeLoader } from "./utils.js";
 import { updateUserDOMElements } from "./frameState.js";
@@ -15,8 +15,8 @@ export const socketObj = {
 
 
 export function socketInit(){
-  if (authObj.AUTHORIZED == false) return
-  const socket = io();
+  if (authObj.AUTHORIZED == false) {updateAuth(); return}
+  const socket = io({reconnection: false});
   socketObj.io = socket
 
   socket.on("connect", userConnected);
@@ -45,7 +45,9 @@ export function socketInit(){
     socketObj.active = false;
     // checkAuth();
     MEMBERS.length = 0
+    authObj.AUTHORIZED = false;
     updateMembersContents()
+    setTimeout(socketInit,1000);
   });
 
 }

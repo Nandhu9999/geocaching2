@@ -1,7 +1,6 @@
 import { authObj } from "./authorization.js";
 import { appendMessage } from "./chatscript.js";
 import { drawObj } from "./drawscript.js";
-import { MEMBERS } from "./sidebarscript.js";
 import { updateMovieState } from "./videoscript.js";
 
 window.mobileAndTabletCheck = function() {
@@ -115,7 +114,11 @@ export function devCommand(command){
     switch (cmd[1]){
         case "service":
             const url = cmd[2]
-            authObj.other_service_url = url
+            if(url.endsWith("/")){
+              authObj.other_service_url = url.slice(0,-1)
+            }else{
+              authObj.other_service_url = url
+            }
             break;
         case "help":
         default:
@@ -389,12 +392,13 @@ async function executeLargeLanguageModel(prompt){
     let rresponse = {}
     try{
         // default: http://localhost:11434
-        rresponse = await fetch(`${authObj.other_service_url}/api/generate`, {
+        rresponse = await fetch("/api/llm", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body:JSON.stringify({
+                "service":`${authObj.other_service_url}/api/generate`,
                 "model": "orca-mini",
                 "prompt": prompt || "Who are you?"
             })

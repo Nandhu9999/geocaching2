@@ -212,7 +212,7 @@ code {
   opacity: 0.7;
   cursor: pointer;
 }
-#userMessageModal .optionsArray div:active {
+#userMessageModal .optionsArray div:active,#userMessageModal .optionsArray div:hover {
   background: rgba(0, 0, 0, 0.125);
   transition: all 0.2s;
 }

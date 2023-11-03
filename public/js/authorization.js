@@ -22,7 +22,7 @@ export const authObj = {
 const authModal = $("#authModal")
 const authForm = $("#authModal form")
 
-function showAuthModal(){
+export function showAuthModal(){
     const accountItem = window.localStorage.getItem("account")
     authModal.showModal()
     if( accountItem ){
