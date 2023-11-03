@@ -8,7 +8,7 @@ function authorizeRequest(request, reply, next){
 
     const URL = request.url
     const ISAUTH = request.session.isAuthenticated
-    
+
     /* 
      *  All Unauthorized and 
      *  /api prefixed urls
@@ -19,7 +19,7 @@ function authorizeRequest(request, reply, next){
     if( ISAUTH === undefined && URL.startsWith("/api/")){
         console.log(request.url)
 
-        VALID_URLS = ["/api/authenticate"]
+        const VALID_URLS = ["/api/authenticate"]
         if(VALID_URLS.indexOf(URL) == -1){
             return reply.send({status: "error", reason: "not authorized" })
         }

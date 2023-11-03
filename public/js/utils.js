@@ -100,7 +100,6 @@ export function devCommand(command){
   if(command.endsWith("\n")){
     command = command.slice(0,-1)
   }
-  debugConsole({"command":command})
   const cmd = command.split(" ")
   if (cmd[0] == "/d"){
     console.log(drawObj)
@@ -121,10 +120,15 @@ export function devCommand(command){
     return false;
   }
   else if(cmd[0] == "/set"){
-    switch (cmd[1]){
+    
+    const cmd2 = cmd[1].split("=")
+    const cmdObj = cmd2.map(ele => ele.trim())
+    const cmdKey = cmdObj[0]
+    const cmdVal = cmdObj[1]
+    
+    switch (cmdKey){
         case "service":
-            const url = cmd[2]
-            debugConsole({"url":url})
+            const url = cmdVal
             const orcaMsg = {
               uid       : '000',
               username  : "OrcaMini",
