@@ -361,7 +361,7 @@
             min-height: 20px;
             white-space: pre-line !important; /* preline or prewrap */
             overflow-wrap: anywhere;
-            width: 100%;
+            width: calc(100% - 10px);
         }
     }
 }

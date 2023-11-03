@@ -236,7 +236,10 @@ export class MessageCreator{
         }
         tempParent.classList.remove("highlightEffect")
         const longpressTime = Date.now() - tempParent.dataset.touchdownTime; 
-        if (longpressTime > 250 && longpressTime < 1500 && window.mobileAndTabletCheck()){
+        if (longpressTime > 250 
+            && longpressTime < 1500 
+            && window.mobileAndTabletCheck()
+            && !tempParent.classList.contains("brokenType")){
             MessageCreator.openCtxMenu(tempParent)
         }
     }
