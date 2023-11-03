@@ -117,11 +117,22 @@ export function devCommand(command){
     switch (cmd[1]){
         case "service":
             const url = cmd[2]
+            const orcaMsg = {
+              uid       : '000',
+              username  : "OrcaMini",
+              messageid : `msgid${randomUUID(12)}`,
+              timestamp : Date.now(),
+              pfp       : "https://ollama.ai/public/ollama.png"
+            }
+            if(!url){
+              appendMessage(Object.assign(orcaMsg,{content:"Invalid service url!"}),1)
+            }
             if(url.endsWith("/")){
               authObj.other_service_url = url.slice(0,-1)
             }else{
               authObj.other_service_url = url
             }
+            appendMessage(Object.assign(orcaMsg,{content:"Successfully set service url to: \n" + authObj.other_service_url}),1)
             break;
         case "help":
         default:
