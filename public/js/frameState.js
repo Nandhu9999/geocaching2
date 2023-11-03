@@ -24,6 +24,7 @@ export function updateUserDOMElements(){
 }
 
 export function defaultState(){
+    window.onbeforeunload = null
     $("main").dataset.state = "default"
     
     $(".mainheader").classList.remove("hide")
@@ -63,7 +64,8 @@ export function overlayState(){
 }
 
 export function setOverlayState(type, media){
-
+    window.onbeforeunload = function(){return 'Are you sure you want to exit?'}
+    
     function enableChatframe(){
         const chatButton = document.createElement('div');
         chatButton.classList = "chatButton";
@@ -126,6 +128,7 @@ export function setOverlayState(type, media){
         enableChatframe()
     }
     else if(type == "draw"){
+
         const drawTools = [
             {name:"🗑️",exec:clearcanvasTool},
             // {name:"📎",exec:settingsTool},

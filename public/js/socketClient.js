@@ -47,6 +47,7 @@ export function socketInit(){
     MEMBERS.length = 0
     authObj.AUTHORIZED = false;
     updateMembersContents()
+    
     setTimeout(socketInit,1000);
   });
 

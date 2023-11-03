@@ -1,6 +1,6 @@
 import { authObj } from "./authorization.js";
 import { socketObj } from "./socketClient.js"
-import { getTimePrefix, randomUUID, tempPfp, devCommand } from "./utils.js"
+import { getTimePrefix, randomUUID, tempPfp, devCommand, getScrollPercent } from "./utils.js"
 
 // console.log("chatscript.js")
 
@@ -59,7 +59,10 @@ function updateWidgetState(){
 function textareaClicked(){
     widgetOpts.classList.remove("active")
     updateWidgetState()
-
+    const scrollPercent = getScrollPercent($(".maincontent"));
+    if(scrollPercent > 92){
+        $(".maincontent").scrollTop = $(".maincontent").scrollTopMax;
+    }
 }
 
 export function sendClicked(msg=null){
@@ -109,11 +112,17 @@ function isTyping(){
 }
 
 export function appendBulkMessages(msgsArray){
+    MessageCreator.lastMsg = {
+        uid: "",
+        username:"",
+        timestamp: 0
+    };
     msgsArray.forEach(msg=>{appendMessage(msg, 1)})
+    $(".maincontent").scrollTop = $(".maincontent").scrollTopMax;
 }
 
 export function appendMessage(data, opacity = 1){
-
+    const scrollPercent =  getScrollPercent($(".maincontent"))
     if(data.content.startsWith("/")){
         console.log("entered slash command")
         devCommand(data.content);
@@ -126,8 +135,10 @@ export function appendMessage(data, opacity = 1){
 
     $("#chatlogs").appendChild(msg.tag)
     const msgHeight = msg.getHeight()
-    $(".maincontent").scrollBy( 0, msgHeight)
-    $(".overlayChatlogs").scrollBy( 0, msgHeight)
+    if(scrollPercent > 92){
+        $(".maincontent").scrollBy( 0, msgHeight)
+        $(".overlayChatlogs").scrollBy( 0, msgHeight)
+    }
 }
 export function appendVerifiedMessage(messageid){
     const message = $("#chatlogs").querySelector("#" + messageid)
@@ -270,10 +281,12 @@ export class MessageCreator{
         $("#userMessageModal .breakMsg").onclick = ()=>{
             if(tag.querySelector(".msgcontent").classList.contains("brokenType")){
                 tag.querySelector(".msgcontent").style.userSelect = "none";
+                tag.querySelector(".msgcontent").style.fontFamily = "inherit";
                 // tag.querySelector(".msgcontent").innerHTML = content
                 tag.querySelector(".msgcontent").classList.remove("brokenType")
             }else{
                 tag.querySelector(".msgcontent").style.userSelect = "text";
+                tag.querySelector(".msgcontent").style.fontFamily = "monospace";
                 // const words = content.split(" ")
                 // tag.querySelector(".msgcontent").innerHTML = (words.map(word=>{return (`<code>${word}</code> `)})).join(" ")
                 tag.querySelector(".msgcontent").classList.add("brokenType")

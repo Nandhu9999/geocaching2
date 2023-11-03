@@ -68,6 +68,12 @@ $("#devCheck").addEventListener("click", async ()=>{
     console.log("dev checking..");
 })
 
+export function getScrollPercent(h) {
+  var b = document.body,
+      st = 'scrollTop',
+      sh = 'scrollHeight';
+  return ((h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100) || 100;
+}
 
 export function isValidImage(url) {
   return /^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(url);
@@ -139,6 +145,9 @@ export function devCommand(command){
             console.log("help")
             break    
     }
+    $("#textarea").innerText = ""
+    $("#textarea").focus()
+    return true
   }
   else if(cmd[0] == "/gpt"){
     let text = ""

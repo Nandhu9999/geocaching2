@@ -307,6 +307,7 @@
   position: absolute;
   object-fit: contain;
   background:white;
+  scale: 0.9;
 }
 .usermessage div[data-col2]{
   width: 100%;
