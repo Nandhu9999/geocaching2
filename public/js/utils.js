@@ -91,6 +91,9 @@ export function midPointBtw({x1,y1,x2,y2}) {
 }
 export function devCommand(command){
 
+  if(command.endsWith("\n")){
+    command = command.slice(0,-1)
+  }
   const cmd = command.split(" ")
   if (cmd[0] == "/d"){
     console.log(drawObj)
@@ -412,6 +415,7 @@ async function executeLargeLanguageModel(prompt){
     const resArray = JSON.parse("[" + ((response.split("\n")).join(",")).slice(0,-1) + "]")
     let msgContent = ""
     resArray.forEach(({response}) => {msgContent += response});
+    console.log(msgContent)
     appendMessage(Object.assign(orcaMsg,{content:msgContent}),1)
 
 }

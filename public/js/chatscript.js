@@ -262,15 +262,20 @@ export class MessageCreator{
             $("#userMessageModal").close()
         }
         // break message
+        if( tag.querySelector(".msgcontent").classList.contains("brokenType")){
+            $("#userMessageModal .breakMsg").innerText = "fix"    
+        }else{
+            $("#userMessageModal .breakMsg").innerText = "break"    
+        }
         $("#userMessageModal .breakMsg").onclick = ()=>{
             if(tag.querySelector(".msgcontent").classList.contains("brokenType")){
                 tag.querySelector(".msgcontent").style.userSelect = "none";
-                tag.querySelector(".msgcontent").innerHTML = content
+                // tag.querySelector(".msgcontent").innerHTML = content
                 tag.querySelector(".msgcontent").classList.remove("brokenType")
             }else{
                 tag.querySelector(".msgcontent").style.userSelect = "text";
-                const words = content.split(" ")
-                tag.querySelector(".msgcontent").innerHTML = (words.map(word=>{return (`<code>${word}</code> `)})).join(" ")
+                // const words = content.split(" ")
+                // tag.querySelector(".msgcontent").innerHTML = (words.map(word=>{return (`<code>${word}</code> `)})).join(" ")
                 tag.querySelector(".msgcontent").classList.add("brokenType")
             }
             $("#userMessageModal").close()
