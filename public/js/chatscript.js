@@ -263,9 +263,16 @@ export class MessageCreator{
         }
         // break message
         $("#userMessageModal .breakMsg").onclick = ()=>{
-            tag.querySelector(".msgcontent").style.userSelect = "text";
-            const words = content.split(" ")
-            tag.querySelector(".msgcontent").innerHTML = (words.map(word=>{return (`<code>${word}</code> `)})).join(" ")
+            if(tag.querySelector(".msgcontent").classList.contains("brokenType")){
+                tag.querySelector(".msgcontent").style.userSelect = "none";
+                tag.querySelector(".msgcontent").innerHTML = content
+                tag.querySelector(".msgcontent").classList.remove("brokenType")
+            }else{
+                tag.querySelector(".msgcontent").style.userSelect = "text";
+                const words = content.split(" ")
+                tag.querySelector(".msgcontent").innerHTML = (words.map(word=>{return (`<code>${word}</code> `)})).join(" ")
+                tag.querySelector(".msgcontent").classList.add("brokenType")
+            }
             $("#userMessageModal").close()
         }
     }

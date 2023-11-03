@@ -15,7 +15,8 @@ export const authObj = {
     account: {
         username: "",
         pfp:""
-    }
+    },
+    other_service_url:""
 }
 
 const authModal = $("#authModal")

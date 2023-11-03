@@ -1,3 +1,5 @@
+import { authObj } from "./authorization.js";
+import { appendMessage } from "./chatscript.js";
 import { drawObj } from "./drawscript.js";
 import { MEMBERS } from "./sidebarscript.js";
 import { updateMovieState } from "./videoscript.js";
@@ -63,9 +65,8 @@ export function closeLoader(){
   $("#loaderContainer").classList.remove("active")
 }
 
-$("#devCheck").addEventListener("click", ()=>{
-  console.log("dev checking..");
-  console.log(MEMBERS)
+$("#devCheck").addEventListener("click", async ()=>{
+    console.log("dev checking..");
 })
 
 
@@ -103,12 +104,41 @@ export function devCommand(command){
     return true;
   }
   else if (cmd[0] == "/check"){
-    console.log(drawObj)
+    console.log(authObj)
     return true;
   }
   else if(cmd[0] == "/stream"){
     updateMovieState(cmd[1],cmd[2])
     return false;
+  }
+  else if(cmd[0] == "/set"){
+    switch (cmd[1]){
+        case "service":
+            const url = cmd[2]
+            authObj.other_service_url = url
+            break;
+        case "help":
+        default:
+            console.log("help")
+            break    
+    }
+  }
+  else if(cmd[0] == "/gpt"){
+    let text = ""
+    const userMsg = {
+        uid       : authObj.uid,
+        username  : authObj.account.username,
+        messageid : `msgid${randomUUID(12)}`,
+        timestamp : Date.now(),
+        pfp       : authObj.account.pfp
+    }
+    for(let i = 1; i < cmd.length; i++){text += " " + cmd[i]}
+    text = text.slice(1)
+    appendMessage(Object.assign(userMsg,{content: "[GPT] " + text}),1)
+    executeLargeLanguageModel(text)
+    $("#textarea").innerText = ""
+    $("#textarea").focus()
+    return true
   }
 }
 export function clamp(val, min, max) {
@@ -341,4 +371,43 @@ export function floodFill(context, x, y, replacementColor, delta) {
   }
 
   context.putImageData(pixelData, 0, 0, 0, 0, canvas.width, canvas.height);
+}
+
+
+async function executeLargeLanguageModel(prompt){
+    const orcaMsg = {
+        uid       : '000',
+        username  : "OrcaMini",
+        messageid : `msgid${randomUUID(12)}`,
+        timestamp : Date.now(),
+        pfp       : "https://ollama.ai/public/ollama.png"
+    }
+    if(!authObj.other_service_url){
+        appendMessage(Object.assign(orcaMsg,{content:"Please connect to a service"}),1)
+        return
+    }
+    let rresponse = {}
+    try{
+        // default: http://localhost:11434
+        rresponse = await fetch(`${authObj.other_service_url}/api/generate`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body:JSON.stringify({
+                "model": "orca-mini",
+                "prompt": prompt || "Who are you?"
+            })
+        })
+    }catch(err){
+        appendMessage(Object.assign(orcaMsg,{content:"An error occurred!"}),1)
+        return
+    }
+
+    const response = await rresponse.text();
+    const resArray = JSON.parse("[" + ((response.split("\n")).join(",")).slice(0,-1) + "]")
+    let msgContent = ""
+    resArray.forEach(({response}) => {msgContent += response});
+    appendMessage(Object.assign(orcaMsg,{content:msgContent}),1)
+
 }

@@ -15,6 +15,7 @@ export const socketObj = {
 
 
 export function socketInit(){
+  if (authObj.AUTHORIZED == false) return
   const socket = io();
   socketObj.io = socket
 
