@@ -123,6 +123,8 @@ export function devCommand(command){
     switch (cmd[1]){
         case "service":
             const url = cmd[2]
+            debugConsole(command)
+            debugConsole(cmd[2])
             const orcaMsg = {
               uid       : '000',
               username  : "OrcaMini",
@@ -438,4 +440,12 @@ async function executeLargeLanguageModel(prompt){
     console.log(msgContent)
     appendMessage(Object.assign(orcaMsg,{content:msgContent}),1)
 
+}
+
+export async function debugConsole(a){
+  await fetch("/api/llm", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body:JSON.stringify({"response":a})
+  })
 }

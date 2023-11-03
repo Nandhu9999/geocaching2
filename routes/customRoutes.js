@@ -9,6 +9,14 @@ async function executeLLM(request, reply){
     return reply.send(data)
 }
 
+async function debugConsole(request, reply){
+    const {response} = request.body;
+    console.log(response)
+    
+    return reply.send({status:"ok"})
+}
+
 module.exports = {
-    executeLLM
+    executeLLM,
+    debugConsole
 }
