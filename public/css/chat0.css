@@ -308,6 +308,9 @@
   object-fit: contain;
   background:white;
 }
+.usermessage div[data-col2]{
+  width: 100%;
+}
 .usermessage div[data-col2] [data-username] {
   font-weight: 600;
 }
@@ -319,6 +322,8 @@
 .usermessage div[data-col2] [data-msgcontent] {
   min-height: 20px;
   white-space: pre-line !important; /* preline or prewrap */
+  overflow-wrap: anywhere;
+  width: 100%;
 }
 .usermessage.hasHeader {
   margin-top: 10px;

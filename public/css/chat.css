@@ -346,6 +346,8 @@
     }
 
     div[data-col2]{
+        width: 100%;
+        
         [data-username]{
             font-weight: 600;
         }
@@ -357,6 +359,8 @@
         [data-msgcontent]{
             min-height: 20px;
             white-space: pre-line !important; /* preline or prewrap */
+            overflow-wrap: anywhere;
+            width: 100%;
         }
     }
 }
