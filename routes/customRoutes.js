@@ -16,7 +16,7 @@ async function debugConsole(request, reply){
     return reply.send({status:"ok"})
 }
 
-async function healthz(request, response){
+async function healthz(request, reply){
     return reply.status(200).send("");
 }
 
