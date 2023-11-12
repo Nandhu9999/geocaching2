@@ -19,7 +19,7 @@ function authorizeRequest(request, reply, next){
     if( ISAUTH === undefined && URL.startsWith("/api/")){
         console.log(request.url)
 
-        const VALID_URLS = ["/api/authenticate"]
+        const VALID_URLS = ["/api/authenticate", "/api/healthz"]
         if(VALID_URLS.indexOf(URL) == -1){
             return reply.send({status: "error", reason: "not authorized" })
         }

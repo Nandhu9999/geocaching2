@@ -168,14 +168,14 @@ export function paletteTool(){
                 // initial color (can be specified in hsv / hsl / rgb / hex)
                 // hsv: [0, 100, 100],
                 // hsl: [0, 100, 50],
-                rgb: [32, 32, 32],
-                // hex: drawObj.color,
+                // rgb: [32, 32, 32],
+                hex: drawObj.color,
                 
                 // appearance
                 wheelDiameter: 200,
                 wheelThickness: 20,
                 handleDiameter: 16,
-                wheelReflectsSaturation: true,
+                wheelReflectsSaturation: false,
                 
                 // handler
                 onChange: function (color) {

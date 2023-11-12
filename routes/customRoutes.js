@@ -1,9 +1,9 @@
 const axios = require('axios');
 
 async function executeLLM(request, reply){
-    const {service, model, prompt} = request.body
+    const {service, model, prompt, stream} = request.body
     console.log(">> service:",service)
-    const {data} = await axios.post(service, {model,prompt}, {
+    const {data} = await axios.post(service, {model,prompt,stream}, {
         headers: {'Content-Type': 'application/json'}
     })
     return reply.send(data)
@@ -16,7 +16,12 @@ async function debugConsole(request, reply){
     return reply.send({status:"ok"})
 }
 
+async function healthz(request, response){
+    return reply.status(200).send("");
+}
+
 module.exports = {
     executeLLM,
-    debugConsole
+    debugConsole,
+    healthz
 }

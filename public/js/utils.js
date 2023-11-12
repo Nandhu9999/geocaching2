@@ -430,7 +430,8 @@ async function executeLargeLanguageModel(prompt){
             body:JSON.stringify({
                 "service":`${authObj.other_service_url}/api/generate`,
                 "model": "orca-mini",
-                "prompt": prompt || "Who are you?"
+                "prompt": prompt || "Who are you?",
+                "stream":false,
             })
         })
     }catch(err){
@@ -438,12 +439,22 @@ async function executeLargeLanguageModel(prompt){
         return
     }
 
-    const response = await rresponse.text();
-    const resArray = JSON.parse("[" + ((response.split("\n")).join(",")).slice(0,-1) + "]")
-    let msgContent = ""
-    resArray.forEach(({response}) => {msgContent += response});
-    console.log(msgContent)
-    appendMessage(Object.assign(orcaMsg,{content:msgContent}),1)
+    // IF STREAMING TOKENS
+    const STREAM_TOKENS = false
+    if (STREAM_TOKENS == true){
+      const response = await rresponse.text();
+      const resArray = JSON.parse("[" + ((response.split("\n")).join(",")).slice(0,-1) + "]")
+      let msgContent = ""
+      resArray.forEach(({response}) => {msgContent += response});
+      console.log(msgContent)
+      appendMessage(Object.assign(orcaMsg,{content:msgContent}),1)
+    }else{
+      const response = await rresponse.json();
+      console.log(response)
+      const msgContent = response["response"]
+      appendMessage(Object.assign(orcaMsg,{content:msgContent}),1)
+    }
+
 
 }
 

@@ -37,7 +37,7 @@ fastify.register(require("@fastify/session"), {
 const { home, authenticate, logout, authorizeRequest, checkAuthorized } = require("./routes/primaryRoutes")
 const { socketConnection } = require("./routes/socketServer");
 const { totalChannels, totalMembers, editProfile } = require("./routes/userRoutes");
-const { executeLLM, debugConsole } = require("./routes/customRoutes");
+const { executeLLM, debugConsole, healthz } = require("./routes/customRoutes");
 
 // HOOKS  
 fastify.addHook("onRequest", authorizeRequest);
@@ -59,6 +59,7 @@ fastify.post("/api/authenticate", authenticate);
 fastify.post("/api/debug", debugConsole);
 fastify.post("/api/llm", executeLLM);
 
+fastify.get("/api/healthz", healthz);
 // WEBSOCKET CONNECTION
 fastify.register(require('fastify-socket.io'));
 fastify.ready(async(err) => {
