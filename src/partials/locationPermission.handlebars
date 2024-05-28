@@ -1,0 +1,29 @@
+<div
+  id="locationPermissionPopup"
+  style="z-index:1000"
+  class="w-screen h-screen fixed grid place-content-center bg-black bg-opacity-50 hidden"
+>
+  <div
+    class="mx-auto w-11/12 md:max-w-md mt-10 bg-white rounded-lg shadow-lg p-4"
+  >
+    <h2 class="text-center text-xl font-bold">Location Permission</h2>
+    <p class="text-justify">This website needs access to your location to track
+      your location in game.</p>
+    <br />
+    <p class="text-justify">It is unplayable without reliable location access,
+      so please allow it.</p>
+    <br />
+    <hr />
+    <br />
+    <div class="error text-red-800 flex flex-col items-center justify-center">
+    </div>
+    <div class="flex justify-center mt-4">
+      <button
+        id="locationAcceptButton"
+        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
+      >
+        Accept
+      </button>
+    </div>
+  </div>
+</div>

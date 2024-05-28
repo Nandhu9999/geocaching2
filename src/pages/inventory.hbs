@@ -1,0 +1,51 @@
+<html lang="en">
+  <head>
+    {{> head }}
+    <title>AmritaTrees | Inventory</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <script src="/js/app.js" type="module"></script>
+
+<body class="w-screen relative bg-slate-800 overflow-y-auto overflow-x-hidden">
+  <div id="TailwindRequiredStyles" class="hidden translate-x-[300px]"></div>
+
+  <div id="contentWrapper" style="width:110vw;" class="w-screen relative transition-all">
+    <div id="inventory" style="width:100%;transform:translateX(-5vw);">
+        <div class="w-full h-full bg-green-500 justify-center p-4 pt-24 flex flex-col items-center gap-8 overflow-y-auto">
+            <div id="inventoryTabBar" class="w-fit h-16 flex flex-row px-8 bg-green-700 items-center rounded-full mx-auto">
+                    {{!-- EVENTS --}}
+                {{!-- <div class="text-center"></div> --}}
+                <div class="text-center w-full">
+                    <h1 class="text-3xl font-bold text-white">TREES</h1>
+                    <h3 class="text-xl font-mono text-gray-300">{{ account.count}}/{{ game.maxCount }}</h3>
+                </div>
+                    {{!-- QUESTS --}}
+                {{!-- <div class="text-center"></div> --}}
+            </div>
+            <div id="inventoryList" class="w-full h-full mx-auto px-2 md:px-20 lg:px-40">
+                <div class="grid place-items-center  grid-cols-3 gap-y-5 md:gap-y-10">
+                    {{#collection.found}}
+              {{!-- <div class="w-24 h-24 md:w-48 md:h-48 lg:w-64 lg:h-64 bg-red-300">
+                        {{this.name}}
+                        {{this.icon}}
+              </div> --}}
+                      {{> inventoryCard }}
+
+                    {{/collection.found}}                        
+                </div>
+            </div>
+            <div id="inventoryFooter" class="block h-20 ">
+              ...
+            </div>
+        </div>
+    </div>
+    <div id="contentOverlay" style="z-index:999;width:100%;transform:translateX(-5vw);" class="h-screen absolute top-0 left-0 bg-black opacity-20 hidden">
+
+    </div>
+  </div>
+
+  {{> gameNavbar}}
+
+  {{> sideBar }}
+</body>
+</html>

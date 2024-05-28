@@ -1,0 +1,72 @@
+<nav
+  class="w-full h-16 bg-gradient-to-r from-slate-900 via-opacity-50 to-slate-900 top-0 fixed z-10 opacity-90"
+>
+  <div class="h-full flex items-center justify-between px-4 py-2">
+    <div class="flex items-center">
+      <img class="nodrag w-10 h-10" src="/assets/favicon.png" alt="logo" />
+      <span
+        class="ml-2 font-bold md:text-2xl text-white w-min md:w-auto"
+      >{{localization.title}}</span>
+    </div>
+    <div class="flex gap-2">
+      <!-- LANGUAGE SELECT DROPDOWN -->
+      <div class="relative">
+        <button
+          id="languageDropdownButton"
+          class="border-2 border-green-500 hover:border-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer flex flex-row gap-1"
+          onclick="toggleLanguageDropdown()"
+        >
+          <span id="dropdownFlagOption" class="hidden md:block">
+            {{#if lang}}{{#ifCond
+                lang "===" "en"
+              }}🇺🇸{{else}}🇮🇳{{/ifCond}}{{/if}}</span>
+          <span id="languageDropdownButtonText">
+            {{#if lang}}
+              {{#ifCond lang "===" "en"}}
+                English
+              {{else ifCond lang "===" "ta"}}
+                தமிழ்
+              {{else ifCond lang "===" "te"}}
+                తెలుగు
+              {{else ifCond lang "===" "ml"}}
+                മലയാളം
+              {{/ifCond}}
+            {{else}}
+              null
+            {{/if}}</span>
+        </button>
+        <div
+          id="languageDropdown"
+          class="absolute top-full left-0 hidden w-48 bg-white rounded-md shadow-lg py-2"
+        >
+          <a
+            href="?lang=en"
+            onClick="return;languageSelected('english')"
+            class="block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white cursor-pointer"
+          >English</a>
+          <a
+            href="?lang=ta"
+            onClick="return;languageSelected('tamil')"
+            class="block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white cursor-pointer"
+          >தமிழ்</a>
+          <a
+            href="?lang=te"
+            onClick="return;languageSelected('telugu')"
+            class="block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white cursor-pointer"
+          >తెలుగు</a>
+          <a
+            href="?lang=ml"
+            onClick="return;languageSelected('malayalam')"
+            class="block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white cursor-pointer"
+          >മലയാളം</a>
+        </div>
+      </div>
+      <!-- CREATE NEW ACCOUNT BUTTON -->
+      <a
+        href="/register"
+        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
+      >{{localization.newUser}}</a>
+    </div>
+  </div>
+</nav>
+<script src="/js/navbarScript.js"></script>

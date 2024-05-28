@@ -1,0 +1,105 @@
+<html lang="en">
+  <head>
+    {{> head }}
+    <title>{{ localization.title }}</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="preload" as="image" href="/assets/heroTree.jpg" />
+  </head>
+  <body class="w-screen overflow-x-hidden relative bg-slate-800">
+    
+    <div
+  id="TailwindRequiredStyles"
+  class="hidden translate-x-[300px] animate-bounce animate-pulse bg-slate-800"
+></div>
+    {{!-- APPLICATION NAVBAR --}}
+    {{> navbar }}
+
+    {{!-- HERO SECTION --}}
+    <div class="relative h-screen">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5/6">
+        <h1 class="text-white font-bold text-7xl customOutline">{{localization.landingTitle}}</h1>
+        <h1 class="text-white font-bold text-4xl mt-4 customOutline">{{localization.landingSubtitle1}}</h1>
+        <p class="text-white font-medium text-xl customOutline">
+          {{localization.landingSubtitle2}}
+        </p>
+        <div class="mt-8">
+          <a href="#login" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
+            {{localization.letsStart}}
+          </a>
+        </div>
+      </div>
+      <img class="nodrag w-full h-full object-cover" src="/assets/heroTree.jpg" alt="trees" />
+    </div>
+
+    {{!-- LANDING PAGE CONTENT --}}
+    <a id="explore" href="#explore" class="h-16 bg-green-600 text-gray-200 text-2xl font-bold flex items-center justify-center">
+      {{localization.exploreWorld}}
+    </a>
+
+
+    <div class="flex flex-col gap-y-20 py-10">
+      {{!-- CONTENT 1 --}}
+      <div class="grid grid-rows-2 md:grid-rows-1 md:grid-cols-2 gap-4 mx-4 md:gap-8 md:px-20">
+        <div>
+          <img class="nodrag w-full h-auto rounded-xl md:rounded-3xl" src="/assets/campus400.png" alt="trees" />
+        </div>
+        <div>
+          <p class="text-white font-medium h-full flex items-center text-xl">{{localization.landingMsg1}}</p>
+        </div>
+      </div>
+
+      {{!-- CONTENT 2a --}}
+      <div class="grid md:hidden grid-rows-2 md:grid-rows-1 md:grid-cols-2 gap-4 mx-4 md:gap-8 md:px-20">
+        <div>
+          <img class="nodrag w-full h-auto rounded-xl md:rounded-3xl" src="/assets/game.png" alt="trees" />
+        </div>
+        <div>
+          <p class="text-white font-medium h-full flex items-center text-xl">{{localization.landingMsg2}}</p>
+        </div>
+      </div>
+
+      {{!-- CONTENT 2b --}}
+      <div class="hidden md:grid grid-rows-2 md:grid-rows-1 md:grid-cols-2 gap-4 mx-4 md:gap-8 md:px-20">
+        <div>
+          <p class="text-white font-medium h-full flex items-center text-xl">{{localization.landingMsg2}}</p>
+        </div>
+        <div>
+          <img class="nodrag w-full h-auto rounded-xl md:rounded-3xl" src="/assets/game.png" alt="trees" />
+        </div>
+      </div>
+      
+      {{!-- CONTENT 3 --}}
+      <div class="grid grid-rows-2 md:grid-rows-1 md:grid-cols-2 gap-4 mx-4 md:gap-8 md:px-20">
+        <div>
+          <img class="nodrag w-full h-auto rounded-xl md:rounded-3xl" src="/assets/questionExample.png" alt="trees" />
+        </div>
+        <div>
+          <p class="text-white font-medium h-full flex items-center text-xl">{{localization.landingMsg3}}</p>
+        </div>
+      </div>
+      
+      <div class="flex flex-col w-full px-4 gap-2 md:px-20 items-center">
+          <img class="nodrag w-full md:w-9/12 h-auto rounded-xl md:rounded-3xl" src="/assets/campus.png" alt="trees" />
+        <div class="text-center text-white text-xs">
+          {{localization.landingFigureCaption}}
+        </div>
+      </div>
+    </div>
+
+
+    <div id="login" class="h-16 opacity-0">
+      Login to Your Account!
+    </div>
+    <a href="#login" id="login" class="h-16 bg-green-600 text-gray-200 text-2xl font-bold flex items-center justify-center">
+      Login to Your Account!
+    </a>
+
+    {{> loginForm }}
+
+    <footer class="bg-slate-800 py-2 text-center text-white">
+      <div class="container mx-auto">
+        &copy; 2024 Amrita Trees. All rights reserved.
+      </div>
+    </footer>
+  </body>
+</html>

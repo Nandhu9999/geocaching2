@@ -1,0 +1,35 @@
+<html lang="en">
+  <head>
+    {{> head }}
+    <title>AmritaTrees | Game</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <script src="/js/app.js" type="module"></script>
+  <link rel="stylesheet" href="/leaflet/leaflet.css"/>
+  <script src="/leaflet/leaflet.js"></script>
+
+<body class="w-screen h-screen relative bg-slate-800 overflow-hidden">
+
+<div
+  id="TailwindRequiredStyles"
+  class="hidden translate-x-[300px] animate-bounce animate-pulse bg-slate-800"
+></div>
+
+  {{!-- {{> newUserPopup }} --}}
+  {{> locationPermission }}
+
+  <div id="contentWrapper" style="width:110vw;" class="w-screen relative transition-all">
+    <div id="map" style="height: 100vh;width:100%;transform:translateX(-5vw);"></div>
+    <div id="contentOverlay" style="z-index:999;width:100%;transform:translateX(-5vw);" class="h-screen absolute top-0 left-0 bg-black opacity-50 hidden">
+
+    </div>
+  </div>
+
+  {{> gameNavbar}}
+
+  {{> sideBar }}
+  {{> questionPopup }}
+</body>
+<script src="/js/mapScript.js" type="module"></script>
+<script src="/js/gameScript.js" type="module"></script>
+</html>

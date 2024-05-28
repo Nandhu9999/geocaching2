@@ -1,0 +1,35 @@
+<div
+  id="questionPopup"
+  style="z-index:999;"
+  class="w-screen h-full absolute top-0 left-0 bg-black bg-opacity-50 hidden"
+>
+  <div class="w-full h-full relative">
+    <div
+      class="w-full md:w-7/12 bottom-0 absolute left-1/2 -translate-x-1/2 rounded-t-xl p-5 questionBackgroundGradient"
+    >
+      <div class="flex justify-between">
+        <div class="select-none flex justify-between">
+          <span class="font-bold pr-2">Q.</span>
+          <div id="question" class="pb-4 pl-0 font-bold"></div>
+        </div>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="white"
+          class="quitButton w-6 h-6 cursor-pointer active:opacity-50 rounded-full border-2 border-black bg-black"
+          viewBox="0 0 17 17"
+        >
+          <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"
+          />
+
+        </svg>
+      </div>
+      <div id="options" class="grid gap-2">
+        <div
+          id="buttonTemplate"
+          class="text-gray-600 p-2 select-none cursor-pointer rounded-lg mb-3 bg-gradient-to-r from-gray-100 to-gray-300 opacity-65 active:from-gray-300 active:to-gray-100 ring-black ring-offset-1 ring-2 hidden"
+        ></div>
+      </div>
+    </div>
+  </div>
+</div>

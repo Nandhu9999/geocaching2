@@ -1,0 +1,119 @@
+<ul class="text-gray-400 pl-4 pr-4">
+  <label
+    class="select-none hover:text-gray-200 py-2 flex flex-row items-center justify-between"
+  >
+    <span class="flex flex-row gap-1 h-full items-center">
+      <span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          class="w-5 h-5"
+          viewBox="0 0 16 16"
+        >
+          {{! <path
+                    d="M11.536 14.01A8.47 8.47 0 0 0 14.026 8a8.47 8.47 0 0 0-2.49-6.01l-.708.707A7.48 7.48 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303z"
+                  /> }}
+          <path
+            d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.48 5.48 0 0 1 11.025 8a5.48 5.48 0 0 1-1.61 3.89z"
+          />
+          <path
+            d="M8.707 11.182A4.5 4.5 0 0 0 10.025 8a4.5 4.5 0 0 0-1.318-3.182L8 5.525A3.5 3.5 0 0 1 9.025 8 3.5 3.5 0 0 1 8 10.475zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06"
+          />
+        </svg>
+      </span>
+      <span>
+        Sounds
+      </span>
+    </span>
+    <span>
+      <input
+        type="checkbox"
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+      />
+    </span></label>
+  <label
+    class="select-none hover:text-gray-200 py-2 flex flex-row items-center justify-between"
+  >
+    <span class="flex flex-row gap-1 h-full items-center">
+      <span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          class="w-4 h-4"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"
+          />
+        </svg>
+      </span>
+      <span>
+        Notifications
+      </span>
+    </span>
+    <span>
+      <input
+        type="checkbox"
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+      />
+    </span></label>
+  {{#if account.admin}}
+    <label
+      class="select-none hover:text-gray-200 py-2 flex flex-row items-center justify-between"
+    >
+      <span class="flex flex-row gap-1 h-full items-center">
+        <span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            class="w-4 h-4"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0m6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0"
+            />
+
+          </svg>
+        </span>
+        <span>
+          Live Location
+        </span>
+      </span>
+      <span>
+        <input
+          type="checkbox"
+          id="liveLocationSetting"
+          checked="true"
+          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+        />
+      </span></label>
+    <label
+      class="select-none hover:text-gray-200 py-2 flex flex-row items-center justify-between"
+    >
+      <span class="flex flex-row gap-1 h-full items-center">
+        <span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            class="w-4 h-4"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0m6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0"
+            />
+
+          </svg>
+        </span>
+        <span>
+          Developer Control
+        </span>
+      </span>
+      <span>
+        <input
+          type="checkbox"
+          id="developerControlSetting"
+          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+        />
+      </span></label>
+  {{/if}}
+</ul>

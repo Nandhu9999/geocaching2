@@ -1,0 +1,870 @@
+export const TREES_LIST = [
+  // {
+  //   scientific_name: "dev",
+  //   coords: "11.0034944, 76.9785856",
+  // },
+  {
+    scientific_name: "Allamanda cathartica",
+    coords: "10.9036130, 76.8978619",
+  },
+  {
+    scientific_name: "B-1421",
+    coords: "10.9037717, 76.8978602",
+  },
+  {
+    scientific_name: "B-1423",
+    coords: "10.9036792, 76.8978019",
+  },
+  {
+    scientific_name: "B-1424",
+    coords: "10.9036719, 76.8977841",
+  },
+  {
+    scientific_name: "B-1425",
+    coords: "10.9037022, 76.8978093",
+  },
+  {
+    scientific_name: "B-1426",
+    coords: "10.9037885, 76.8978002",
+  },
+  {
+    scientific_name: "B-1471",
+    coords: "10.9039040, 76.8978260",
+  },
+  {
+    scientific_name: "B-1472",
+    coords: "10.9039030, 76.8978609",
+  },
+  {
+    scientific_name: "B-1473",
+    coords: "10.9039468, 76.8978096",
+  },
+  {
+    scientific_name: "B-1484",
+    coords: "10.9041668, 76.8978146",
+  },
+  {
+    scientific_name: "B-1482",
+    coords: "10.9041862, 76.8978126",
+  },
+  {
+    scientific_name: "B-1486",
+    coords: "10.9042257, 76.8978200",
+  },
+  {
+    scientific_name: "tall tree",
+    coords: "10.9058181, 76.8985288",
+  },
+  {
+    scientific_name: "Roystonea regia",
+    coords: "10.9058033, 76.8989636",
+  },
+  {
+    scientific_name: "Bismarckia nobilis",
+    coords: "10.9059814, 76.8990612",
+  },
+  {
+    scientific_name: "Bismarckia nobilis",
+    coords: "10.9059913, 76.8991514",
+  },
+  {
+    scientific_name: "Bismarckia nobilis",
+    coords: "10.9050122, 76.8994337",
+  },
+  {
+    scientific_name: "tree near shuttle bus",
+    coords: "10.9063238, 76.8992607",
+  },
+  {
+    scientific_name: "Pterocarpus indicus",
+    coords: "10.9048854, 76.8993596",
+    __EMPTY: "narra",
+  },
+  {
+    scientific_name: "a",
+    coords: "10.9044045, 76.8995011",
+  },
+  {
+    scientific_name: "aa",
+    coords: "10.9038026, 76.9004228",
+  },
+  {
+    scientific_name: "Millettia pinnata",
+    coords: "10.9021710, 76.9012519",
+    __EMPTY: "indian beech tree",
+  },
+  {
+    scientific_name: "Saraca asoca",
+    coords: "10.9023373, 76.9012958",
+    __EMPTY: "asoka",
+  },
+  {
+    scientific_name: "Ficus elastica",
+    coords: "10.9024064, 76.9013796",
+    __EMPTY: "rubber fig",
+  },
+  {
+    scientific_name: "Bridelia retusa",
+    coords: "10.9017229, 76.9022074",
+    __EMPTY: "spinous kino",
+  },
+  {
+    scientific_name: "Spathodea campanulata",
+    coords: "10.9015939, 76.9023278",
+    __EMPTY: "african tulip tree",
+  },
+  {
+    scientific_name: "Alstonia Scholaris",
+    coords: "10.9017074, 76.9027841",
+    __EMPTY: "devil",
+  },
+  {
+    scientific_name: "Strychnos nux-vomica, Nux vomica",
+    coords: "10.9017302, 76.9028518",
+  },
+  {
+    scientific_name: "Polyalthia longifolia, Indian Willow",
+    coords: "10.9017423, 76.9029809",
+  },
+  {
+    scientific_name: "Syzygium cumini",
+    coords: "10.9017502, 76.9030168",
+    __EMPTY: "Java Plum",
+  },
+  {
+    scientific_name: "Artocarpus heterophyllus",
+    coords: "10.9017572, 76.9030507",
+    __EMPTY: "Jackfruit",
+  },
+  {
+    scientific_name: "Callistemon viminalis, Bottle brush",
+    coords: "10.9017641, 76.9030738",
+  },
+  {
+    scientific_name: "Terminalia catappa",
+    coords: "10.9016791, 76.9030051",
+    __EMPTY: "indian almond",
+  },
+  {
+    scientific_name: "Terminalia catappa",
+    coords: "10.9017173, 76.9032615",
+    __EMPTY: "indian almond",
+  },
+  {
+    scientific_name: "Mangifera indica",
+    coords: "10.9017084, 76.9034198",
+  },
+  {
+    scientific_name: "Filicium decipiens, Fern tree",
+    coords: "10.9011626, 76.9026691",
+  },
+  {
+    scientific_name: "Millingtonia hortensis",
+    coords: "10.9012814, 76.9027529",
+    __EMPTY: "indian cork tree",
+  },
+  {
+    scientific_name: "Cuban pink trumpet",
+    coords: "10.9010576, 76.9027191",
+  },
+  {
+    scientific_name: "Syzygium cumini",
+    coords: "10.9011504, 76.9028260",
+    __EMPTY: "Java Plum",
+  },
+  {
+    scientific_name: "Grewia tilifolia, Dhaman",
+    coords: "10.9011781, 76.9028917",
+  },
+  {
+    scientific_name: "B-1413",
+    coords: "10.9034461, 76.8979394",
+  },
+  {
+    scientific_name: "B-1410",
+    coords: "10.9034141, 76.8979860",
+  },
+  {
+    scientific_name: "B-1409",
+    coords: "10.9034043, 76.8979930",
+  },
+  {
+    scientific_name: "B-1408",
+    coords: "10.9033924, 76.8979910",
+  },
+  {
+    scientific_name: "B-1407",
+    coords: "10.9033819, 76.8980007",
+  },
+  {
+    scientific_name: "B-1406",
+    coords: "10.9033779, 76.8979910",
+  },
+  {
+    scientific_name: "B-1403",
+    coords: "10.9033730, 76.8980208",
+  },
+  {
+    scientific_name: "B-1405",
+    coords: "10.9033615, 76.8980088",
+  },
+  {
+    scientific_name: "B-1404",
+    coords: "10.9033444, 76.8980141",
+  },
+  {
+    scientific_name: "B-1402",
+    coords: "10.9033621, 76.8980624",
+  },
+  {
+    scientific_name: "B-1401",
+    coords: "10.9033450, 76.8980715",
+  },
+  {
+    scientific_name: "B-1400",
+    coords: "10.9033114, 76.8980269",
+  },
+  {
+    scientific_name: "B-1390",
+    coords: "10.9032034, 76.8980923",
+  },
+  {
+    scientific_name: "B-1388",
+    coords: "10.9031498, 76.8981127",
+  },
+  {
+    scientific_name: "B-1385",
+    coords: "10.9031481, 76.8981523",
+  },
+  {
+    scientific_name: "B-1384",
+    coords: "10.9031550, 76.8982136",
+  },
+  {
+    scientific_name: "B-1383",
+    coords: "10.9031416, 76.8982683",
+  },
+  {
+    scientific_name: "B-1380",
+    coords: "10.9031386, 76.8982854",
+  },
+  {
+    scientific_name: "B-1379",
+    coords: "10.9031113, 76.8982897",
+  },
+  {
+    scientific_name: "Copper Pod",
+    coords: "10.8995724, 76.9000576",
+  },
+  {
+    scientific_name: "Yellow cheesewood",
+    coords: "10.8994302, 76.9001562",
+  },
+  {
+    scientific_name: "Alstonia Scholaris",
+    coords: "10.8995112, 76.9003047",
+    __EMPTY: "devil",
+  },
+  {
+    scientific_name: "Ceylon satinwood",
+    coords: "10.8994466, 76.9001321",
+  },
+  {
+    scientific_name: "Royal poinciana",
+    coords: "10.8995138, 76.9000798",
+  },
+  {
+    scientific_name: "Kindal, Flowering murdah",
+    coords: "10.8997011, 76.8999319",
+  },
+  {
+    scientific_name: "Notched leaf soap nut",
+    coords: "10.9015330, 76.8997167",
+  },
+  {
+    scientific_name: "Thespesia populnea",
+    coords: "10.8995141, 76.9003768",
+    __EMPTY: "indian tulip tree",
+  },
+  {
+    scientific_name: "Spanish cherry",
+    coords: "10.8994796, 76.9004211",
+  },
+  {
+    scientific_name: "Millettia pinnata",
+    coords: "10.8994243, 76.9004536",
+    __EMPTY: "indian beech tree",
+  },
+  {
+    scientific_name: "Azadirachta indica",
+    coords: "10.8992188, 76.9005143",
+    __EMPTY: "neem",
+  },
+  {
+    scientific_name: "Gold shower",
+    coords: "10.8992257, 76.9005954",
+  },
+  {
+    scientific_name: "Gold shower",
+    coords: "10.8992382, 76.9008717",
+  },
+  {
+    scientific_name: "Copper pod",
+    coords: "10.8991954, 76.9010273",
+  },
+  {
+    scientific_name: "Azadirachta indica",
+    coords: "10.8992185, 76.9011201",
+  },
+  {
+    scientific_name: "Ben teak",
+    coords: "10.8992073, 76.9012529",
+  },
+  {
+    scientific_name: "Azadirachta indica",
+    coords: "10.8992238, 76.9014574",
+  },
+  {
+    scientific_name: "Albizia lebbeck",
+    coords: "10.8992300, 76.9014879",
+    __EMPTY: "lebbreck",
+  },
+  {
+    scientific_name: "Azadirachta indica",
+    coords: "10.8992656, 76.9016586",
+  },
+  {
+    scientific_name: "Copper pod",
+    coords: "10.8992531, 76.9017384",
+  },
+  {
+    scientific_name: "Copper pod",
+    coords: "10.8992498, 76.9020794",
+  },
+  {
+    scientific_name: "Gold Shower",
+    coords: "10.8992425, 76.9021568",
+  },
+  {
+    scientific_name: "Millettia pinnata",
+    coords: "10.8994875, 76.9021079",
+    __EMPTY: "indian beech tree",
+  },
+  {
+    scientific_name: "Pink Lapacho",
+    coords: "10.8995128, 76.9021501",
+  },
+  {
+    scientific_name: "Indian cherry",
+    coords: "10.8997202, 76.9020794",
+  },
+  {
+    scientific_name: "Costus spectabilis",
+    coords: "10.8995991, 76.9023241",
+    __EMPTY: "yellow trumpet",
+  },
+  {
+    scientific_name: "Marking nut tree",
+    coords: "10.8996162, 76.9023724",
+  },
+  {
+    scientific_name: "Spanish cherry",
+    coords: "10.8996129, 76.9024113",
+  },
+  {
+    scientific_name: "Dinner plate tree",
+    coords: "10.8996113, 76.9024455",
+  },
+  {
+    scientific_name: "Blue Marble tree, Quandong",
+    coords: "10.8995355, 76.9024552",
+  },
+  {
+    scientific_name: "Putranjiva roxburghii",
+    coords: "10.8997746, 76.9024173",
+    __EMPTY: "child life tree",
+  },
+  {
+    scientific_name: "Kigelia Africana",
+    coords: "10.8997196, 76.9024871",
+  },
+  {
+    scientific_name: "Weeping fig",
+    coords: "10.8999968, 76.9024448",
+  },
+  {
+    scientific_name: "Frangipani",
+    coords: "10.8999905, 76.9025551",
+  },
+  {
+    scientific_name: "Mangifera indica",
+    coords: "10.9019955, 76.9019288",
+    __EMPTY: "mango",
+  },
+  {
+    scientific_name: "West Indian Mahagony",
+    coords: "10.9020252, 76.9018993",
+  },
+  {
+    scientific_name: "Tamarind",
+    coords: "10.9020943, 76.9018893",
+  },
+  {
+    scientific_name: "Stereospermum colais",
+    coords: "10.9021996, 76.9018353",
+  },
+  {
+    scientific_name: "Yellow cheesewood",
+    coords: "10.9021996, 76.9018353",
+  },
+  {
+    scientific_name: "Millingtonia hortensis",
+    coords: "10.9023504, 76.9018695",
+    __EMPTY: "indian cork tree",
+  },
+  {
+    scientific_name: "Belliric Myrobalan",
+    coords: "10.9023781, 76.9018504",
+  },
+  {
+    scientific_name: "Soapnut",
+    coords: "10.9023774, 76.9017478",
+  },
+  {
+    scientific_name: "Roystonea regia",
+    coords: "10.8996830, 76.9028341",
+  },
+  {
+    scientific_name: "Var. Variegeta",
+    coords: "10.8997100, 76.9032827",
+  },
+  {
+    scientific_name: "Weeping Fig",
+    coords: "10.8995536, 76.9033266",
+  },
+  {
+    scientific_name: "Bamboo",
+    coords: "10.8993854, 76.9036233",
+  },
+  {
+    scientific_name: "Purple orchild tree",
+    coords: "10.8994246, 76.9035690",
+  },
+  {
+    scientific_name: "Millettia pinnata",
+    coords: "10.8995543, 76.9036183",
+    __EMPTY: "indian beech tree",
+  },
+  {
+    scientific_name: "Terminalia catappa",
+    coords: "10.8995876, 76.9036531",
+    __EMPTY: "indian almond",
+  },
+  {
+    scientific_name: "Tabebuia rosea",
+    coords: "10.8996741, 76.9036122",
+    __EMPTY: "pink trumpet tree",
+  },
+  {
+    scientific_name: "Azadirachta indica",
+    coords: "10.8997146, 76.9036438",
+    __EMPTY: "neem",
+  },
+  {
+    scientific_name: "Silver Oak",
+    coords: "10.8997462, 76.9035915",
+  },
+  {
+    scientific_name: "Diploknema butyracea",
+    coords: "10.8997914, 76.9036052",
+    __EMPTY: "indian butter",
+  },
+  {
+    scientific_name: "Haldu",
+    coords: "10.8995899, 76.9034704",
+  },
+  {
+    scientific_name: "Cannon-ball tree",
+    coords: "10.8996718, 76.9034661",
+  },
+  {
+    scientific_name: "Flame of the forest",
+    coords: "10.8997400, 76.9034785",
+  },
+  {
+    scientific_name: "Peacock chaste tree",
+    coords: "10.8998816, 76.9034714",
+  },
+  {
+    scientific_name: "Indian Tupil tree",
+    coords: "10.8999665, 76.9034483",
+  },
+  {
+    scientific_name: "Purple orchild tree",
+    coords: "10.8999033, 76.9036347",
+  },
+  {
+    scientific_name: "Terminalia arjuna",
+    coords: "10.8999342, 76.9036994",
+    __EMPTY: "arjun tree",
+  },
+  {
+    scientific_name: "Thespesia populnea",
+    coords: "10.8999655, 76.9036555",
+    __EMPTY: "indian tulip tree",
+  },
+  {
+    scientific_name: "Artocarpus heterophyllus",
+    coords: "10.9000314, 76.9036837",
+    __EMPTY: "jackfruit",
+  },
+  {
+    scientific_name: "Ceylon satinwood",
+    coords: "10.9000350, 76.9036310",
+  },
+  {
+    scientific_name: "Ceylon satinwood",
+    coords: "10.9001357, 76.9035539",
+  },
+  {
+    scientific_name: "Azadirachta indica",
+    coords: "10.9002299, 76.9035542",
+    __EMPTY: "neem",
+  },
+  {
+    scientific_name: "Sausage tree",
+    coords: "10.9034619, 76.9023204",
+  },
+  {
+    scientific_name: "Putranjiva roxburghii",
+    coords: "10.9034550, 76.9023627",
+    __EMPTY: "child life tree",
+  },
+  {
+    scientific_name: "Gmelina arborea",
+    coords: "10.9034566, 76.9023791",
+    __EMPTY: "beech wood",
+  },
+  {
+    scientific_name: "Malabar blackwood",
+    coords: "10.9034553, 76.9022681",
+  },
+  {
+    scientific_name: "Millettia pinnata",
+    coords: "10.9035732, 76.9022245",
+    __EMPTY: "indian beech tree",
+  },
+  {
+    scientific_name: "Indian king tree",
+    coords: "10.9029736, 76.9018098",
+  },
+  {
+    scientific_name: "Spathodea campanulata",
+    coords: "10.9029391, 76.9018205",
+    __EMPTY: "african tulip tree",
+  },
+  {
+    scientific_name: "Spanish cherry",
+    coords: "10.9029364, 76.9018497",
+  },
+  {
+    scientific_name: "Wrightia tinctoria",
+    coords: "10.9028406, 76.9019533",
+    __EMPTY: "pala indigo",
+  },
+  {
+    scientific_name: "Terminalia arjuna",
+    coords: "10.9032183, 76.9016878",
+    __EMPTY: "arjun tree",
+  },
+  {
+    scientific_name: "Thespesia populnea",
+    coords: "10.9030675, 76.9017156",
+    __EMPTY: "indian tulip tree",
+  },
+  {
+    scientific_name: "Big leaf mahogany",
+    coords: "10.9031182, 76.9017887",
+  },
+  {
+    scientific_name: "Costus spectabilis",
+    coords: "10.9031574, 76.9019315",
+    __EMPTY: "yellow trumpet",
+  },
+  {
+    scientific_name: "Katsagon",
+    coords: "10.9029012, 76.9020656",
+  },
+  {
+    scientific_name: "Aloe arborescens",
+    coords: "10.9030619, 76.9020606",
+    __EMPTY: "aloe vera",
+  },
+  {
+    scientific_name: "Soapnut",
+    coords: "10.9030945, 76.9019711",
+  },
+  {
+    scientific_name: "Spanish cherry",
+    coords: "10.9031412, 76.9019436",
+  },
+  {
+    scientific_name: "Millingtonia hortensis",
+    coords: "10.9032051, 76.9019476",
+    __EMPTY: "cork",
+  },
+  {
+    scientific_name: "Fiddle wood",
+    coords: "10.9033753, 76.9019573",
+  },
+  {
+    scientific_name: "Teak",
+    coords: "10.9035053, 76.9020613",
+  },
+  {
+    scientific_name: "Beggers bowl(calabash tree)",
+    coords: "10.9035047, 76.9019831",
+  },
+  {
+    scientific_name: "Hill mango",
+    coords: "10.9036759, 76.9019090",
+  },
+  {
+    scientific_name: "Diploknema butyracea",
+    coords: "10.9036021, 76.9016170",
+    __EMPTY: "indian butter",
+  },
+  {
+    scientific_name: "tamarind",
+    coords: "10.9036568, 76.9016572 ",
+  },
+  {
+    scientific_name: "Aloe arborescens",
+    coords: "10.9036311, 76.9017488",
+    __EMPTY: "aloe vera",
+  },
+  {
+    scientific_name: "Indian mulberry",
+    coords: "10.9035998, 76.9016998",
+  },
+  {
+    scientific_name: "Sandal",
+    coords: "10.9036670, 76.9015989",
+  },
+  {
+    scientific_name: "Thespesia populnea",
+    coords: "10.9039050, 76.9017052",
+    __EMPTY: "indian tulip tree",
+  },
+  {
+    scientific_name: "Syzygium cumini",
+    coords: "10.9038372, 76.9016301",
+    __EMPTY: "Java Plum",
+  },
+  {
+    scientific_name: "Indian mulberry",
+    coords: "10.9037315, 76.9016814",
+  },
+  {
+    scientific_name: "Diploknema butyracea",
+    coords: "10.9037605, 76.9017639",
+    __EMPTY: "indian butter",
+  },
+  {
+    scientific_name: "Meliaceae",
+    coords: "10.9039636, 76.9019982",
+    __EMPTY: "veppu",
+  },
+  {
+    scientific_name: "Meliaceae",
+    coords: "10.9038306, 76.9021595",
+    __EMPTY: "veppu",
+  },
+  {
+    scientific_name: "Vitex trifolia",
+    coords: "10.9037002, 76.9021625",
+    __EMPTY: "three leaved chaste tree",
+  },
+  {
+    scientific_name: "Vitex trifolia",
+    coords: "10.9037002, 76.9023154",
+    __EMPTY: "three leaved chaste tree",
+  },
+  {
+    scientific_name: "Tabebuia rosea",
+    coords: "10.9037068, 76.9023553",
+    __EMPTY: "pink trumpet tree",
+  },
+  {
+    scientific_name: "Meliaceae",
+    coords: "10.9037743, 76.9023409",
+    __EMPTY: "veppu",
+  },
+  {
+    scientific_name: "Meliaceae",
+    coords: "10.9037911, 76.9021240",
+    __EMPTY: "veppu",
+  },
+  {
+    scientific_name: "Cannon ball tree",
+    coords: "10.9037055, 76.9021555",
+  },
+  {
+    scientific_name: "Chlid life tree",
+    coords: "10.9036976, 76.9020267",
+  },
+  {
+    scientific_name: "Gold apple",
+    coords: "10.9038273, 76.9019258",
+  },
+  {
+    scientific_name: "Costus spectabilis",
+    coords: "10.9038161, 76.9018618",
+    __EMPTY: "yellow trumpet",
+  },
+  {
+    scientific_name: "Gum Arabic",
+    coords: "10.9041068, 76.9023486",
+  },
+  {
+    scientific_name: "Red sandalwood",
+    coords: "10.9039429, 76.9024331",
+  },
+  {
+    scientific_name: "Indian gooseberry",
+    coords: "10.9041605, 76.9024270",
+  },
+  {
+    scientific_name: "Alchorn tree",
+    coords: "10.9041803, 76.9023972",
+  },
+  {
+    scientific_name: "Bitter albizia",
+    coords: "10.9043626, 76.9024016",
+  },
+  {
+    scientific_name: "Chebulic myrobalan",
+    coords: "10.9043771, 76.9023385",
+  },
+  {
+    scientific_name: "Vitex trifolia",
+    coords: "10.9043942, 76.9023543",
+    __EMPTY: "three leaved chaste tree ",
+  },
+  {
+    scientific_name: "Thespesia populnea",
+    coords: "10.9044344, 76.9024140",
+    __EMPTY: "indian tulip tree",
+  },
+  {
+    scientific_name: "Millettia pinnata",
+    coords: "10.9043281, 76.9024207",
+    __EMPTY: "indian beech tree",
+  },
+  {
+    scientific_name: "terminalia crenulata ",
+    coords: "10.9041151, 76.9024220",
+    __EMPTY: "black murdar",
+  },
+  {
+    scientific_name: "Terminalia arjuna",
+    coords: "10.9041348, 76.9023707",
+    __EMPTY: "arjun tree",
+  },
+  {
+    scientific_name: "Gmelina arborea",
+    coords: "10.9041770, 76.9022695",
+    __EMPTY: "beech wood",
+  },
+  {
+    scientific_name: "Wrightia tinctoria",
+    coords: "10.9043198, 76.9015751",
+    __EMPTY: "pala indigo",
+  },
+  {
+    scientific_name: "Albizia lebbeck",
+    coords: "10.9045325, 76.9015553",
+    __EMPTY: "lebbreck",
+  },
+  {
+    scientific_name: "Azadirachta indica",
+    coords: "10.9042415, 76.9014785",
+    __EMPTY: "neem",
+  },
+  {
+    scientific_name: "Cactaceae",
+    coords: "10.9035824, 76.8990870",
+    __EMPTY: "catpus",
+  },
+  {
+    scientific_name: "Mangifera indica",
+    coords: "10.9034734, 76.8992406",
+  },
+  {
+    scientific_name: "Mangifera indica",
+    coords: "10.9038053, 76.8991239",
+  },
+  {
+    scientific_name: "Azadirachta indica",
+    coords: "10.9040575, 76.8989817",
+    __EMPTY: "neem",
+  },
+  {
+    scientific_name: "Azadirachta indica",
+    coords: "10.9040555, 76.8988862",
+    __EMPTY: "neem",
+  },
+  {
+    scientific_name: "Mangifera indica",
+    coords: "10.9039001, 76.8989972",
+  },
+  {
+    scientific_name: "Mangifera indica",
+    coords: "10.9038494, 76.8989901",
+  },
+  {
+    scientific_name: "Mangifera indica",
+    coords: "10.9038026, 76.8989687",
+  },
+  {
+    scientific_name: "Mangifera indica",
+    coords: "10.9037763, 76.8989556",
+  },
+  {
+    scientific_name: "Lauraceae",
+    coords: "10.9035419, 76.8987380",
+  },
+  {
+    scientific_name: "Lauraceae",
+    coords: "10.9035765, 76.8987061",
+  },
+  {
+    scientific_name: "Lauraceae",
+    coords: "10.9035264, 76.8986854",
+  },
+  {
+    scientific_name: "Mangifera indica",
+    coords: "10.9035053, 76.8987548 ",
+  },
+  {
+    scientific_name: "Azadirachta indica",
+    coords: "10.9036186, 76.8987031",
+    __EMPTY: "neem",
+  },
+  {
+    scientific_name: "Mangifera indica",
+    coords: "10.9037075, 76.8985191",
+  },
+  {
+    scientific_name: "Mangifera indica",
+    coords: "10.9037062, 76.8985965",
+  },
+  {
+    scientific_name: "Casuarina",
+    coords: "10.9035205, 76.8981694",
+  },
+  {
+    scientific_name: "Azadirachta indica",
+    coords: "10.9034625, 76.8980993",
+  },
+];
