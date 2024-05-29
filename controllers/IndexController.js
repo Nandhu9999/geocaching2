@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const seo = require("../src/seo.json");
 const User = require("../models/User");
 const {
   LOCALIZATION,
@@ -27,7 +28,11 @@ module.exports = {
     const { lang } = request.query;
     const langCode = lang || "en";
     const localization = LOCALIZATION[langCode];
-    return reply.view("/src/pages/landing", { lang: langCode, localization });
+    return reply.view("/src/pages/landing", {
+      lang: langCode,
+      localization,
+      seo,
+    });
   },
   login: async (request, reply) => {
     const { email, password } = request.body;
@@ -49,6 +54,7 @@ module.exports = {
           loginError: "invalid login attempt",
           lang: langCode,
           localization,
+          seo,
         });
       }
     } catch (err) {
@@ -56,6 +62,7 @@ module.exports = {
         loginError: "invalid login attempt",
         lang: langCode,
         localization,
+        seo,
       });
     }
   },
@@ -65,23 +72,27 @@ module.exports = {
     if (email == "" || email.indexOf("@") == -1) {
       return reply.view("/src/pages/register.hbs", {
         error: "Invalid email address",
+        seo,
       });
     }
 
     if (!password || password !== passwordConfirm) {
       return reply.view("/src/pages/register.hbs", {
         error: "Password did not match",
+        seo,
       });
     }
     if (await User.findOne({ where: { email } })) {
       return reply.view("/src/pages/register.hbs", {
         error: "Email already exists",
+        seo,
       });
     }
 
     try {
       const hashedPassword = password || (await bcrypt.hash(password, 10));
-      await User.create({ email, pass: hashedPassword });
+      const name = email.split("@")[0];
+      await User.create({ email, name, pass: hashedPassword });
       const user = await User.findOne({
         where: { email, pass: hashedPassword },
         attributes: ["id", "name", "email", "admin", "score", "collected"],
@@ -91,6 +102,7 @@ module.exports = {
     } catch (err) {
       return reply.view("/src/pages/register.hbs", {
         error: err,
+        seo,
       });
     }
     return reply.redirect("/game?new=1");
@@ -103,6 +115,7 @@ module.exports = {
       account: ACCOUNT,
       gameScreen: true,
       newUser: isNew || false,
+      seo,
     });
   },
 
@@ -116,6 +129,7 @@ module.exports = {
       account: ACCOUNT,
       collection: { INVENTORY_FOUND },
       gameScreen: false,
+      seo,
     });
   },
 
@@ -125,6 +139,7 @@ module.exports = {
       game: GAME,
       account: ACCOUNT,
       gameScreen: false,
+      seo,
     });
   },
 };

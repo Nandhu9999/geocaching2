@@ -78,7 +78,10 @@ db.sync({ force: false }).then(async () => {
 
   if (!dbAlreadyExisted) {
     // ADMIN USER
-    const hashedPassword = "abc123" || (await bcrypt.hash("abc123", 10));
+    const hashedPassword =
+      process.env.ADMIN_PASS ||
+      "abc123" ||
+      (await bcrypt.hash(process.env.ADMIN_PASS || "abc123", 10));
     User.create({
       name: "admin",
       email: "admin@nandhu.site",
@@ -123,6 +126,35 @@ db.sync({ force: false }).then(async () => {
     });
   }
 });
+
+// All Requests Middleware
+fastify.addHook("onRequest", (request, reply, next) => {
+  const protocol = request.raw.headers["x-forwarded-proto"]?.split(",")[0];
+  if (protocol === "http" && !request.hostname.startsWith("localhost")) {
+    reply.redirect("https://" + request.hostname + request.url);
+  }
+
+  console.log("onRequest:", request.url);
+  const sid = request.session.sessionId;
+  // console.log("sid:",sid);
+
+  const RESTRICTED_URLs = [
+    "/game",
+    "/inventory",
+    "/leaderboards",
+    "/create",
+    // "/users",
+    "/geocache",
+  ];
+  if (
+    request.session.isAuthenticated === undefined &&
+    RESTRICTED_URLs.indexOf(request.url) !== -1
+  ) {
+    reply.redirect("/");
+  }
+  next();
+});
+
 // Routes
 fastify.register(require("./routes/indexRoutes.js"));
 fastify.register(require("./routes/userRoutes.js"));

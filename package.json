@@ -4,7 +4,8 @@
   "description": "A Node app with SQLite database, instantly up and running.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "tailwind": "npx tailwindcss -i ./public/css/tailwind.css -o ./public/css/styles.css"
   },
   "dependencies": {
     "@fastify/cookie": "^9.1.0",
@@ -13,6 +14,7 @@
     "@fastify/static": "^6.10.2",
     "@fastify/view": "^8.0.0",
     "bcrypt": "^5.1.1",
+    "caniuse-lite": "^1.0.30001625",
     "fastify": "^4.21.0",
     "fastify-socket.io": "^4.0.0",
     "follow-redirects": ">=1.15.6",
@@ -34,5 +36,8 @@
     "node",
     "glitch",
     "sqlite"
-  ]
+  ],
+  "devDependencies": {
+    "tailwindcss": "^3.4.3"
+  }
 }
