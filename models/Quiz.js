@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const db = require("../database");
+const db = require("../src/services/database.service");
 
 const Quiz = db.define(
   "Quiz",

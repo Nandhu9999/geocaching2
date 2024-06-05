@@ -1,16 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 const fastify = require("fastify")({ logger: false });
-const db = require("./database");
-
+const db = require("./src/services/database.service.js");
 // CONFIG
-const PORT = process.env.PORT || 5000;
-const HOST = "0.0.0.0" || "127.0.0.1" || "localhost";
-const COOKIE_SECRET =
-  process.env.COOKIE_SECRET || "qj6EUPTx0pbLkVGsuPw8nH2Pe3BgRwe5";
-const SESSION_SECRET =
-  process.env.SESSION_SECRET || "67rTNHieTrmQ3sXI3PaG3rxyTrPCfaq6";
-
+const config = require("./appConfig.js");
 // const data = require("./src/data.json");
 // const db = require("./src/" + data.database);
 
@@ -23,7 +16,8 @@ const {
   dbFilePath,
   ifConditionFunction,
   numberWithCommas,
-} = require("./serverHelper.js");
+  hashPasswordFn,
+} = require("./src/services/server-helper.service.js");
 
 const handlebars = require("handlebars");
 fastify.register(require("@fastify/formbody"));
@@ -49,11 +43,11 @@ handlebars.registerHelper("ifCond", ifConditionFunction);
 handlebars.registerHelper("numberWithCommas", numberWithCommas);
 
 fastify.register(require("@fastify/cookie"), {
-  secret: COOKIE_SECRET, // for cookies signature
+  secret: config.COOKIE_SECRET, // for cookies signature
   parseOptions: {}, // options for parsing cookies
 });
 fastify.register(require("@fastify/session"), {
-  secret: SESSION_SECRET,
+  secret: config.SESSION_SECRET,
   saveUninitialized: true,
   cookie: {
     secure: false,
@@ -62,6 +56,7 @@ fastify.register(require("@fastify/session"), {
     maxAge: 1000 * 60 * 60 * 24,
   },
 });
+
 const Geocache = require("./models/Geocache.js");
 const GeocacheProperties = require("./models/GeocacheProperties.js");
 const Quiz = require("./models/Quiz.js");
@@ -78,14 +73,10 @@ db.sync({ force: false }).then(async () => {
 
   if (!dbAlreadyExisted) {
     // ADMIN USER
-    const hashedPassword =
-      process.env.ADMIN_PASS ||
-      "abc123" ||
-      (await bcrypt.hash(process.env.ADMIN_PASS || "abc123", 10));
     User.create({
       name: "admin",
-      email: "admin@nandhu.site",
-      pass: hashedPassword,
+      email: config.ADMIN_EMAIL,
+      pass: await hashPasswordFn(config.ADMIN_PASS),
       admin: true,
       score: 10000000,
     });
@@ -161,10 +152,13 @@ fastify.register(require("./routes/userRoutes.js"));
 fastify.register(require("./routes/geocacheRoutes.js"));
 
 // Run the server and report out to the logs
-fastify.listen({ port: PORT, host: HOST }, function (err, address) {
-  if (err) {
-    console.error(err);
-    process.exit(1);
+fastify.listen(
+  { port: config.PORT, host: config.HOST },
+  function (err, address) {
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
+    console.log(`Your app is listening on ${address}`);
   }
-  console.log(`Your app is listening on ${address}`);
-});
+);

@@ -6,7 +6,12 @@ const ICON_SIZE = [50, 50];
 
 var map = L.map("map");
 map.setView(UNI_LOCATION, MAX_MAP_ZOOM);
-L.tileLayer("http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}", {
+
+const MAP_TILES = {
+  gmap: "http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}",
+  osm: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+};
+L.tileLayer(MAP_TILES.gmap, {
   maxZoom: MAX_MAP_ZOOM,
   subdomains: ["mt0", "mt1", "mt2", "mt3"],
 }).addTo(map);
@@ -46,7 +51,7 @@ export function addTreeMarkerToMap(idx, location, popupText, onClick) {
   const marker = L.marker(location, { icon: treeIcon })
     .on("click", () => {
       marker._icon.classList.add("customMarkerAnimation");
-      onClick(idx);
+      onClick(idx, location);
       setTimeout(() => {
         marker._icon.classList.remove("customMarkerAnimation");
       }, 3000);
@@ -58,6 +63,13 @@ export function addTreeMarkerToMap(idx, location, popupText, onClick) {
       `<h1 style="font-weight:700;font-size:1.25rem;">#${idx}</h1>` + popupText
     );
   }
+}
+
+export function getMapCenter() {
+  return map.getCenter();
+}
+export function moveMapTo(location) {
+  map.setView(location, MAX_MAP_ZOOM);
 }
 
 export function getUserLocation() {

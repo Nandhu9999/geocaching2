@@ -1,7 +1,7 @@
 <div
   id="gameNavbar"
   style="z-index:998;"
-  class="transition-all text-white fixed top-0 left-0 w-full h-24 flex items-start justify-between px-2 pt-2"
+  class="transition-all text-white fixed top-0 left-0 w-full h-0 flex items-start justify-between px-2 pt-2"
 >
   <div
     id="gameMenuButton"
@@ -36,7 +36,10 @@
           />
         </svg>
       </div>
-      <div id="currentTime" class="font-mono font-bold"></div>
+      <div
+        id="currentTime"
+        class="pointer-events-none user-select-none font-mono font-bold"
+      ></div>
     </div>
   {{/if}}
 

@@ -1,3 +1,6 @@
+{{!--     DO NOT ADD <!DOCTYPE html>      --}}
+{{!--  * adding it will break the map     --}}
+{{!--  * on firefox browser, not sure why --}}
 <html lang="en">
   <head>
     {{> head }}
@@ -16,7 +19,7 @@
                     {{!-- EVENTS --}}
                 {{!-- <div class="text-center"></div> --}}
                 <div class="text-center w-full">
-                    <h1 class="text-3xl font-bold text-white">TREES</h1>
+                    <h1 class="text-3xl font-bold text-white">MY COLLECTION</h1>
                     <h3 class="text-xl font-mono text-gray-300">{{ account.count}}/{{ game.maxCount }}</h3>
                 </div>
                     {{!-- QUESTS --}}
@@ -34,7 +37,7 @@
                     {{/collection.found}}                        
                 </div>
             </div>
-            <div id="inventoryFooter" class="block h-20 ">
+            <div id="inventoryFooter" class="block h-20 opacity-0">
               ...
             </div>
         </div>

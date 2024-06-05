@@ -1,3 +1,7 @@
+{{!--     DO NOT ADD <!DOCTYPE html>      --}}
+{{!--  * adding it will break the map     --}}
+{{!--  * on firefox browser, not sure why --}}
+
 <html lang="en">
   <head>
     {{> head }}
@@ -8,7 +12,7 @@
   <link rel="stylesheet" href="/leaflet/leaflet.css"/>
   <script src="/leaflet/leaflet.js"></script>
 
-<body class="w-screen h-screen relative bg-slate-800 overflow-hidden">
+<body class="w-screen h-full relative bg-slate-800 overflow-hidden">
 
 <div
   id="TailwindRequiredStyles"
@@ -19,7 +23,7 @@
   {{> locationPermission }}
 
   <div id="contentWrapper" style="width:110vw;" class="w-screen relative transition-all">
-    <div id="map" style="height: 100vh;width:100%;transform:translateX(-5vw);"></div>
+    <div id="map" style="height: 100%;width:100%;transform:translateX(-5vw);"></div>
     <div id="contentOverlay" style="z-index:999;width:100%;transform:translateX(-5vw);" class="h-screen absolute top-0 left-0 bg-black opacity-50 hidden">
 
     </div>

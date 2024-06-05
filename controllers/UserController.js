@@ -1,4 +1,4 @@
-const db = require("../database");
+const db = require("../src/services/database.service");
 const Inventory = require("../models/Inventory");
 const User = require("../models/User");
 
@@ -22,14 +22,13 @@ module.exports = {
     });
     return reply.send({ path: "getUserById", user, inventory });
   },
-  createUser: (request, reply) => {
+  createUser: async (request, reply) => {
     const { email, password, confirmPassword } = request.body;
     try {
       if (password == confirmPassword) {
-        const hashedPass = password;
         User.findOrCreate({
           email: email,
-          pass: password,
+          pass: await hashPasswordFn(password),
         });
         return reply.send({ path: "createUser", success: true });
       }

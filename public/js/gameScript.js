@@ -6,6 +6,8 @@ import {
   updateMapView,
   disableMapControl,
   updateUserLocation,
+  getMapCenter,
+  moveMapTo,
 } from "./mapScript.js";
 
 TREES_LIST.forEach((treeItem, idx) => {
@@ -16,20 +18,18 @@ TREES_LIST.forEach((treeItem, idx) => {
   }
 });
 
-function TREE_CLICKED(idx) {
+function TREE_CLICKED(idx, location) {
   console.log("Clicked", idx);
+  UserLocations.beforeGeocacheClick = getMapCenter();
+  moveMapTo(location);
+
   const questionPopup = $("#questionPopup");
   questionPopup.classList.remove("hidden");
   questionPopup.querySelector("#question").innerText = `What is life?`;
   const optionsHolder = questionPopup.querySelector("#options");
   const templateButton = optionsHolder.querySelector("#buttonTemplate");
   optionsHolder.innerHTML = null;
-  const optionsList = [
-    "abc abc abc abc",
-    "bcd bcd bcd bcd bcd bcd bcd",
-    "cde cde cde cde cde cde cde cde cde",
-    "def def def def def def def def def",
-  ];
+  const optionsList = ["option 1", "option 2", "option 3", "option 4"];
   optionsList.forEach((optionText) => {
     const optionButton = templateButton.cloneNode(true);
     optionButton.innerText = optionText;
@@ -62,6 +62,10 @@ const UserLocations = {
     if (this.list.length > 3) {
       this.list.splice(0, 1);
     }
+  },
+  beforeGeocacheClick: {
+    lat: 0,
+    lng: 0,
   },
 };
 
@@ -99,6 +103,11 @@ async function GEOLOCATION_UPDATED(pos) {
 }
 
 function closeQuesitonPopup() {
+  const location = [
+    UserLocations.beforeGeocacheClick.lat,
+    UserLocations.beforeGeocacheClick.lng,
+  ];
+  moveMapTo(location);
   $("#questionPopup").classList.add("hidden");
 }
 
@@ -111,7 +120,7 @@ function Main() {
   // setInterval(gameLoop, 1000);
   navigator.geolocation.watchPosition(GEOLOCATION_UPDATED, READ_ERROR, {
     enableHighAccuracy: true,
-    timeout: 5000,
+    timeout: 10_000,
     maximumAge: 0,
   });
 

@@ -1,4 +1,3 @@
-const bcrypt = require("bcrypt");
 const seo = require("../src/seo.json");
 const User = require("../models/User");
 const {
@@ -9,6 +8,12 @@ const {
   getSunIndex,
 } = require("../src/localization");
 const Inventory = require("../models/Inventory");
+const {
+  hashPasswordFn,
+  comparePasswordFn,
+} = require("../src/services/server-helper.service.js");
+const MailService = require("../src/services/mailing.service.js");
+const MAIL = new MailService();
 
 const INVENTORY = {
   found: [
@@ -40,9 +45,20 @@ module.exports = {
     const langCode = "en";
     const localization = LOCALIZATION[langCode];
     try {
-      const hashedPassword = password || (await bcrypt.hash(password, 10));
+      const { pass: userHashedPassword } = await User.findOne({
+        where: { email },
+      });
+      if (!(await comparePasswordFn(password, userHashedPassword))) {
+        return reply.view("/src/pages/landing", {
+          loginError: "password did not match",
+          lang: langCode,
+          localization,
+          seo,
+        });
+      }
+
       const user = await User.findOne({
-        where: { email, pass: hashedPassword },
+        where: { email },
         attributes: ["id", "name", "email", "admin", "score", "collected"],
       });
       if (!!user) {
@@ -58,6 +74,7 @@ module.exports = {
         });
       }
     } catch (err) {
+      console.error(err);
       return reply.view("/src/pages/landing", {
         loginError: "invalid login attempt",
         lang: langCode,
@@ -90,7 +107,7 @@ module.exports = {
     }
 
     try {
-      const hashedPassword = password || (await bcrypt.hash(password, 10));
+      const hashedPassword = await hashPasswordFn(password);
       const name = email.split("@")[0];
       await User.create({ email, name, pass: hashedPassword });
       const user = await User.findOne({
@@ -105,8 +122,25 @@ module.exports = {
         seo,
       });
     }
+    await MAIL.sendNewRegisterMail({ to: email });
     return reply.redirect("/game?new=1");
   },
+  forgot: async (request, reply) => {
+    const { email } = request.body;
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return reply.view("/src/pages/forgot.hbs", {
+        error: "Email not found",
+        seo,
+      });
+    }
+    await MAIL.sendForgotMail({ to: email });
+    return reply.view("/src/pages/landing.hbs", {
+      popup_message: "Check your email for further instructions",
+      seo,
+    });
+  },
+
   game: async (request, reply) => {
     const { new: isNew } = request.query;
     const ACCOUNT = request.session.user;

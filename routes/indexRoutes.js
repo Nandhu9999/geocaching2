@@ -7,9 +7,14 @@ async function indexRoutes(fastify, options) {
     return reply.view("/src/pages/register.hbs", {});
   });
   fastify.post("/register", indexController.register);
+  fastify.get("/logout", (request, reply) => {
+    if (request.session.isAuthenticated) request.session.destroy();
+    return reply.redirect("/");
+  });
   fastify.get("/forgot", (request, reply) => {
     return reply.view("/src/pages/forgot.hbs", {});
   });
+  fastify.post("/forgot", indexController.forgot);
   fastify.get("/healthz", (request, reply) => {
     return reply.send({ status: "OK" }).code(200);
   });

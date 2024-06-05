@@ -1,4 +1,4 @@
-const db = require("../database");
+const db = require("../src/services/database.service");
 const Geocache = require("../models/Geocache");
 
 module.exports = {
