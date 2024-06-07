@@ -7,6 +7,10 @@ html {
   scroll-behavior: smooth;
 }
 
+input:-webkit-autofill {
+  background-color: white !important;
+}
+
 .customOutline {
   text-shadow: 2px 2px 4px black;
 }

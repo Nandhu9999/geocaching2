@@ -9,8 +9,9 @@ const {
 } = require("../src/localization");
 const Inventory = require("../models/Inventory");
 const {
-  hashPasswordFn,
+  passwordHashFn,
   comparePasswordFn,
+  generateRandomString,
 } = require("../src/services/server-helper.service.js");
 const MailService = require("../src/services/mailing.service.js");
 const MAIL = new MailService();
@@ -50,7 +51,7 @@ module.exports = {
       });
       if (!(await comparePasswordFn(password, userHashedPassword))) {
         return reply.view("/src/pages/landing", {
-          loginError: "password did not match",
+          error: "Incorrect password",
           lang: langCode,
           localization,
           seo,
@@ -67,7 +68,7 @@ module.exports = {
         return reply.redirect("/game#");
       } else {
         return reply.view("/src/pages/landing", {
-          loginError: "invalid login attempt",
+          error: "User does not exist",
           lang: langCode,
           localization,
           seo,
@@ -76,7 +77,7 @@ module.exports = {
     } catch (err) {
       console.error(err);
       return reply.view("/src/pages/landing", {
-        loginError: "invalid login attempt",
+        error: "Invalid login attempt",
         lang: langCode,
         localization,
         seo,
@@ -107,7 +108,7 @@ module.exports = {
     }
 
     try {
-      const hashedPassword = await hashPasswordFn(password);
+      const hashedPassword = await passwordHashFn(password);
       const name = email.split("@")[0];
       await User.create({ email, name, pass: hashedPassword });
       const user = await User.findOne({
@@ -134,11 +135,45 @@ module.exports = {
         seo,
       });
     }
-    await MAIL.sendForgotMail({ to: email });
-    return reply.view("/src/pages/landing.hbs", {
-      popup_message: "Check your email for further instructions",
-      seo,
+    const newPassword = generateRandomString(12, {
+      symbols: false,
+      numbers: true,
     });
+    user.pass = await passwordHashFn(newPassword);
+    user.save();
+
+    await MAIL.sendPasswordForgotMail({
+      to: email,
+      new_password: newPassword,
+      link: `${request.headers.origin}/reset?email=${email}`,
+    });
+
+    return reply.redirect("/");
+  },
+  reset: async (request, reply) => {
+    const { email, passwordOld, passwordNew } = request.body;
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return reply.view("/src/pages/reset.hbs", {
+        error: "Email not found",
+        seo,
+      });
+    }
+    const { pass: hashedUserPassword } = user;
+
+    if (!(await comparePasswordFn(passwordOld, hashedUserPassword))) {
+      // Entered incorrect old password
+      console.log("> Invalid Password attempt for the account:", email);
+      return reply.view("/src/pages/reset.hbs", {
+        error: "Your old password is invalid.",
+      });
+    } else {
+      // Successfully reset password
+      user.pass = await passwordHashFn(passwordNew);
+      await user.save();
+      await MAIL.sendPasswordResetMail({ to: email });
+      return reply.redirect("/#login");
+    }
   },
 
   game: async (request, reply) => {

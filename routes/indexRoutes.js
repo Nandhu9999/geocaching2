@@ -15,6 +15,10 @@ async function indexRoutes(fastify, options) {
     return reply.view("/src/pages/forgot.hbs", {});
   });
   fastify.post("/forgot", indexController.forgot);
+  fastify.get("/reset", (request, reply) => {
+    return reply.view("/src/pages/reset.hbs", {});
+  });
+  fastify.post("/reset", indexController.reset);
   fastify.get("/healthz", (request, reply) => {
     return reply.send({ status: "OK" }).code(200);
   });
@@ -27,6 +31,12 @@ async function indexRoutes(fastify, options) {
     return reply.view("/src/pages/leaderboards.hbs", {});
   });
   fastify.get("/create", indexController.createGeocache);
+  /*
+   *  ADMIN RELATED ROUTES
+   */
+  fastify.get("/admin", (request, reply) => {
+    return reply.view("/src/pages/admin.hbs", {});
+  });
 }
 
 module.exports = indexRoutes;

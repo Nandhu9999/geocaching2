@@ -17,6 +17,7 @@
           <input
             class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white"
             id="email"
+            required="true"
             type="email"
             name="email"
             placeholder="Email"
@@ -36,6 +37,7 @@
           <input
             class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white"
             id="password"
+            required="true"
             type="password"
             name="password"
             placeholder="Password"
@@ -43,10 +45,7 @@
         </div>
       </div>
       <div class="md:flex flex-col items-center mb-2">
-        <div
-          class=""
-          style="height: 2rem; color: #b42d20;line-height:2rem;"
-        >{{loginError}}</div>
+        {{> formError }}
         <div class="w-full">
           <button
             class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full"

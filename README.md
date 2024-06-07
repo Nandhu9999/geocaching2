@@ -32,3 +32,18 @@ It's a Geocaching framework project, which means, I should be able to change the
 2. Geolocation
 3. OpenStreetMap
 4. PWA's
+
+## ToDo
+
+General Features
+
+1. Forgot Password Page
+1. Inventory Page
+1. QA setup
+1. PWA setup
+1. Create Geocache Page
+
+Admin Functionalities:
+
+- Handle Database
+- Approve/Reject Geocaches

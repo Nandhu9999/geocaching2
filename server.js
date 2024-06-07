@@ -16,7 +16,7 @@ const {
   dbFilePath,
   ifConditionFunction,
   numberWithCommas,
-  hashPasswordFn,
+  passwordHashFn,
 } = require("./src/services/server-helper.service.js");
 
 const handlebars = require("handlebars");
@@ -28,7 +28,10 @@ fastify.register(require("@fastify/view"), {
       head: "/src/partials/head.handlebars",
       navbar: "/src/partials/navbar.handlebars",
       loginForm: "/src/partials/loginForm.handlebars",
+      forgotForm: "/src/partials/forgotForm.handlebars",
       registerForm: "/src/partials/registerForm.handlebars",
+      passwordResetForm: "/src/partials/passwordResetForm.handlebars",
+      formError: "/src/partials/formError.handlebars",
       locationPermission: "/src/partials/locationPermission.handlebars",
       newUserPopup: "/src/partials/newUserPopup.handlebars",
       questionPopup: "/src/partials/questionPopup.handlebars",
@@ -76,7 +79,7 @@ db.sync({ force: false }).then(async () => {
     User.create({
       name: "admin",
       email: config.ADMIN_EMAIL,
-      pass: await hashPasswordFn(config.ADMIN_PASS),
+      pass: await passwordHashFn(config.ADMIN_PASS),
       admin: true,
       score: 10000000,
     });

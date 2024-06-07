@@ -77,9 +77,18 @@ async function GEOLOCATION_UPDATED(pos) {
   });
 
   // update live location on map
-  if (UserLocations.last.valid && $("#liveLocationSetting")?.checked) {
-    updateUserLocation([UserLocations.last.lat, UserLocations.last.lng], 5);
-    updateMapView([UserLocations.last.lat, UserLocations.last.lng]);
+  if ($("#liveLocationSetting")) {
+    // ADMIN
+    if (UserLocations.last.valid && $("#liveLocationSetting")?.checked) {
+      updateUserLocation([UserLocations.last.lat, UserLocations.last.lng], 5);
+      updateMapView([UserLocations.last.lat, UserLocations.last.lng]);
+    }
+  } else {
+    // NORMAL USER
+    if (UserLocations.last.valid) {
+      updateUserLocation([UserLocations.last.lat, UserLocations.last.lng], 5);
+      updateMapView([UserLocations.last.lat, UserLocations.last.lng]);
+    }
   }
 
   // current Time
@@ -116,7 +125,9 @@ function READ_ERROR(err) {
 }
 
 function Main() {
+  // GAME START
   getUserCurrentLocation();
+
   // setInterval(gameLoop, 1000);
   navigator.geolocation.watchPosition(GEOLOCATION_UPDATED, READ_ERROR, {
     enableHighAccuracy: true,

@@ -29,30 +29,26 @@ class MailService {
     }
   }
 
-  async sendForgotMail({ to = "", new_password = "" }) {
-    try {
-      await this.sendMail({
-        to,
-        subject: "Forgot Password",
-        html: `
+  async sendPasswordForgotMail({ to = "", new_password = "", link = "" }) {
+    return await this.sendMail({
+      to,
+      subject: "Forgot Password",
+      html: `
         <p>Hello User,</p>
         <p>It looks like you've forgotten your password.</p>
-        <p>Here is your newly auto-generated password: <strong>${new_password}</strong></p>
-        <p>Please log in and change your password to something more secure.</p>
+        <p>Here is your newly generated password: <strong>${new_password}</strong></p>
+        <p>Please open this URL and use your new auto generated password to change it.</p>
+        <p>Password Reset: <a href='${link}'>${link}</a></p>
         <p>Thank you,</p>
         <p>The AmritTrees Team</p>
         `,
-      });
-    } catch (err) {
-      throw err;
-    }
+    });
   }
   async sendNewRegisterMail({ to = "" }) {
-    try {
-      await this.sendMail({
-        to,
-        subject: "Welcome New User!",
-        html: `
+    return await this.sendMail({
+      to,
+      subject: "Welcome New User!",
+      html: `
         <p>Hello User,</p>
         <p>Welcome to AmritaTrees!</p>
         <p>We are thrilled to have you on our platform.</p>
@@ -60,10 +56,24 @@ class MailService {
         <p>Thank you,</p>
         <p>The AmritaTrees Team</p>
         `,
-      });
-    } catch (err) {
-      throw err;
-    }
+    });
+  }
+
+  async sendPasswordResetMail({ to = "" }) {
+    const now = new Date();
+    const currentDate = `${now.getDate()}/${now.getMonth()}/${now.getFullYear()}`;
+    const currentTime = ``;
+    return await this.sendMail({
+      to,
+      subject: "Password Reset!",
+      html: `
+        <p>Your AmritaTrees account has been updated.</p>
+        <p>Your password has been reset on ${currentDate} at ${currentTime}</p>
+        <p>Please use your new password to log in to your account.</p>
+        <p>Thank you,</p>
+        <p>The AmritaTrees Team</p>
+        `,
+    });
   }
 }
 module.exports = MailService;

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {{> head }}
+    <title>AmritaTrees | Reset Password</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+
+<body class="w-screen h-screen relative bg-slate-800 overflow-hidden">
+    <div class="w-full h-full">
+    <img style="filter:blur(1px);" class="nodrag w-full h-full object-cover" src="/assets/heroTree.jpg"  alt="trees" />
+    <div class="w-full h-full absolute top-0 left-0 grid place-content-center">
+        {{> passwordResetForm }}
+    </div>
+    </div>
+</body>
+<script>
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const email = urlParams.get("email");
+    console.log({email})
+    document.querySelectorAll("input").forEach(tag => {tag.value = "";});
+    if(email){
+        document.querySelector("input#email").value = email
+    }else{
+        document.querySelector("input#email").value = "";
+    }
+
+    document.querySelector("input#passwordNew").focus();
+    document.querySelector("input#passwordOld").focus();
+    document.querySelector("input#passwordOld").type = "password";
+    document.querySelector("input#passwordNew").type = "password";
+    setTimeout(()=>{
+      document.querySelector("input#passwordNew").value = "";
+      document.querySelector("input#passwordOld").value = "";
+    },1)
+  });
+</script>
+</html>

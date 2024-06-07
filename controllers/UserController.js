@@ -28,7 +28,7 @@ module.exports = {
       if (password == confirmPassword) {
         User.findOrCreate({
           email: email,
-          pass: await hashPasswordFn(password),
+          pass: await passwordHashFn(password),
         });
         return reply.send({ path: "createUser", success: true });
       }

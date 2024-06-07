@@ -2,7 +2,7 @@ const LANGUAGES_LIST = ["english", "tamil", "telugu", "malayalam"];
 
 const RAW_LOCALIZATION = {
   title: {
-    en: "AmritaTrees",
+    en: "Amrita Trees",
     ta: "அமிர்த மரங்கள்",
     te: "అమృత వృక్షాలు",
     ml: "അമൃത മരങ്ങൾ",
