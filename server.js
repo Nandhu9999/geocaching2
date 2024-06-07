@@ -36,6 +36,7 @@ fastify.register(require("@fastify/view"), {
       newUserPopup: "/src/partials/newUserPopup.handlebars",
       questionPopup: "/src/partials/questionPopup.handlebars",
       sideBar: "/src/partials/sideBar.handlebars",
+      snackbar: "/src/partials/snackbar.handlebars",
       gameNavbar: "/src/partials/gameNavbar.handlebars",
       gameSettings: "/src/partials/gameSettings.handlebars",
       inventoryCard: "/src/partials/inventoryCard.handlebars",

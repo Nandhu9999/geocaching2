@@ -1,0 +1,17 @@
+{{#if message}}
+  <style>
+    .snackbar { position: fixed; top: 10px; right: 10px; z-index: 1000000;
+    min-width: 220px; background-color: #333; color: white; padding: 15px;
+    border-radius: 5px; animation: slideIn 1s forwards, stayActive 5s forwards
+    1s; } @keyframes slideIn { from { transform: translateX(100%); } to {
+    transform: translateX(0); } } @keyframes stayActive { 0% { transform:
+    translateX(0); } 90% { transform: translateX(0); } 100% { transform:
+    translateX(110%); } }
+  </style>
+
+  <div class="snackbar" id="snackbar">
+    {{message}}
+  </div>
+{{else}}
+  <div class="hidden">no snackbar</div>
+{{/if}}

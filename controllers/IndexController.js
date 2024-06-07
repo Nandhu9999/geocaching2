@@ -37,6 +37,7 @@ module.exports = {
     return reply.view("/src/pages/landing", {
       lang: langCode,
       localization,
+      message: "",
       seo,
     });
   },
@@ -148,7 +149,15 @@ module.exports = {
       link: `${request.headers.origin}/reset?email=${email}`,
     });
 
-    return reply.redirect("/");
+    const { lang } = request.query;
+    const langCode = lang || "en";
+    const localization = LOCALIZATION[langCode];
+    return reply.view("/src/pages/landing", {
+      lang: langCode,
+      localization,
+      message: "Open your email to reset your password",
+      seo,
+    });
   },
   reset: async (request, reply) => {
     const { email, passwordOld, passwordNew } = request.body;
