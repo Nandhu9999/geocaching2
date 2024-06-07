@@ -107,9 +107,9 @@ export function updateUserLocation(location, distance) {
     map.removeLayer(userCircle);
   }
   userCircle = L.circle(location, {
-    color: "red",
-    fillColor: "#f03",
-    fillOpacity: 0.25,
+    color: "#1260cc",
+    fillColor: "#4095c0",
+    fillOpacity: 0.5,
     radius: distance || 50,
   }).addTo(map);
 }
