@@ -1,4 +1,4 @@
-import { TREES_LIST } from "./config.js";
+// import { TREES_LIST } from "./config.js";
 import { $ } from "./app.js";
 import {
   addTreeMarkerToMap,
@@ -9,12 +9,31 @@ import {
   getMapCenter,
   moveMapTo,
 } from "./mapScript.js";
+import GeocacheApi from "./api/geocache.js";
 
+const TREES_LIST = await GeocacheApi.getGeocaches();
 TREES_LIST.forEach((treeItem, idx) => {
-  const randomlySelected = Math.floor(Math.random() * 5) === 0;
-  if (randomlySelected) {
-    const location = treeItem.coords.split(",");
-    addTreeMarkerToMap(idx, location, "", TREE_CLICKED);
+  if (treeItem.scientific_name == "tree") {
+    const iconUrl = "/assets/game/tree_golden.png";
+    addTreeMarkerToMap(
+      idx,
+      iconUrl,
+      [treeItem.lat, treeItem.lng],
+      "",
+      TREE_CLICKED
+    );
+  } else {
+    const randomlySelected = Math.floor(Math.random() * 5) === 0;
+    const iconUrl = "/assets/game/tree.png";
+    if (randomlySelected) {
+      addTreeMarkerToMap(
+        idx,
+        iconUrl,
+        [treeItem.lat, treeItem.lng],
+        "",
+        TREE_CLICKED
+      );
+    }
   }
 });
 
@@ -96,16 +115,16 @@ async function GEOLOCATION_UPDATED(pos) {
   var hours = currentDateTime.getHours();
   var minutes = currentDateTime.getMinutes();
   var seconds = currentDateTime.getSeconds();
-  var suffix = "am";
-  if (hours > 12) {
+  let suffix = " AM";
+  if (hours >= 12) {
+    suffix = " PM";
     hours = hours - 12;
-    suffix = "pm";
   }
   hours = hours > 9 ? hours : "0" + hours;
   minutes = minutes > 9 ? minutes : "0" + minutes;
   seconds = seconds > 9 ? seconds : "0" + seconds;
-  const timeDisplay0 = `  ${hours}:${minutes}${suffix}`;
-  const timeDisplay1 = `${hours}:${minutes}:${seconds}${suffix}`;
+  // const timeDisplay0 = `  ${hours}:${minutes}${suffix}`;
+  // const timeDisplay1 = `${hours}:${minutes}:${seconds}${suffix}`;
   $("#currentTime").innerHTML = `${
     hours == 0 ? "12" : hours
   }<span class="time-pulse">:</span>${minutes}${suffix}`;

@@ -4,17 +4,23 @@ const UNI_LOCATION = [10.8993923, 76.9029521];
 const MAX_MAP_ZOOM = 20;
 const ICON_SIZE = [50, 50];
 
-var map = L.map("map");
-map.setView(UNI_LOCATION, MAX_MAP_ZOOM);
+var map = undefined;
+if (window.L) {
+  var map = L.map("map");
+  map.setView(UNI_LOCATION, MAX_MAP_ZOOM);
 
-const MAP_TILES = {
-  gmap: "http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}",
-  osm: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-};
-L.tileLayer(MAP_TILES.gmap, {
-  maxZoom: MAX_MAP_ZOOM,
-  subdomains: ["mt0", "mt1", "mt2", "mt3"],
-}).addTo(map);
+  const MAP_TILES = {
+    gmap: "http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}",
+    osm: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+  };
+  L.tileLayer(MAP_TILES.gmap, {
+    maxZoom: MAX_MAP_ZOOM,
+    subdomains: ["mt0", "mt1", "mt2", "mt3"],
+  }).addTo(map);
+
+  $(".leaflet-control-zoom").style.visibility = "hidden";
+  $(".leaflet-control-attribution").style.visibility = "hidden";
+}
 
 export function disableMapControl(state) {
   console.log("disable map control", state);
@@ -34,13 +40,11 @@ export function disableMapControl(state) {
     map.dragging.enable();
   }
 }
-$(".leaflet-control-zoom").style.visibility = "hidden";
-$(".leaflet-control-attribution").style.visibility = "hidden";
 
-export function addTreeMarkerToMap(idx, location, popupText, onClick) {
+export function addTreeMarkerToMap(idx, iconUrl, location, popupText, onClick) {
   var treeIcon = L.icon({
-    iconUrl: "/assets/game/tree.png",
     shadowUrl: "/assets/game/shadow.png",
+    iconUrl,
     iconSize: ICON_SIZE,
     shadowSize: ICON_SIZE,
     iconAnchor: ICON_SIZE.map((i) => i / 2),

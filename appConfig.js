@@ -6,6 +6,8 @@ module.exports = {
   ADMIN_EMAIL: "amritatrees@gmail.com",
   ADMIN_PASS: process.env.ADMIN_KEY,
 
+  GOOGLE_LLM_API_KEY: process.env.GOOGLE_LLM_API_KEY,
+
   EMAIL: {
     host: "smtp.gmail.com",
     port: 465,

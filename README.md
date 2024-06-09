@@ -37,9 +37,9 @@ It's a Geocaching framework project, which means, I should be able to change the
 
 General Features
 
-1. Forgot Password Page
-1. Inventory Page
+1. Forgot Password Page X
 1. QA setup
+1. Inventory Page
 1. PWA setup
 1. Create Geocache Page
 
