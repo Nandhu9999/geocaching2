@@ -17,6 +17,7 @@ const {
   ifConditionFunction,
   numberWithCommas,
   passwordHashFn,
+  checkKeywords,
 } = require("./src/services/server-helper.service.js");
 
 const handlebars = require("handlebars");
@@ -132,18 +133,18 @@ fastify.addHook("onRequest", (request, reply, next) => {
   console.log("onRequest:", request.url);
   const sid = request.session.sessionId;
   // console.log("sid:",sid);
-
   const RESTRICTED_URLs = [
     "/game",
     "/inventory",
     "/leaderboards",
     "/create",
     // "/users",
-    "/geocache",
+    // "/geocache",
   ];
+
   if (
     request.session.isAuthenticated === undefined &&
-    RESTRICTED_URLs.indexOf(request.url) !== -1
+    checkKeywords(request.url, RESTRICTED_URLs)
   ) {
     reply.redirect("/");
   }

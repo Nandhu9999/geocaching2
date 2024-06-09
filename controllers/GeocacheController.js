@@ -2,6 +2,8 @@ const axios = require("axios");
 const config = require("../appConfig.js");
 const Geocache = require("../models/Geocache");
 const GeocacheProperties = require("../models/GeocacheProperties.js");
+const Quiz = require("../models/Quiz.js");
+const User = require("../models/User.js");
 
 async function insertNewGeocacheToDb({
   name = "",
@@ -29,10 +31,72 @@ async function insertNewGeocacheToDb({
 module.exports = {
   getGeocaches: async (request, reply) => {
     const geocacheList = await Geocache.findAll();
-    return reply.send({ success: true, path: "getGeocaches", geocacheList });
+    return reply.send({ success: true, geocacheList });
   },
-  getGeocacheById: (request, reply) => {
-    return reply.send({ success: true, path: "getGeocacheById" });
+  getGeocacheById: async (request, reply) => {
+    const { id } = request.params;
+    const geocacheProperties = await GeocacheProperties.findOne({
+      where: { id },
+    });
+    const geocaches = await Geocache.findAll({
+      where: { id },
+    });
+    return reply.send({ success: true, geocacheProperties, geocaches });
+  },
+  getGeocacheQuiz: async (request, reply) => {
+    try {
+      const { id: geocacheId } = request.params;
+      const geocache = await Geocache.findOne({
+        where: { id: geocacheId },
+      });
+
+      const geocacheQuiz = await Quiz.findAll({
+        where: { scientific_name: geocache.scientific_name },
+        attributes: ["id", "scientific_name", "question", "options"],
+      });
+      const randomId = Math.floor(Math.random() * geocacheQuiz.length);
+      const quiz = geocacheQuiz[randomId];
+      return reply.send({
+        success: true,
+        quiz,
+      });
+    } catch (err) {
+      console.log("getGeocacheQuiz error:", err);
+      return reply.send({ success: false, error: err.message });
+    }
+  },
+  submitGeocacheQuiz: async (request, reply) => {
+    try {
+      const { scientific_name, quiz_id, answer } = request.body;
+      const submission = await Quiz.findOne({
+        where: { id: quiz_id, answer },
+      });
+      console.log(submission);
+      if (submission) {
+        const ACCOUNT = request.session.user;
+        const user = await User.findOne({
+          where: { id: ACCOUNT.id },
+          attributes: ["id", "name", "email", "admin", "score", "collected"],
+        });
+        const geocache = await GeocacheProperties.findOne({
+          where: { scientific_name },
+        });
+        await user.update({
+          score: user.score + geocache.score,
+        });
+        await user.save();
+        request.session.user = user.dataValues;
+        return reply.send({
+          success: true,
+          isCorrect: true,
+          score: user.score,
+        });
+      } else {
+        return reply.send({ success: true, isCorrect: false });
+      }
+    } catch (err) {
+      return reply.send({ success: false, error: err.message });
+    }
   },
   createGeocache: async (request, reply) => {
     try {

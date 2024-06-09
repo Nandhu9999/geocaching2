@@ -10,6 +10,7 @@ import {
   moveMapTo,
 } from "./mapScript.js";
 import GeocacheApi from "./api/geocache.js";
+import GameApi from "./api/game.js";
 
 const TREES_LIST = await GeocacheApi.getGeocaches();
 TREES_LIST.forEach((treeItem, idx) => {
@@ -17,6 +18,7 @@ TREES_LIST.forEach((treeItem, idx) => {
     const iconUrl = "/assets/game/tree_golden.png";
     addTreeMarkerToMap(
       idx,
+      treeItem.scientific_name,
       iconUrl,
       [treeItem.lat, treeItem.lng],
       "",
@@ -28,6 +30,7 @@ TREES_LIST.forEach((treeItem, idx) => {
     if (randomlySelected) {
       addTreeMarkerToMap(
         idx,
+        treeItem.scientific_name,
         iconUrl,
         [treeItem.lat, treeItem.lng],
         "",
@@ -37,25 +40,67 @@ TREES_LIST.forEach((treeItem, idx) => {
   }
 });
 
-function TREE_CLICKED(idx, location) {
+async function TREE_CLICKED(idx, scientific_name, location) {
   console.log("Clicked", idx);
+  // GET QUESTION
+  const quizResponse = await GameApi.getGeocacheQuiz(idx);
+  if (!quizResponse.quiz) return;
+
   UserLocations.beforeGeocacheClick = getMapCenter();
   moveMapTo(location);
 
   const questionPopup = $("#questionPopup");
   questionPopup.classList.remove("hidden");
-  questionPopup.querySelector("#question").innerText = `What is life?`;
+
+  questionPopup.querySelector("#question").innerText =
+    quizResponse.quiz.question;
   const optionsHolder = questionPopup.querySelector("#options");
-  const templateButton = optionsHolder.querySelector("#buttonTemplate");
-  optionsHolder.innerHTML = null;
-  const optionsList = ["option 1", "option 2", "option 3", "option 4"];
+  optionsHolder.innerHTML = "";
+  const optionsList = quizResponse.quiz.options.split(",");
   optionsList.forEach((optionText) => {
-    const optionButton = templateButton.cloneNode(true);
+    // const optionButton = templateButton.cloneNode(true);
+    const optionButton = document.createElement("div");
     optionButton.innerText = optionText;
-    optionButton.classList.remove("hidden");
+    optionButton.classList =
+      "text-gray-600 p-2 select-none cursor-pointer rounded-lg mb-3 bg-gradient-to-r from-gray-100 to-gray-300 opacity-65 active:from-gray-300 active:to-gray-100 ring-black ring-offset-1 ring-2";
+    optionButton.addEventListener("click", () => {
+      TREE_OPTION_SUBMISSION(scientific_name, quizResponse.quiz.id, optionText);
+    });
     optionsHolder.appendChild(optionButton);
   });
-  optionsHolder.appendChild(templateButton);
+}
+async function TREE_OPTION_SUBMISSION(scientific_name, quiz_id, user_answer) {
+  const response = await GameApi.submitGeocacheQuiz(
+    scientific_name,
+    quiz_id,
+    user_answer
+  );
+  if (response.success) {
+    if (response.isCorrect) {
+      // SUCCESS
+      console.log("celebrate, right answer...");
+      closeQuesitonPopup();
+      party.confetti($("#map"), {
+        debug: false,
+        gravity: 800,
+        zIndex: 99999,
+        count: party.variation.range(50, 80),
+      });
+    } else {
+      console.log("incorrect answer...");
+      $("#map").classList.add("shake-screen");
+      navigator.vibrate([100, 50, 100, 50, 300]);
+
+      setTimeout(() => {
+        $("#map").classList.remove("shake-screen");
+      }, 500);
+      closeQuesitonPopup();
+    }
+  } else {
+    // error
+    console.log(response.error);
+    closeQuesitonPopup();
+  }
 }
 
 async function getUserCurrentLocation() {

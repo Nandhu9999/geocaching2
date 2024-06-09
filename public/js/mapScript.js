@@ -41,7 +41,14 @@ export function disableMapControl(state) {
   }
 }
 
-export function addTreeMarkerToMap(idx, iconUrl, location, popupText, onClick) {
+export function addTreeMarkerToMap(
+  idx,
+  scientific_name,
+  iconUrl,
+  location,
+  popupText,
+  onClick
+) {
   var treeIcon = L.icon({
     shadowUrl: "/assets/game/shadow.png",
     iconUrl,
@@ -55,7 +62,7 @@ export function addTreeMarkerToMap(idx, iconUrl, location, popupText, onClick) {
   const marker = L.marker(location, { icon: treeIcon })
     .on("click", () => {
       marker._icon.classList.add("customMarkerAnimation");
-      onClick(idx, location);
+      onClick(idx, scientific_name, location);
       setTimeout(() => {
         marker._icon.classList.remove("customMarkerAnimation");
       }, 3000);

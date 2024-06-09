@@ -141,7 +141,7 @@ module.exports = {
       numbers: true,
     });
     user.pass = await passwordHashFn(newPassword);
-    user.save();
+    await user.save();
 
     await MAIL.sendPasswordForgotMail({
       to: email,

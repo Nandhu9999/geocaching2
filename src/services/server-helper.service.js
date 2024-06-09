@@ -1,5 +1,14 @@
 const bcrypt = require("bcrypt");
 
+function checkKeywords(inputString, keywords) {
+  for (let keyword of keywords) {
+    if (inputString.includes(keyword)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function ifConditionFunction(v1, operator, v2, options) {
   switch (operator) {
     case "==":
@@ -58,6 +67,7 @@ function generateRandomString(
 const dbFilePath = "./src/.data/db.sqlite";
 module.exports = {
   dbFilePath,
+  checkKeywords,
   passwordHashFn,
   numberWithCommas,
   comparePasswordFn,
