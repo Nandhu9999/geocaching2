@@ -90,7 +90,6 @@ async function TREE_OPTION_SUBMISSION(scientific_name, quiz_id, user_answer) {
       console.log("incorrect answer...");
       $("#map").classList.add("shake-screen");
       navigator.vibrate([100, 50, 100, 50, 300]);
-
       setTimeout(() => {
         $("#map").classList.remove("shake-screen");
       }, 500);
